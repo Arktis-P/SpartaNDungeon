@@ -9,7 +9,14 @@ namespace SpartaNDungeon
     internal class Dungeon
     {
         private string[] dungeonMenu = { "상태 보기", "전투 시작", "포션 사용" };
-        // private Player player;
+        // private Monster[] monsters; // 출현 몬스터 지정
+        private int stage = 1; // 난이도
+        
+        public Dungeon(int stage)
+        {
+            this.stage = stage;
+            SetMonster(stage);
+        }
         public void DungeonPage()
         {
             Console.Clear();
@@ -75,10 +82,22 @@ namespace SpartaNDungeon
             }
         }
         
-        public void UsePotion()
+        public void UsePotion() // 포션 사용
         {
-
+            //개수 검사 후 사용
+            //Item에서 가져오기
         }
         
+        public void SetMonster(int stage) // 해당 던전에서 출현하는 몬스터 저장
+        {
+            switch (stage)
+            {
+                case 1:
+                    //monsters.Add(new Monster~);
+                    break;
+            }
+        }
+
+
     }
 }

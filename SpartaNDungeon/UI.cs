@@ -12,7 +12,7 @@ namespace SpartaNDungeon
         Item item = new Item();
         Dungeon dungeon = new Dungeon();
 
-        public void StartPage()
+        public void StartPage() // 메인 화면
         {
             Console.WriteLine("스파르타 던전에 오신 여러분 환영합니다.");
             Console.WriteLine();
@@ -24,11 +24,11 @@ namespace SpartaNDungeon
             Console.WriteLine("6. 게임저장");
             Console.WriteLine();
 
-            int input = ConsoleUtil.GetInput(1, 6);
+            int input = ConsoleUtil.GetInput(1, 6); // input의 입력 범위를 1부터 6까지 제한
             switch(input)
             {
                 case 1:
-                    player.DisplayStatus();
+                    player.DisplayStatus(); 
                     break;
                 case 2:
                     player.DisplayInventory();

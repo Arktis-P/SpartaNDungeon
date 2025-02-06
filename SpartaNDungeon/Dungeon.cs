@@ -11,7 +11,7 @@ namespace SpartaNDungeon
         private string[] dungeonMenu = { "상태 보기", "전투 시작", "포션 사용" };
         // private Monster[] monsters; // 출현 몬스터 지정
         private int stage = 1; // 난이도
-        
+        public Player player;
         public Dungeon(int stage)
         {
             this.stage = stage;
@@ -56,6 +56,7 @@ namespace SpartaNDungeon
             Console.WriteLine("던전에 입장할 캐릭터의 정보가 표시됩니다.");
 
             //플레이어 정보 출력
+            player.DisplayStatus();
 
             Console.WriteLine("0. 나가기");
             //GameManager.GetInput(0, 0);

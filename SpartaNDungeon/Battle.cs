@@ -55,9 +55,12 @@ namespace SpartaNDungeon
                 }
                 if(dungeon.monsters.Count == monsterCnt || dungeon.player.Hp == 0)
                 {
-
+                    BattleResult();
+                    break;
                 }
+
             }
+            dungeon.DungeonPage();
         }
         public void Shuffle<T>(T[] array) // 배열 섞기
         {

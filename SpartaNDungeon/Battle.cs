@@ -13,11 +13,13 @@ namespace SpartaNDungeon
         Dungeon dungeon;
         int damage;
         bool playerTurn = true;
-        int MonsterCnt = 0; // 잡은 몬스터 수
-        
+        int monsterCnt = 0; // 잡은 몬스터 수
+        int prevHp = 0;
+
         public Battle(Dungeon dungeon)
         {
             this.dungeon = dungeon;
+            prevHp = dungeon.player.Health;
         }
         public void EnterDungeon()
         {
@@ -33,7 +35,7 @@ namespace SpartaNDungeon
             PlayerStatus();
             Console.WriteLine("\n1. 공격\n");
             Console.WriteLine("원하시는 행동을 입력해주세요.");
-            if (Console.ReadLine() == "1") Attack();
+            if (Console.ReadLine() == "1") StartBattle();
             else Console.WriteLine("다시 입력해주세요.");
 
         }
@@ -50,6 +52,10 @@ namespace SpartaNDungeon
                 else
                 {
                     MonsterAttack();
+                }
+                if(dungeon.monsters.Count == monsterCnt || dungeon.player.Hp == 0)
+                {
+
                 }
             }
         }
@@ -172,9 +178,30 @@ namespace SpartaNDungeon
                 Console.WriteLine($"Lv.{select.Level} {select.Name}의 공격!");
                 Console.WriteLine($"{dungeon.player.Name} 을(를) 맞췄습니다. [데미지: {atk}]");
                 Console.WriteLine($"\nLv.{dungeon.player.Level} {dungeon.player.Name}");
-                Console.WriteLine($"HP {dungeon.player.Health + atk} -> {dungeon.player.Health}");
+                Console.WriteLine($"HP {prevHp} -> {dungeon.player.Health}");
             }
             Console.WriteLine("\n0. 다음");
+        }
+
+        public void BattleResult()
+        {
+            Console.WriteLine("Battle!! - Result");
+            if (dungeon.monsters.Count == monsterCnt)
+            {
+                Console.WriteLine("Victory");
+                Console.WriteLine($"던전에서 몬스터 {monsterCnt}마리를 잡았습니다.");
+            }
+            else if (dungeon.player.Health == 0) Console.WriteLine("You Lose");
+
+            Console.WriteLine($"\nLv.{dungeon.player.Level} {dungeon.player.Name}");
+            Console.WriteLine($"HP {prevHp} -> {dungeon.player.Health}");
+            Console.WriteLine("\n0. 다음");
+            if(Console.ReadLine() == "0")
+            {
+                // 리워드
+            }
+
+
         }
     }
 }

@@ -66,6 +66,7 @@ namespace SpartaNDungeon
             Console.WriteLine("4. 던전입장");
             Console.WriteLine("5. 퀘스트");
             Console.WriteLine("6. 게임저장");
+            Console.WriteLine("0. 게임종료");
             Console.WriteLine();
 
             int input = ConsoleUtil.GetInput(1, 6); // input의 입력 범위를 1부터 6까지 제한
@@ -88,6 +89,9 @@ namespace SpartaNDungeon
                     break;
                 case 6:
                     SavePage();  // to save page
+                    break;
+                case 0:
+                    EndGame();  // to end game page
                     break;
             }
         }
@@ -303,6 +307,15 @@ namespace SpartaNDungeon
                 // back to startpage
                 StartPage(); return;
             }
+        }
+
+        // end game
+        private void EndGame()
+        {
+            Console.Clear();
+            Console.WriteLine("게임을 종료합니다.");
+            Thread.Sleep(1000);  // wait for 1 second
+            Environment.Exit(0);  // normal exit
         }
     }
 }

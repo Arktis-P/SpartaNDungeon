@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,12 +19,12 @@ namespace SpartaNDungeon
     class Game
     {
         private Player player;
+        private UI ui;
 
         public void Start()
         {
-            ShowIntroduction();
-            InitializePlayer();
-            UI.StartPage();
+            ui.IntroductionPage();
+            ui.StartPage();
         }
     }
 }

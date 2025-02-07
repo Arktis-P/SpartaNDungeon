@@ -6,13 +6,22 @@ using System.Threading.Tasks;
 
 namespace SpartaNDungeon
 {
+    public enum MonsterType // 몬스터 타입. 노말과 네임드가 존재. 네임드는 추가 스탯과 칭호가 생긴다
+    {
+        Normal,
+        Named
+    }
+
     public class Monster
     {
         Dungeon dungeon = new Dungeon();
 
+        Random random = new Random();
+
         int levelScale = (dungeon.stageClear / 3);
 
         public int Level { get; set; } // 몬스터 레벨
+        public MonsterType Type { get; set; } // 몬스터 타입
         public string Name { get; set; } // 몬스터 이름
         public int Hp { get; set; } //  몬스터 체력
         public int Atk { get; set; } // 몬스터 공격력
@@ -26,6 +35,17 @@ namespace SpartaNDungeon
             Hp = (hp + (levelScale * 2)); // 스테이지 클리어 3회당 체력 2 증가
             Atk = (atk + (levelScale)); // 스테이지 클리어 3회당 공격력 1 증가
             IsDead = isDead;
+
+            Type = GetType(); // 몬스터 타입 판단
+
+            if(Type == MonsterType.Named) // 몬스터 타입이 Named로 결정된다면 추가 스탯 + 이름 앞에 "화난" 이 붙는다
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Name = "화난 " + Name;
+                Console.ResetColor();
+                Hp += 5;
+                Atk += 2;
+            }
         }
 
         public string MonsterDisplay() // 몬스터의 정보 출력
@@ -37,12 +57,21 @@ namespace SpartaNDungeon
                 Console.ResetColor();
                 return mon;
             }
-            else
+            else  // 몬스터가 살아있을 시 일반적인 글자 색 출력
             {
-                string mon = $"Lv.{Level} {Name} {GetIsDead()}"; // 몬스터가 살아있을 시 일반적인 글자 색 출력
-                return mon;
-            }
-            
+                if(Type == MonsterType.Named) // 네임드라면 빨간색으로 글자 출력
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    string mon = $"Lv.{Level} {Name} {GetIsDead()}"; 
+                    Console.ResetColor();
+                    return mon;
+                }
+                else
+                {
+                    string mon = $"Lv.{Level} {Name} {GetIsDead()}"; // 노말이면 일반적인 글자 색 출력
+                    return mon;
+                }
+            } 
         }
 
         public string GetIsDead() // 몬스터 사망 시 HP를 출력하지 않고 대신 Dead 출력
@@ -51,11 +80,16 @@ namespace SpartaNDungeon
             return str;
         }
 
+        private MonsterType GetType() // 10%의 확률로 네임드 몬스터 탄생
+        {
+            return (random.Next(0, 10) == 0)? MonsterType.Named : MonsterType.Normal;
+        }
     }
 
     public class MonsterManager
     {
         Random random = new Random();
+
         List<Monster> monsterList; // 몬스터 리스트
 
         public MonsterManager()

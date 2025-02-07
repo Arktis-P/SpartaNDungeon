@@ -84,7 +84,7 @@ namespace SpartaNDungeon
            return IsPurchase ? "구매완료" : $"{Cost} G";
         }
 
-        static int UseItem(Player player, Item item)
+        public static int UseItem(Player player, Item item)
         {
             if (item.Type == ItemType.Potion)
             {

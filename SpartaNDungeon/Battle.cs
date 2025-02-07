@@ -210,10 +210,10 @@ namespace SpartaNDungeon
             Console.WriteLine("Battle!! - Result");
             if (dungeon.monsters.Count == monsterCnt)
             {
-                dungeon.stage++;
+                dungeon.Stage++;
                 Console.WriteLine("Victory");
                 Console.WriteLine($"던전에서 몬스터 {monsterCnt}마리를 잡았습니다.");
-                dungeon.player.Exp += random.Next(dungeon.stage, dungeon.stage * 10 + 1);
+                dungeon.player.Exp += random.Next(dungeon.Stage, dungeon.Stage * 10 + 1);
             }
             else if (dungeon.player.Health == 0) Console.WriteLine("You Lose");
 
@@ -222,7 +222,7 @@ namespace SpartaNDungeon
             Console.WriteLine($"HP {prevHp} -> {dungeon.player.Health}");
             Console.WriteLine($"exp {prevExp} -> {dungeon.player.Exp}");
 
-            dungeon.Reward(dungeon.stage);
+            dungeon.Reward(dungeon.Stage);
 
         }
     }

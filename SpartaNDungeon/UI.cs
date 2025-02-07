@@ -38,6 +38,7 @@ namespace SpartaNDungeon
                 {
                     jobId = input;
                     InitializePlayer(name, jobId);
+                    return;
                 }
                 else { Console.WriteLine("잘못된 입력입니다."); break; }
             }
@@ -46,7 +47,7 @@ namespace SpartaNDungeon
         private void InitializePlayer(string name, int jobId)
         {
             // instantiate player
-            Player player = new Player(name, jobId);
+            player = new Player(name, jobId);
 
             // show welcome 
             Console.Clear();
@@ -95,6 +96,7 @@ namespace SpartaNDungeon
         {
             while (true)
             {
+                Console.Clear();
                 Console.WriteLine();
                 Console.WriteLine("\t\t==== 상태보기 ====");
                 Console.WriteLine("캐릭터의 현재 상태를 확인할 수 있습니다.");
@@ -113,6 +115,7 @@ namespace SpartaNDungeon
         {
             while (true)
             {
+                Console.Clear();
                 Console.WriteLine();
                 Console.WriteLine("\t\t==== 인벤토리 ====");
                 Console.WriteLine("캐릭터의 인벤토리를 확인하고, 장비를 관리할 수 있습니다.");
@@ -142,6 +145,7 @@ namespace SpartaNDungeon
         {
             while (true)
             {
+                Console.Clear();
                 Console.WriteLine();
                 Console.WriteLine("\t\t==== 인벤토리 - 장착관리 ====");
                 Console.WriteLine("아이템을 장비하거나 해제할 수 있습니다.");
@@ -179,6 +183,7 @@ namespace SpartaNDungeon
         {
             while (true)
             {
+                Console.Clear();
                 Console.WriteLine("");
                 Console.WriteLine("\t\t==== 상점 ====");
                 Console.WriteLine("필요한 아이템을 구매하고 필요 없는 아이템을 판매할 수 있습니다.");
@@ -194,7 +199,7 @@ namespace SpartaNDungeon
                         break;
                     case 2:  // 2. 판매하기
                         break;
-                    case 3:  // 0. 나가기
+                    case 0:  // 0. 나가기
                         StartPage();  return;
                 }
             }
@@ -209,6 +214,7 @@ namespace SpartaNDungeon
         {
             while (true)
             {
+                Console.Clear();
                 Console.WriteLine("");
                 Console.WriteLine("\t\t==== 퀘스트 ====");
                 Console.WriteLine("퀘스트 기능은 현재 구현되지 않았습니다.");
@@ -229,6 +235,7 @@ namespace SpartaNDungeon
         {
             while (true)
             {
+                Console.Clear();
                 Console.WriteLine("");
                 Console.WriteLine("\t\t==== 저장하기 ====");
                 Console.WriteLine("저장하기 기능은 현재 구현되지 않았습니다.");

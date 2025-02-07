@@ -32,14 +32,14 @@ namespace SpartaNDungeon
         {
             if (IsDead == true)
             {
-                Console.ForegroundColor = ConsoleColor.DarkGray; // 몬스터 사망 시 몬스터의 텍스트 색깔을 DarkGray로 변경
+                Console.ForegroundColor = ConsoleColor.DarkGray; // 몬스터 사망 시 몬스터의 글자 색깔을 DarkGray로 변경
                 string mon = $"Lv.{Level} {Name} {GetIsDead()}";
                 Console.ResetColor();
                 return mon;
             }
             else
             {
-                string mon = $"Lv.{Level} {Name} {GetIsDead()}"; 
+                string mon = $"Lv.{Level} {Name} {GetIsDead()}"; // 몬스터가 살아있을 시 일반적인 글자 색 출력
                 return mon;
             }
         }
@@ -54,7 +54,7 @@ namespace SpartaNDungeon
 
     public class MonsterManager
     {
-
+        Random random = new Random();
         List<Monster> monsterList; // 몬스터 리스트
 
         public MonsterManager()
@@ -68,5 +68,19 @@ namespace SpartaNDungeon
             };
         }
 
+        public List<Monster> RandomMonster() // 전투에서 랜덤하게 등장할 몬스터를 정한다
+        {
+            List<Monster> summonMonster = new List<Monster>();
+            int randomCount = random.Next(1, 5); // 한 전투에 나타나는 몬스터의 개체 수. 1마리 부터 4마리까지 등장
+            int randomMon; // 랜덤한 몬스터를 지정할 변수
+
+            for (int i = 0; i < randomCount; i++)
+            {
+                randomMon = random.Next(summonMonster.Count); // 몬스터 리스트의 범위에서 랜덤하게 선택한다
+                summonMonster.Add(monsterList[randomMon]); // 몬스터 소환
+            }
+
+            return summonMonster;
+        }
     }
 }

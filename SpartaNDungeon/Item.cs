@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using Microsoft.VisualBasic;
+using System.Numerics;
 
 namespace SpartaNDungeon
 {
@@ -53,8 +54,8 @@ namespace SpartaNDungeon
 
         public string DisplayItem()
         {
-            string str = IsEquip ? "[E] " : "";
-            str += $"- {Name} | {GetType()} | {Descrip} | {GetPriceString()}";
+            //string str = IsEquip ? "[E] " : "";
+            string str = $"- {Name} | {GetType()} | {Descrip} | {GetPriceString()}";
             if (Type == ItemType.Potion)
             {
                 str += $"  (보유량: {Count})";

@@ -69,7 +69,7 @@ namespace SpartaNDungeon
             Console.WriteLine("0. 게임종료");
             Console.WriteLine();
 
-            int input = ConsoleUtil.GetInput(1, 6); // input의 입력 범위를 1부터 6까지 제한
+            int input = ConsoleUtil.GetInput(0, 6); // input의 입력 범위를 1부터 6까지 제한
             switch(input)
             {
                 case 1:

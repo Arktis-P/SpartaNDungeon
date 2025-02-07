@@ -13,6 +13,7 @@ namespace SpartaNDungeon
         public int Stage { get;  set; }
         public Player player;
         public MonsterManager manager;
+        public UI ui;
         public Dungeon(int stage, Player player, MonsterManager manager)
         {
             this.player = player;
@@ -35,7 +36,7 @@ namespace SpartaNDungeon
             switch (ConsoleUtil.GetInput(0,3))
             {
                 case 0: // 나가기
-                    // startPage();
+                    ui.StartPage();
                     break;
                 case 1: // 상태 보기
                     BattleStatusPage();

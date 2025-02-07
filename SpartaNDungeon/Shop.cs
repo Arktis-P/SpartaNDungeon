@@ -8,13 +8,15 @@ namespace SpartaNDungeon
 {
     internal class Shop
     {
-        public List<Item> ItemSale { get; set; }
+        public List<Item> ItemSale { get; private set; }
         
         public Shop()
         {
-            ItemSale = new List<Item>();
+            ItemSale = Item.GetItemList(); //목록 가져오기
 
         }
+
+
 
         public void AddItem(Item item)
         {
@@ -26,22 +28,22 @@ namespace SpartaNDungeon
             ItemSale.Remove(item);
         }
 
-        public void DisplayItem(Item item)
+        public void DisplayItem()
         {
             Console.WriteLine("--- 상점 --- ");
-            foreach (var item in ItemSale)
+            foreach (var saleItem in ItemSale)
             {
-                Console.WriteLine($"{item.Name}({item.Price}) gold");
+                Console.WriteLine($"{saleItem.Name} ({saleItem.Cost}) gold");
             }
         }
         
         public void BuyItem(Player player, Item item)
         {
-            if(player.Gold >= selectedItem.Price)
+            if(player.Gold >= item.Cost)
             {
-                player.Gold -= selectedItem.Price;
-                Console.WriteLine($"{selectedItem.Name} 구매완료!");
-                player.DisplayInventory.Add(selectedItem); //구매한 아이템 인벤토리로
+                player.Gold -= item.Cost;
+                Console.WriteLine($"{item.Name} 구매완료!");
+                player.DisplayInventory.Add(item); //구매한 아이템 인벤토리로
             }
 
             else
@@ -49,12 +51,12 @@ namespace SpartaNDungeon
                 Console.WriteLine("골드가 충분하지 않습니다.");
             }
         }
-        public void SellItem(Player player, int Item item)
+        public void SellItem(Player player,Item item)
         {
-            int sellPrce = Item.Price / 2;
+            int sellPrce = item.Cost / 2;
             player.Gold += sellPrce;
-            Console.WriteLine($"{Item.Name}이/가 {sellPrce}gold 로 판매되었습니다!");
-            player.DisplayInventory().Remove(Item); //판매한 아이템 인벤토리에서 제거
+            Console.WriteLine($"{item.Name}이/가 {sellPrce}gold 로 판매되었습니다!");
+            player.DisplayInventory.Remove(item); //판매한 아이템 인벤토리에서 제거
         }
             
     }

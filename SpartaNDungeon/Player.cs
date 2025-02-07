@@ -173,6 +173,10 @@ namespace SpartaNDungeon
             return;
         }
 
+        public void AddItem(Item item) { inventory.Add(item); return; }
+
+        public void RemoveItem(Item item) { inventory.Remove(item); return; }
+
         // display player's skill set
         public void DisplaySkills()
         {

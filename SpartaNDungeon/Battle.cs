@@ -16,11 +16,13 @@ namespace SpartaNDungeon
         bool playerTurn = true;
         int monsterCnt = 0; // 잡은 몬스터 수
         int prevHp = 0; // 입장 플레이어 체력
+        int prevMp = 0;
 
         public Battle(Dungeon dungeon)
         {
             this.dungeon = dungeon;
             prevHp = dungeon.player.Health;
+            prevMp = dungeon.player.Mana;
         }
         public void EnterDungeon()
         {
@@ -35,9 +37,16 @@ namespace SpartaNDungeon
 
             PlayerStatus();
             Console.WriteLine("\n1. 공격\n");
-            Console.WriteLine("원하시는 행동을 입력해주세요.");
-            if (Console.ReadLine() == "1") StartBattle();
-            else Console.WriteLine("다시 입력해주세요.");
+            Console.WriteLine("2. 스킬\n");
+            switch (ConsoleUtil.GetInput(1, 2))
+            {
+                case 1:
+                    StartBattle();
+                    break;
+                case 2:
+
+                    break;
+            }
 
         }
         public void StartBattle()
@@ -77,7 +86,8 @@ namespace SpartaNDungeon
         {
             Console.WriteLine("[내정보]");
             Console.WriteLine($"Lv.{dungeon.player.Level} {dungeon.player.Name} ({dungeon.player.Job})");
-            Console.WriteLine($"HP {dungeon.player.Health - damage}/{dungeon.player.Health}");
+            Console.WriteLine($"HP {prevHp}/{dungeon.player.Health}");
+            Console.WriteLine($"MP {prevMp}/{dungeon.player.Mana}");
         }
 
         public void MonsterStatus() // 몬스터 상태 출력

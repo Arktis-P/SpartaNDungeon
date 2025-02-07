@@ -9,6 +9,7 @@ namespace SpartaNDungeon
     public class UI
     {
         Player player;
+        Dungeon dungeon;
         
         public void IntroductionPage()  // 게임 시작 시 소개 화면
         {
@@ -25,6 +26,7 @@ namespace SpartaNDungeon
             // get player name
             Console.WriteLine("당신의 이름을 알려주세요.");
             name = Console.ReadLine();
+            name = name == null ? "르탄" : name;
             // get player job
             while (true)
             {
@@ -96,10 +98,12 @@ namespace SpartaNDungeon
                 Console.WriteLine("");
                 Console.WriteLine("\t\t==== 상태보기 ====");
                 Console.WriteLine("캐릭터의 현재 상태를 확인할 수 있습니다.");
-
+                // show options
                 Console.WriteLine("");
                 player.DisplayStatus();
                 // 0. 나가기
+                int input = ConsoleUtil.GetInput(0, 0);
+                StartPage(); return;
             }
         }
         // inventory page
@@ -111,10 +115,32 @@ namespace SpartaNDungeon
                 Console.WriteLine("\t\t==== 인벤토리 ====");
                 Console.WriteLine("캐릭터의 인벤토리를 확인하고, 장비를 관리할 수 있습니다.");
 
-                // 1. 장착관리
-                // 0. 나가기
+                Console.WriteLine();
+                Console.WriteLine("\t[보유한 아이템 목록]");
+                // display inventory
+                Console.WriteLine();
+                player.DisplayInventory();
+                // show options
+                Console.WriteLine();
+                Console.WriteLine("1. 장착관리\n0. 나가기");
+
+                // get player's input
+                int input = ConsoleUtil.GetInput(0, 1);
+                switch (input)
+                {
+                    case 1:  // 1. 장착관리
+                        InventoryManagePage(); break;
+                    case 0:  // 0. 나가기
+                        StartPage(); return;
+                }
             }
         }
+        // inventory manage page
+        private void InventoryManagePage()
+        {
+
+        }
+
         // shop page
         private void ShopPage()
         {
@@ -123,25 +149,27 @@ namespace SpartaNDungeon
                 Console.WriteLine("");
                 Console.WriteLine("\t\t==== 상점 ====");
                 Console.WriteLine("필요한 아이템을 구매하고 필요 없는 아이템을 판매할 수 있습니다.");
+                // show options
+                Console.WriteLine();
+                Console.WriteLine("1. 구매하기\n2. 판매하기\n0. 나가기");
 
-                // 1. 구매하기
-                // 2. 판매하기
-                // 3. 나가기
+                // get player's input
+                int input = ConsoleUtil.GetInput(0, 2);
+                switch (input)
+                {
+                    case 1:  // 1. 구매하기
+                        break;
+                    case 2:  // 2. 판매하기
+                        break;
+                    case 3:  // 0. 나가기
+                        StartPage();  return;
+                }
             }
         }
         // dungeon page
         private void DungeonPage()
         {
-            while (true)
-            {
-                Console.WriteLine("");
-                Console.WriteLine("\t\t==== 던전입장 ====");
-                Console.WriteLine("던전에 입장할 수 있습니다.");
-
-                // 1. 전투시작
-                // 2. 아이템 사용
-                // 3. 나가기
-            }
+            dungeon.DungeonPage();
         }
         // quest page
         private void QuestPage()
@@ -160,7 +188,7 @@ namespace SpartaNDungeon
                 // get player's input
                 int input = ConsoleUtil.GetInput(0, 0);
                 // back to startpage
-                StartPage(); break;
+                StartPage(); return;
             }
         }
         // save page
@@ -180,7 +208,7 @@ namespace SpartaNDungeon
                 // get player's input
                 int input = ConsoleUtil.GetInput(0, 0);
                 // back to startpage
-                StartPage(); break;
+                StartPage(); return;
             }
         }
     }

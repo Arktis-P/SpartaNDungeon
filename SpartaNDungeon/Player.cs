@@ -134,9 +134,9 @@ namespace SpartaNDungeon
                 item = "";  // initialize entire string for each item
                 item += isManaging ? $"{i + 1}. " : "-  ";
                 item += inventory[i].isEquip ? "(E)" : "   ";
-                item += inventory[i].Name + "\t| " + inventory[i].Desc;
-                // item += (item의 효과)
-                item += isSelling ? $"\t| {inventory[i].Price} G" : "";
+                item += inventory[i].Name + "\t| " + inventory[i].Descrip;
+                // item += (item의 효과)  // itemType에 따라서 방어/공격 결정
+                item += isSelling ? $"\t| {inventory[i].Cost} G" : "";
                 // show on console
                 Console.WriteLine(item);
             }

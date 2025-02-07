@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace SpartaNDungeon
 {
+
     public enum MonsterType // 몬스터 타입. 노말과 네임드가 존재. 네임드는 추가 스탯과 칭호가 생긴다
     {
         Normal,
@@ -14,11 +15,9 @@ namespace SpartaNDungeon
 
     public class Monster
     {
-        Dungeon dungeon = new Dungeon();
-
         Random random = new Random();
 
-        int levelScale = (dungeon.stageClear / 3);
+        Player player;
 
         public int Level { get; set; } // 몬스터 레벨
         public MonsterType Type { get; set; } // 몬스터 타입
@@ -27,22 +26,24 @@ namespace SpartaNDungeon
         public int Atk { get; set; } // 몬스터 공격력
         public bool IsDead { get; set; } // 사망했는지 판단하는 횟수
 
-        // 몬스터는 플레이어의 스테이지 클리어 횟수에 따라 레벨 및 각종 스탯이 상승한다.
+
+        // 몬스터는 플레이어의 레벨에 따라 레벨 및 각종 스탯이 상승한다.
         public Monster(int level, string name, int hp, int atk,bool isDead) 
         {
-            Level = (level + levelScale); // 스테이지 클리어 3회당 레벨 1 증가
+            int levelScale = (player.Level / 3); // 플레이어의 레벨 3업에 맟춰 레벨스케일링 발생
+
+            Level = (level + levelScale); // 레벨스케일링마다 1 증가
             Name = name;
-            Hp = (hp + (levelScale * 2)); // 스테이지 클리어 3회당 체력 2 증가
-            Atk = (atk + (levelScale)); // 스테이지 클리어 3회당 공격력 1 증가
+            Hp = (hp + (levelScale * 2));  // 레벨스케일링마다 2 증가
+            Atk = (atk + (levelScale)); // 레벨스케일링마다 1 증가
             IsDead = isDead;
 
             Type = GetType(); // 몬스터 타입 판단
 
-            if(Type == MonsterType.Named) // 몬스터 타입이 Named로 결정된다면 추가 스탯 + 이름 앞에 "화난" 이 붙는다
+            if(Type == MonsterType.Named) // 몬스터 타입이 Named로 결정된다면 추가 레벨 및 스탯 + 이름 앞에 "화난" 이 붙는다
             {
-                Console.ForegroundColor = ConsoleColor.Yellow;
                 Name = "화난 " + Name;
-                Console.ResetColor();
+                Level += 3;
                 Hp += 5;
                 Atk += 2;
             }
@@ -59,7 +60,7 @@ namespace SpartaNDungeon
             }
             else  // 몬스터가 살아있을 시 일반적인 글자 색 출력
             {
-                if(Type == MonsterType.Named) // 네임드라면 빨간색으로 글자 출력
+                if(Type == MonsterType.Named) // 네임드라면 노란색으로 글자 출력
                 {
                     Console.ForegroundColor = ConsoleColor.Yellow;
                     string mon = $"Lv.{Level} {Name} {GetIsDead()}"; 

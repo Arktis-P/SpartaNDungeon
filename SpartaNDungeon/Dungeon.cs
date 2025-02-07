@@ -78,18 +78,14 @@ namespace SpartaNDungeon
                     DungeonPage();
                     break;
                 case 1:
-                    UsePotion();
+                    Item.UseItem();
                     break;
                 default:
                     break;
             }
         }
         
-        public void UsePotion() // 포션 사용
-        {
-            //개수 검사 후 사용
-            //Item에서 가져오기
-        }
+        
         
         public void SetMonster(int stage) // 해당 던전에서 출현하는 몬스터 저장
         {
@@ -112,8 +108,11 @@ namespace SpartaNDungeon
             List<Item> reward = new List<Item>();
             List<Item> potions = Item.GetItemList().Where(x => x.Type == ItemType.Potion).ToList();
             List<Item> items = Item.GetItemList().Where(x => x.Type == ItemType.Armor || x.Type == ItemType.Weapon).ToList();
+
             Random random = new Random();
             int randomItem = random.Next(1, stage);
+  
+
             for (int i = 0; i < randomItem; i++)
             {
                 Item potion = potions[random.Next(potions.Count)];
@@ -122,17 +121,21 @@ namespace SpartaNDungeon
                 reward.Add(item);
                 
             }
-            DisplayReward(reward, randomItem); // 보상 출력
+            int rewardGold = 500 * stage;
+            DisplayReward(reward, randomItem, rewardGold); // 보상 출력
+            player.Gold += rewardGold;
             player.inventory.AddRange(reward); // 보상 인벤토리에 추가
         }
 
-        public void DisplayReward(List<Item> reward, int random)
+        public void DisplayReward(List<Item> reward,int randomItem, int rewardGold)
         {
             Console.WriteLine("[획득 아이템]");
+            Console.WriteLine($"{rewardGold} G");
             foreach (Item item in reward)
             {
-                Console.WriteLine($"{item.Name} - {random}");
+                Console.WriteLine($"{item.Name} - {randomItem}");
             }
+
         }
     }
 }

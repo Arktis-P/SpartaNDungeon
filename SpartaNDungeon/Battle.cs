@@ -213,6 +213,7 @@ namespace SpartaNDungeon
                 dungeon.stage++;
                 Console.WriteLine("Victory");
                 Console.WriteLine($"던전에서 몬스터 {monsterCnt}마리를 잡았습니다.");
+                dungeon.player.Exp += random.Next(dungeon.stage, dungeon.stage * 10 + 1);
             }
             else if (dungeon.player.Health == 0) Console.WriteLine("You Lose");
 

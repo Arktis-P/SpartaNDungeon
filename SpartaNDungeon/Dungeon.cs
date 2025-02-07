@@ -12,11 +12,13 @@ namespace SpartaNDungeon
         public List<Monster> monsters = new List<Monster>(); // 출현 몬스터 지정
         public int stage = 1;
         public Player player;
-        public Dungeon(int stage, Player player)
+        public MonsterManager manager;
+        public Dungeon(int stage, Player player, MonsterManager manager)
         {
             this.player = player;
             this.stage = stage;
             SetMonster(stage);
+            this.manager = manager;
         }
         public void DungeonPage()
         {
@@ -91,22 +93,46 @@ namespace SpartaNDungeon
         
         public void SetMonster(int stage) // 해당 던전에서 출현하는 몬스터 저장
         {
+            List<Monster> randomMonsters = manager.RandomMonster();
             if(stage < 3)
             {
                 for(int i = 0; i < 3; i++)
                 {
-                    monsters.Add(MonsterManager.monsterList[i]);
+                    monsters.Add(randomMonsters[i]);
                 }
             }
             else
             {
-                foreach(Monster m in MonsterManager.monsterList)
-                {
-                    monsters.Add(m);
-                }
+                monsters.AddRange(randomMonsters);
             }
         }
 
+        public void Reward(int stage) // 1~stage 개수 만큼 보상 랜덤 지급
+        {
+            List<Item> reward = new List<Item>();
+            List<Item> potions = Item.GetItemList().Where(x => x.Type == ItemType.Potion).ToList();
+            List<Item> items = Item.GetItemList().Where(x => x.Type == ItemType.Armor || x.Type == ItemType.Weapon).ToList();
+            Random random = new Random();
+            int randomItem = random.Next(1, stage);
+            for (int i = 0; i < randomItem; i++)
+            {
+                Item potion = potions[random.Next(potions.Count)];
+                reward.Add(potion);
+                Item item = items[random.Next(items.Count)];
+                reward.Add(item);
+                
+            }
+            DisplayReward(reward, randomItem); // 보상 출력
+            player.inventory.AddRange(reward); // 보상 인벤토리에 추가
+        }
 
+        public void DisplayReward(List<Item> reward, int random)
+        {
+            Console.WriteLine("[획득 아이템]");
+            foreach (Item item in reward)
+            {
+                Console.WriteLine($"{item.Name} - {random}");
+            }
+        }
     }
 }

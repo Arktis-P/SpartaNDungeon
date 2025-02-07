@@ -17,12 +17,14 @@ namespace SpartaNDungeon
         int monsterCnt = 0; // 잡은 몬스터 수
         int prevHp = 0; // 입장 플레이어 체력
         int prevMp = 0;
+        int prevExp = 0;
 
         public Battle(Dungeon dungeon)
         {
             this.dungeon = dungeon;
             prevHp = dungeon.player.Health;
             prevMp = dungeon.player.Mana;
+            prevExp = dungeon.player.Exp;
         }
         public void EnterDungeon()
         {
@@ -70,7 +72,9 @@ namespace SpartaNDungeon
                 }
 
             }
-            dungeon.DungeonPage();
+            Console.WriteLine("\n0. 다음");
+            if(ConsoleUtil.GetInput(0,0) == 0) dungeon.DungeonPage();
+
         }
         public void Shuffle(List<Monster> list) // 배열 섞기
         {
@@ -212,15 +216,12 @@ namespace SpartaNDungeon
             }
             else if (dungeon.player.Health == 0) Console.WriteLine("You Lose");
 
+            Console.WriteLine("[캐릭터 정보]");
             Console.WriteLine($"\nLv.{dungeon.player.Level} {dungeon.player.Name}");
             Console.WriteLine($"HP {prevHp} -> {dungeon.player.Health}");
+            Console.WriteLine($"exp {prevExp} -> {dungeon.player.Exp}");
 
-            Console.WriteLine("\n0. 다음");
-            if(Console.ReadLine() == "0")
-            {
-                // 리워드
-            }
-
+            dungeon.Reward(dungeon.stage);
 
         }
     }

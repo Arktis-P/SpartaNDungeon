@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SpartaNDungeon
 {
-    class Player
+    public class Player
     {
         // basic stats
         // name, job, level  // atk, def, luk, dex  // hp, mp  // gold
@@ -20,7 +20,7 @@ namespace SpartaNDungeon
         public int Intelligence { get; private set; }
         public int Luck { get; private set; }
         public int Dexterity { get; private set; }
-        public int Health { get; }
+        public int Health { get; set; }
         public int Mana { get; }
         public int Gold { get; }
         public int Exp { get; private set; }
@@ -33,7 +33,8 @@ namespace SpartaNDungeon
 
         // complex stats  
         // inventory
-        public List<Item> inventory;
+        // public List<Item> inventory;
+        public List<ISkill> skills;
 
         // player class initiate
         public Player(string name, int jobId)
@@ -48,36 +49,54 @@ namespace SpartaNDungeon
             LevelExp = 100 * Level;  // requied exp increases as level increases
 
             // player's inventoy list
-            // write after item class is made
+            // [later] after item class is made
 
-            // give player additional stat according to its job
+            // player's skill set
+            skills = new List<ISkill>();
+            // add skills to player's skill set according to player's job
+            AddSkillsByJob(Job);
+
+            // give player additional stat according to player's job
             AddStatus(Job);
         }
 
         // job gives additional stats
         private void AddStatus(string job)
         {
-            JobType jobType;
-            JobType.TryParse(job, out jobType);
+            JobType.TryParse(job, out JobType jobType);
 
             switch (jobType)
             {
-                case JobType.전사:  // warrior
+                case JobType.Warrior:  // warrior
                     Attack += 5; Defense += 5;
                     break;
-                case JobType.마법사:  // magician
+                case JobType.Mage:  // mage
                     Attack += 5; Intelligence += 5;
                     break;
-                case JobType.도적:  // logue
+                case JobType.Logue:  // logue
                     Luck += 5; Dexterity += 5;
                     break;
-                case JobType.궁수:  // archer
+                case JobType.Archer:  // archer
                     Attack += 5; Dexterity += 5;
                     break;
                 default: break;  // default, no additional stats
             }
         }
 
+        // skill related methods
+        // add only skills for each job of player
+        private void AddSkillsByJob(string job)
+        {
+            skills.AddRange(SkillDatabase.GetSkillsByJob(job));
+        }
+        private void UseSkill(string skillName)
+        {
+            foreach (ISkill skill in skills)
+            {
+                if (skill.Name == skillName) { skill.UseSkill(); return; }
+            }
+        }
+        
         // display player's status
         public void DisplayStatus()
         {
@@ -88,8 +107,9 @@ namespace SpartaNDungeon
             Console.WriteLine($"Gold : {Gold} G");  // Gold : 1000 G
         }
 
-        enum JobType { 전사 = 1, 마법사, 도적, 궁수 }
+        public enum JobType { Warrior = 1, Mage, Logue, Archer }
 
+        // display player's inventory for inventory checking and selling items, using & equipping items
         public void DisplayInventory()
         {
             return;

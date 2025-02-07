@@ -14,16 +14,16 @@ namespace SpartaNDungeon
         // name, job, level  // atk, def, luk, dex  // hp, mp  // gold
         public string Name { get; set; }
         public string Job { get; }
-        public int Level { get; private set; }
-        public int Attack { get; private set; }
-        public int Defense { get; private set; }
-        public int Intelligence { get; private set; }
-        public int Luck { get; private set; }
-        public int Dexterity { get; private set; }
+        public int Level { get; set; }
+        public int Attack { get; set; }
+        public int Defense { get; set; }
+        public int Intelligence { get; set; }
+        public int Luck { get; set; }
+        public int Dexterity { get; set; }
         public int Health { get; set; }
         public int Mana { get; }
-        public int Gold { get; }
-        public int Exp { get; private set; }
+        public int Gold { get; set; }
+        public int Exp { get; set; }
 
         // intermediate stats
         // max health  // level exp 

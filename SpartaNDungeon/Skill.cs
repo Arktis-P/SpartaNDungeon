@@ -14,7 +14,7 @@ namespace SpartaNDungeon
         int Multiplier { get; set; }  // basically multiple operation
 
         // how to calcualte damage done by player
-        int CalculateDamage(Player player) { return 0; };
+        int CalculateDamage(Player player) { return 0; }
 
         int UseSkill(Player player) { return CalculateDamage(player); }
     }

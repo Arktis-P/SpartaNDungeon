@@ -9,11 +9,12 @@ namespace SpartaNDungeon
     internal class Dungeon
     {
         private string[] dungeonMenu = { "상태 보기", "전투 시작", "포션 사용" };
-        // private Monster[] monsters; // 출현 몬스터 지정
-        private int stage = 1; // 난이도
+        public List<Monster> monsters = new List<Monster>(); // 출현 몬스터 지정
+        public int stage = 1;
         public Player player;
-        public Dungeon(int stage)
+        public Dungeon(int stage, Player player)
         {
+            this.player = player;
             this.stage = stage;
             SetMonster(stage);
         }
@@ -29,22 +30,22 @@ namespace SpartaNDungeon
             Console.WriteLine("0. 나가기");
 
             Console.WriteLine("원하시는 행동을 입력해주세요");
-            switch (Console.ReadLine())
+            switch (ConsoleUtil.GetInput(0,3))
             {
-                case "0": // 나가기
+                case 0: // 나가기
                     // startPage();
                     break;
-                case "1": // 상태 보기
+                case 1: // 상태 보기
                     BattleStatusPage();
                     break;
-                case "2": // 전투 시작
-                    // enterDungeon(); -> Battle 클래스에
+                case 2: // 전투 시작
+                    Battle battle = new Battle(this);
+                    battle.EnterDungeon();
                     break;
-                case "3": // 포션 사용
+                case 3: // 포션 사용
                     UsePotionPage();
                     break;
                 default:
-                    // GameManager.GetInput(0, deogonMenu.Length-1);
                     break;
             }
         }
@@ -59,7 +60,7 @@ namespace SpartaNDungeon
             player.DisplayStatus();
 
             Console.WriteLine("0. 나가기");
-            //GameManager.GetInput(0, 0);
+            ConsoleUtil.GetInput(0, 0);
         }
         
         public void UsePotionPage() // 포션 사용
@@ -69,16 +70,15 @@ namespace SpartaNDungeon
             Console.WriteLine();
             Console.WriteLine("1. 사용하기\n0. 나가기");
             
-            switch(Console.ReadLine())
+            switch(ConsoleUtil.GetInput(0, 1))
             {
-                case "0":
+                case 0:
                     DungeonPage();
                     break;
-                case "1":
+                case 1:
                     UsePotion();
                     break;
                 default:
-                    //GameManager.GetInput(0,1);
                     break;
             }
         }
@@ -91,11 +91,19 @@ namespace SpartaNDungeon
         
         public void SetMonster(int stage) // 해당 던전에서 출현하는 몬스터 저장
         {
-            switch (stage)
+            if(stage < 3)
             {
-                case 1:
-                    //monsters.Add(new Monster~);
-                    break;
+                for(int i = 0; i < 3; i++)
+                {
+                    monsters.Add(MonsterManager.monsterList[i]);
+                }
+            }
+            else
+            {
+                foreach(Monster m in MonsterManager.monsterList)
+                {
+                    monsters.Add(m);
+                }
             }
         }
 

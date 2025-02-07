@@ -14,7 +14,7 @@ namespace SpartaNDungeon
         int damage;
         bool playerTurn = true;
         int monsterCnt = 0; // 잡은 몬스터 수
-        int prevHp = 0;
+        int prevHp = 0; // 입장 플레이어 체력
 
         public Battle(Dungeon dungeon)
         {
@@ -26,11 +26,11 @@ namespace SpartaNDungeon
             Console.Clear();
             Console.WriteLine("Battle!!\n");
 
-            //Shuffle(dungeon.monsters);
-            //foreach (string info in dungeon.monsters)
-            //{
-            //    Console.WriteLine(info);
-            //}
+            Shuffle(dungeon.monsters);
+            foreach (Monster mon in dungeon.monsters)
+            {
+               Console.WriteLine(mon.MonsterDisplay());
+            }
 
             PlayerStatus();
             Console.WriteLine("\n1. 공격\n");
@@ -53,7 +53,7 @@ namespace SpartaNDungeon
                 {
                     MonsterAttack();
                 }
-                if(dungeon.monsters.Count == monsterCnt || dungeon.player.Hp == 0)
+                if(dungeon.monsters.Count == monsterCnt || dungeon.player.Health == 0)
                 {
                     BattleResult();
                     break;
@@ -62,13 +62,13 @@ namespace SpartaNDungeon
             }
             dungeon.DungeonPage();
         }
-        public void Shuffle<T>(T[] array) // 배열 섞기
+        public void Shuffle(List<Monster> list) // 배열 섞기
         {
-            int n = array.Length;
+            int n = list.Count;
             for(int i = n-1; i >0; i--)
             {
                 int j = random.Next(0, i + 1);
-                (array[i], array[j]) = (array[j], array[i]);
+                (list[i], list[j]) = (list[j], list[i]);
             }
         }
         
@@ -84,7 +84,7 @@ namespace SpartaNDungeon
             for (int i = 0; i < dungeon.monsters.Count; i++)
             {
                 //if (dungeon.monsters[i].hp == 0) // 어둡게 출력
-                Console.WriteLine((i + 1) + dungeon.monsters[i].GetInfo());
+                Console.WriteLine((i + 1) + dungeon.monsters[i].MonsterDisplay());
             }
         }
 
@@ -133,6 +133,7 @@ namespace SpartaNDungeon
                 {
                     // 몬스터 사망 상태로 바꾸기 -> 텍스트 어두운 색
                     selectedMonster.Hp = 0;
+                    selectedMonster.IsDead = true;
                 }
                 PhaseResult(false, selectedMonster, playerAtk);
             }
@@ -142,19 +143,19 @@ namespace SpartaNDungeon
         {
             foreach(Monster mon in dungeon.monsters)
             {
-                if (mon.HP <= 0) continue;
+                if (mon.Hp <= 0) continue;
 
                 Console.WriteLine($"Lv. {mon.Level} {mon.Name}의 공격!");
                 int prevHp = dungeon.player.Health;
-                dungeon.player.Health -= mon.Attack;
+                dungeon.player.Health -= mon.Atk;
 
                 if(dungeon.player.Health <= 0)
                 {
                     dungeon.player.Health = 0;
-                    PhaseResult(false, mon, mon.Attack);
+                    PhaseResult(false, mon, mon.Atk);
                     break;
                 }
-                PhaseResult(false, mon, mon.Attack);
+                PhaseResult(false, mon, mon.Atk);
             }
             while (true)
             {
@@ -191,6 +192,7 @@ namespace SpartaNDungeon
             Console.WriteLine("Battle!! - Result");
             if (dungeon.monsters.Count == monsterCnt)
             {
+                dungeon.stage++;
                 Console.WriteLine("Victory");
                 Console.WriteLine($"던전에서 몬스터 {monsterCnt}마리를 잡았습니다.");
             }
@@ -198,6 +200,7 @@ namespace SpartaNDungeon
 
             Console.WriteLine($"\nLv.{dungeon.player.Level} {dungeon.player.Name}");
             Console.WriteLine($"HP {prevHp} -> {dungeon.player.Health}");
+
             Console.WriteLine("\n0. 다음");
             if(Console.ReadLine() == "0")
             {

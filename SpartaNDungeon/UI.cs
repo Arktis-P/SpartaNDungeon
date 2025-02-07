@@ -9,6 +9,7 @@ namespace SpartaNDungeon
     public class UI
     {
         Player player;
+        Shop shop;
         Dungeon dungeon;
         
         public void IntroductionPage()  // 게임 시작 시 소개 화면
@@ -181,10 +182,12 @@ namespace SpartaNDungeon
         // shop page
         private void ShopPage()
         {
+            shop = new Shop();  // initiate shop
+
             while (true)
             {
                 Console.Clear();
-                Console.WriteLine("");
+                Console.WriteLine();
                 Console.WriteLine("\t\t==== 상점 ====");
                 Console.WriteLine("필요한 아이템을 구매하고 필요 없는 아이템을 판매할 수 있습니다.");
                 // show options
@@ -196,14 +199,64 @@ namespace SpartaNDungeon
                 switch (input)
                 {
                     case 1:  // 1. 구매하기
-                        break;
+                        BuyItemPage();  break;
                     case 2:  // 2. 판매하기
-                        break;
+                        SellItemPage();  break;
                     case 0:  // 0. 나가기
                         StartPage();  return;
                 }
             }
         }
+        // shop under - buy item page
+        private void BuyItemPage()
+        {
+            while (true)
+            {
+                Console.Clear();
+                Console.WriteLine();
+                Console.WriteLine("\t\t==== 상점 - 구매하기 ====");
+                Console.WriteLine("필요한 아이템을 구매할 수 있습니다.");
+                // show options
+                Console.WriteLine();
+                Console.WriteLine("\t[구매 가능한 아이템 목록]");
+                shop.DisplayItem();
+                Console.WriteLine();
+                Console.WriteLine("0. 나가기");
+
+                // get player's input
+                int input = ConsoleUtil.GetInput(0, shop.ItemSale.Count);
+                if (input == 0) { ShopPage(); return; }
+                else { return; }
+            }
+        }
+        // shop under - sell item page
+        private void SellItemPage()
+        {
+            while (true)
+            {
+                Console.Clear();
+                Console.WriteLine();
+                Console.WriteLine("\t\t==== 상점 - 판매하기 ====");
+                Console.WriteLine("필요 없는 아이템을 판매할 수 있습니다.");
+                // show options
+                Console.WriteLine();
+                Console.WriteLine("\t[판매 가능한 아이템 목록]");
+                player.DisplayInventory(true, true);
+                Console.WriteLine();
+                Console.WriteLine("0. 나가기");
+
+                // get player's input
+                int input = ConsoleUtil.GetInput(0, player.inventory.Count);
+                if (input == 0) { ShopPage(); return; }
+                else
+                {
+                    input--;
+                    shop.SellItem(player, player.inventory[input]);
+                    break;
+                }
+            }
+        }
+
         // dungeon page
         private void DungeonPage()
         {

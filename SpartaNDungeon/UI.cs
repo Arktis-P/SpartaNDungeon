@@ -230,7 +230,11 @@ namespace SpartaNDungeon
                 // get player's input
                 int input = ConsoleUtil.GetInput(0, shop.ItemSale.Count);
                 if (input == 0) { ShopPage(); return; }
-                else { return; }
+                else
+                {
+                    input--;
+                    shop.BuyItem(player, shop.ItemSale[input]);
+                }
             }
         }
         // shop under - sell item page

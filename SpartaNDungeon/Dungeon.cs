@@ -68,7 +68,7 @@ namespace SpartaNDungeon
         public void UsePotionPage() // 포션 사용
         {
             Console.WriteLine("회복");
-            Console.WriteLine($"포션을 사용하면 체력을 30 회복할 수 있습니다. (남은 포션: )");
+            Console.WriteLine($"포션을 사용하면 체력을 30 회복할 수 있습니다.");
             Console.WriteLine();
             Console.WriteLine("1. 사용하기\n0. 나가기");
             
@@ -78,13 +78,30 @@ namespace SpartaNDungeon
                     DungeonPage();
                     break;
                 case 1:
-                    Item.UseItem();
+                    UsePotion();
                     break;
                 default:
                     break;
             }
         }
         
+        public void UsePotion()
+        {
+            // 개수 검사
+            Item potion = player.inventory.FirstOrDefault(x => x.Type == ItemType.Potion);
+            if(potion != null)
+            {
+                Console.WriteLine($"{potion.Name}을 사용했습니다.");
+                int newHp = Item.UseItem(player, potion);
+                Console.WriteLine($"체력 30 회복.\n HP {newHp-30} -> {newHp}");
+                potion.Count--;
+                if(potion.Count <= 0)
+                {
+                    player.inventory.Remove(potion);
+                }
+                Console.WriteLine($"남은 포션: {potion.Count}개") ;
+            }
+        }
         
         
         public void SetMonster(int stage) // 해당 던전에서 출현하는 몬스터 저장
@@ -106,34 +123,45 @@ namespace SpartaNDungeon
         public void Reward(int stage) // 1~stage 개수 만큼 보상 랜덤 지급
         {
             List<Item> reward = new List<Item>();
-            List<Item> potions = Item.GetItemList().Where(x => x.Type == ItemType.Potion).ToList();
+            Item potion = Item.GetItemList().FirstOrDefault(x => x.Type == ItemType.Potion);
             List<Item> items = Item.GetItemList().Where(x => x.Type == ItemType.Armor || x.Type == ItemType.Weapon).ToList();
 
             Random random = new Random();
-            int randomItem = random.Next(1, stage);
-  
+            int randomItem = random.Next(1, stage); // 아이템 보상 개수
+            int randomPotion = random.Next(1, stage+1); // 포션 보상 개수
 
+            //포션 
+            if (potion != null) potion.Count += randomPotion;
+            else player.inventory.Add(new Item("회복 물약", ItemType.Potion, 30, "체력을 30 회복 할 수 있습니다.", 1000, randomPotion));
+            reward.Add(potion);
+
+            //장비 아이템
             for (int i = 0; i < randomItem; i++)
             {
-                Item potion = potions[random.Next(potions.Count)];
-                reward.Add(potion);
                 Item item = items[random.Next(items.Count)];
+                if (item != null) item.Count++;
+                else player.inventory.Add(new Item(item.Name, item.Type, item.Value, item.Descrip, item.Cost, 1));
                 reward.Add(item);
-                
             }
+
+            //골드
             int rewardGold = 500 * stage;
-            DisplayReward(reward, randomItem, rewardGold); // 보상 출력
             player.Gold += rewardGold;
-            player.inventory.AddRange(reward); // 보상 인벤토리에 추가
+
+            DisplayReward(reward, randomPotion, rewardGold); // 보상 출력
         }
 
-        public void DisplayReward(List<Item> reward,int randomItem, int rewardGold)
+        public void DisplayReward(List<Item> reward,int randomPotion, int rewardGold)
         {
             Console.WriteLine("[획득 아이템]");
             Console.WriteLine($"{rewardGold} G");
             foreach (Item item in reward)
             {
-                Console.WriteLine($"{item.Name} - {randomItem}");
+                if(item.Type == ItemType.Potion)
+                {
+                    Console.WriteLine($"{item.Name} - {randomPotion}개");
+                }
+                else Console.WriteLine($"{item.Name} - 1개");
             }
 
         }

@@ -10,8 +10,7 @@ namespace SpartaNDungeon
     public enum MonsterType // 몬스터 타입. 노말과 네임드가 존재. 네임드는 추가 스탯과 칭호가 생긴다
     {
         Normal,
-        Named,
-        Boss
+        Named
     }
 
     public class Monster
@@ -45,9 +44,9 @@ namespace SpartaNDungeon
             if(Type == MonsterType.Named) // 몬스터 타입이 Named로 결정된다면 추가 레벨 및 스탯 + 이름 앞에 "화난" 이 붙는다
             {
                 Name = "화난 " + Name;
-                Level += 3;
-                Hp += 5;
-                Atk += 2;
+                Level += 3 + (3 * levelScale); // 레벨이 2이하일 경우에도 네임드가 나와도 추가 스탯을 부여하기 위해 추가값을 따로 분리해서 더해준다
+                Hp += 5 + (5 * levelScale);
+                Atk += 2 + (2 * levelScale);
             }
         }
 
@@ -86,7 +85,7 @@ namespace SpartaNDungeon
         // 기본적으로 10%의 확률로 네임드 몬스터 탄생. 스테이지가 3층 이상일 경우 네임드 확률이 30%로 변경
         private MonsterType GetType() 
         {
-            if(dungeon.stage < 3)
+            if(dungeon.Stage < 3)
             {
                 return (random.Next(0, 10) == 0) ? MonsterType.Named : MonsterType.Normal;
             }
@@ -119,7 +118,7 @@ namespace SpartaNDungeon
 
             bossLitst = new List<Monster>
             {
-                new Monster(30, "보스", 75, 25, false)
+                new Monster(30, "보스", 80, 25, false)
             };
         }
 
@@ -130,7 +129,7 @@ namespace SpartaNDungeon
             int randomMon; // 랜덤한 몬스터를 지정할 변수
 
 
-            if(dungeon.stage / 5 == 0) // 5층마다 보스 등장
+            if(dungeon.Stage / 5 == 0) // 5층마다 보스 등장
             {
                 for (int i = 0; i < randomCount; i++)
                 {

@@ -84,26 +84,48 @@ namespace SpartaNDungeon
                 return IsPurchase ? "구매완료" : $"{Cost} G";
             }
 
-            public int UseItem()
+            public int UseItem(Player player )
             {
-                // 아이템 사용 로직 추가 
-                //if (Type == ItemType.Potion)
-                //{
-                //    if (Count > 0)
-                //    {
-                //        Count--;
-                //        return player.Health+=30; // 사용 성공
-                //    }
-                //    else
-                //    {
-                //        Console.WriteLine("포션이 부족합니다!");
-                //        return player.Health; // 사용 실패
-                //    }
-                //}
-
+            //아이템 사용 로직 추가
+                if (Type == ItemType.Potion)
+                {
+                    if (Count > 0)
+                    {
+                        Count--;
+                        int health = player.Health += 30; // 사용 성공
+                        return health >= 100 ? 100 : health; // 체력은 100이 최대
+                    }
+                    else
+                    {
+                        //inventory.Remove(this);
+                        return player.Health; 
+                    }
+                }
+                
                 return 0;
+
             }
-        }
+        //public void EquipItem(Player player)
+        //{
+        //    if (IsEquip)
+        //    {
+        //        IsEquip = false;
+        //        if (Type == ItemType.Weapon) player.Attack -= Value;
+        //        if (Type == ItemType.Armor) player.Defense -= Value;
+        //        Console.WriteLine($"{Name}을(를) 해제했습니다.");
+        //    }
+        //    else
+        //    {
+        //        IsEquip = true;
+        //        if (Type == ItemType.Weapon) player.Attack += Value;
+        //        if (Type == ItemType.Armor) player.Defense += Value;
+        //        Console.WriteLine($"{Name}을(를) 장착했습니다.");
+        //    }
+        //}
+
+
+
+    }
 
    
 }

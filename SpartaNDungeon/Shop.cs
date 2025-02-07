@@ -30,10 +30,13 @@ namespace SpartaNDungeon
 
         public void DisplayItem()
         {
-            Console.WriteLine("--- 상점 --- ");
+            Console.WriteLine("\n========= 아이템 목록 ========= ");
+            Console.WriteLine($"보유 골드 : G :");
+            Console.WriteLine();
+
             foreach (var saleItem in ItemSale)
             {
-                Console.WriteLine($"{saleItem.Name} ({saleItem.Cost}) gold");
+                Console.WriteLine($"{saleItem.Name} | {saleItem.Descrip} |  {saleItem.Cost}G");
             }
         }
         

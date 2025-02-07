@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -91,7 +92,12 @@ namespace SpartaNDungeon
         public int CalAttack()
         {
             int randomAtk = (int)Math.Ceiling(dungeon.player.Attack * 0.1);
-            return dungeon.player.Attack + random.Next(-randomAtk, randomAtk + 1);
+            int playerAtk = dungeon.player.Attack + random.Next(-randomAtk, randomAtk + 1);
+            if(random.Next(0, 1) < 0.15) // 크리티컬 추후 Luk에 따라 변경
+            {
+                playerAtk = (int)(playerAtk * 1.6);
+            }
+            return playerAtk;
         }
         public void Attack()
         {
@@ -131,7 +137,6 @@ namespace SpartaNDungeon
                 selectedMonster.Hp -= playerAtk;
                 if (selectedMonster.Hp <= 0)
                 {
-                    // 몬스터 사망 상태로 바꾸기 -> 텍스트 어두운 색
                     selectedMonster.Hp = 0;
                     selectedMonster.IsDead = true;
                 }
@@ -173,9 +178,8 @@ namespace SpartaNDungeon
                 Console.WriteLine($"Lv.{select.Level} 을(를) 맞췄습니다. [데미지: {atk}]");
                 Console.WriteLine();
                 Console.WriteLine($"Lv.{select.Level} {select.Name}");
-                Console.Write($"HP {select.Hp + atk} -> ");
-                if (select.Hp == 0) Console.WriteLine("Dead");
-                else Console.WriteLine(select.Hp);
+                Console.Write($"HP {select.Hp + atk} -> {select.GetIsDead}");
+
             }
             else
             {

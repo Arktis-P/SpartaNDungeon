@@ -129,17 +129,17 @@ namespace SpartaNDungeon
             int randomMon; // 랜덤한 몬스터를 지정할 변수
 
 
-            if(dungeon.Stage / 5 == 0) // 5층마다 보스 등장
+            if(dungeon.Stage % 5 == 0) 
+            {
+                summonMonster.Add(bossLitst[0]);
+            }
+            else
             {
                 for (int i = 0; i < randomCount; i++)
                 {
                     randomMon = random.Next(summonMonster.Count); // 몬스터 리스트의 범위에서 랜덤하게 선택한다
                     summonMonster.Add(monsterList[randomMon]); // 몬스터 소환
-                }
-            }
-            else
-            {
-                summonMonster.Add(bossLitst[0]);
+                } 
             }
             
 

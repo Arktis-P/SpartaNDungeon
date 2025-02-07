@@ -18,8 +18,9 @@ namespace SpartaNDungeon
         {
             this.player = player;
             this.Stage = stage;
+            this.manager = new MonsterManager();
             SetMonster(stage);
-            this.manager = manager;
+
         }
         public void DungeonPage()
         {

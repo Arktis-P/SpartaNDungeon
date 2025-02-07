@@ -11,7 +11,7 @@ namespace SpartaNDungeon
         Player player;
         Shop shop;
         Dungeon dungeon;
-        
+        MonsterManager manager;
         public void IntroductionPage()  // 게임 시작 시 소개 화면
         {
             Console.Clear();
@@ -260,6 +260,7 @@ namespace SpartaNDungeon
         // dungeon page
         private void DungeonPage()
         {
+            dungeon = new Dungeon(1, player, manager);
             dungeon.DungeonPage();
         }
         // quest page

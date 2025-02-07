@@ -8,7 +8,8 @@ namespace SpartaNDungeon
 {
     static class ConsoleUtil
     {
-        public static int GetInput(int min, int max)
+        // min부터 max까지만 입력 가능. 그 외의 값을 입력할 경우 잘못된 입력입니다 출력 후 다시 입력
+        public static int GetInput(int min, int max) 
         {
             while (true)
             {

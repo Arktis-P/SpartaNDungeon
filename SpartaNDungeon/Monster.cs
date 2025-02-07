@@ -42,6 +42,7 @@ namespace SpartaNDungeon
                 string mon = $"Lv.{Level} {Name} {GetIsDead()}"; // 몬스터가 살아있을 시 일반적인 글자 색 출력
                 return mon;
             }
+            
         }
 
         public string GetIsDead() // 몬스터 사망 시 HP를 출력하지 않고 대신 Dead 출력

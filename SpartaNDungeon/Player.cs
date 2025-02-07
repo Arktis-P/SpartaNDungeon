@@ -96,7 +96,7 @@ namespace SpartaNDungeon
                 if (skill.Name == skillName) { skill.UseSkill(); return; }
             }
         }
-        
+
         // display player's status
         public void DisplayStatus()
         {
@@ -178,7 +178,7 @@ namespace SpartaNDungeon
             Console.WriteLine("다시 시작하시겠습니까?");
             Console.WriteLine("1. 예");
             Console.WriteLine("2. 아니오");
-
+        
             // get player's input
             int input;
             int.TryParse(Console.ReadLine(), out input);

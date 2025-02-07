@@ -95,14 +95,16 @@ namespace SpartaNDungeon
         {
             while (true)
             {
-                Console.WriteLine("");
+                Console.WriteLine();
                 Console.WriteLine("\t\t==== 상태보기 ====");
                 Console.WriteLine("캐릭터의 현재 상태를 확인할 수 있습니다.");
                 // show options
-                Console.WriteLine("");
+                Console.WriteLine();
                 player.DisplayStatus();
-                // 0. 나가기
+                Console.WriteLine();
+                Console.WriteLine("0. 나가기");
                 int input = ConsoleUtil.GetInput(0, 0);
+                // 0. 나가기
                 StartPage(); return;
             }
         }
@@ -111,7 +113,7 @@ namespace SpartaNDungeon
         {
             while (true)
             {
-                Console.WriteLine("");
+                Console.WriteLine();
                 Console.WriteLine("\t\t==== 인벤토리 ====");
                 Console.WriteLine("캐릭터의 인벤토리를 확인하고, 장비를 관리할 수 있습니다.");
 
@@ -122,7 +124,7 @@ namespace SpartaNDungeon
                 player.DisplayInventory();
                 // show options
                 Console.WriteLine();
-                Console.WriteLine("1. 장착관리\n0. 나가기");
+                Console.WriteLine("1. 장착관리\n\n0. 나가기");
 
                 // get player's input
                 int input = ConsoleUtil.GetInput(0, 1);
@@ -138,7 +140,28 @@ namespace SpartaNDungeon
         // inventory manage page
         private void InventoryManagePage()
         {
+            while (true)
+            {
+                Console.WriteLine();
+                Console.WriteLine("\t\t==== 인벤토리 - 장착관리 ====");
+                Console.WriteLine("아이템을 장비하거나 해제할 수 있습니다.");
 
+                Console.WriteLine();
+                Console.WriteLine("\t[보유한 아이템 목록]");
+                // show options & display inventory
+                Console.WriteLine();
+                player.DisplayInventory(true, false);
+                Console.WriteLine();
+                Console.WriteLine("0. 나가기");
+
+                // get player's input
+                int input = ConsoleUtil.GetInput(0, player.inventory.Count());
+                if (input == 0) { InventoryPage(); return; }
+                else
+                {
+                    // equip item (and other things)
+                }
+            }
         }
 
         // shop page

@@ -14,9 +14,9 @@ namespace SpartaNDungeon
         int Multiplier { get; set; }  // basically multiple operation
 
         // how to calcualte damage done by player
-        int CalculateDamage(Player player);
+        int CalculateDamage(Player player) { return 0; };
 
-        void UseSkill();
+        int UseSkill(Player player) { return CalculateDamage(player); }
     }
 
     // warrior class skills
@@ -32,12 +32,9 @@ namespace SpartaNDungeon
             Name = name; Desc = desc; ManaCost = manaCost; Multiplier = multiplier;
         }
 
-        public int CalculateDamage(Player player) { return player.Attack * Multiplier; }
-        
-        public void UseSkill()
-        {
-            // real logic of skill
-        }
+        private int CalculateDamage(Player player) { return player.Attack * Multiplier; }
+
+        public int UseSkill(Player player) { return CalculateDamage(player); }
     }
 
     // mage class skills
@@ -55,10 +52,7 @@ namespace SpartaNDungeon
 
         public int CalculateDamage(Player player) { return player.Intelligence * Multiplier; }
 
-        public void UseSkill()
-        {
-            // real logic of skill
-        }
+        public int UseSkill(Player player) { return CalculateDamage(player); }
     }
 
     // logue class skills
@@ -76,10 +70,7 @@ namespace SpartaNDungeon
 
         public int CalculateDamage(Player player) { return player.Luck * Multiplier; }
 
-        public void UseSkill()
-        {
-            // real logic of skill
-        }
+        public int UseSkill(Player player) { return CalculateDamage(player); }
     }
 
     // archer class skills
@@ -97,10 +88,7 @@ namespace SpartaNDungeon
 
         public int CalculateDamage(Player player) { return player.Dexterity * Multiplier; }
 
-        public void UseSkill()
-        {
-            // real logic of skill
-        }
+        public int UseSkill(Player player) { return CalculateDamage(player); }
     }
 
     // skill database

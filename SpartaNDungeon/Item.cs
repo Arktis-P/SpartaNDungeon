@@ -53,11 +53,11 @@ namespace SpartaNDungeon
                 if (Type == ItemType.Potion)
                 {
                     str += $"  (보유량: {Count})";
-                    if(IsEquip==true)
-                    {
-                        Count--;
+                    //if(IsEquip==true)
+                    //{
+                    //    Count--;
 
-                    }
+                    //}
                 }
                 return str;
             }

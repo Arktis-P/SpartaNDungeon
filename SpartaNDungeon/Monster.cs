@@ -10,7 +10,8 @@ namespace SpartaNDungeon
     public enum MonsterType // 몬스터 타입. 노말과 네임드가 존재. 네임드는 추가 스탯과 칭호가 생긴다
     {
         Normal,
-        Named
+        Named,
+        Boss
     }
 
     public class Monster
@@ -18,6 +19,7 @@ namespace SpartaNDungeon
         Random random = new Random();
 
         Player player;
+        Dungeon dungeon;
 
         public int Level { get; set; } // 몬스터 레벨
         public MonsterType Type { get; set; } // 몬스터 타입
@@ -81,17 +83,29 @@ namespace SpartaNDungeon
             return str;
         }
 
-        private MonsterType GetType() // 10%의 확률로 네임드 몬스터 탄생
+        // 기본적으로 10%의 확률로 네임드 몬스터 탄생. 스테이지가 3층 이상일 경우 네임드 확률이 30%로 변경
+        private MonsterType GetType() 
         {
-            return (random.Next(0, 10) == 0)? MonsterType.Named : MonsterType.Normal;
+            if(dungeon.stage < 3)
+            {
+                return (random.Next(0, 10) == 0) ? MonsterType.Named : MonsterType.Normal;
+            }
+            else
+            {
+                return (random.Next(0, 10) < 3) ? MonsterType.Named : MonsterType.Normal;
+            }
+
         }
     }
+
 
     public class MonsterManager
     {
         Random random = new Random();
+        Dungeon dungeon;
 
         List<Monster> monsterList; // 몬스터 리스트
+        List<Monster> bossLitst;
 
         public MonsterManager()
         {
@@ -102,6 +116,11 @@ namespace SpartaNDungeon
                 new Monster(3, "공허충", 10, 10, false),
                 new Monster(10, "슈퍼 미니언", 30, 15, false)
             };
+
+            bossLitst = new List<Monster>
+            {
+                new Monster(30, "보스", 75, 25, false)
+            };
         }
 
         public List<Monster> RandomMonster() // 전투에서 랜덤하게 등장할 몬스터를 정한다
@@ -110,11 +129,20 @@ namespace SpartaNDungeon
             int randomCount = random.Next(1, 5); // 한 전투에 나타나는 몬스터의 개체 수. 1마리 부터 4마리까지 등장
             int randomMon; // 랜덤한 몬스터를 지정할 변수
 
-            for (int i = 0; i < randomCount; i++)
+
+            if(dungeon.stage / 5 == 0) // 5층마다 보스 등장
             {
-                randomMon = random.Next(summonMonster.Count); // 몬스터 리스트의 범위에서 랜덤하게 선택한다
-                summonMonster.Add(monsterList[randomMon]); // 몬스터 소환
+                for (int i = 0; i < randomCount; i++)
+                {
+                    randomMon = random.Next(summonMonster.Count); // 몬스터 리스트의 범위에서 랜덤하게 선택한다
+                    summonMonster.Add(monsterList[randomMon]); // 몬스터 소환
+                }
             }
+            else
+            {
+                summonMonster.Add(bossLitst[0]);
+            }
+            
 
             return summonMonster;
         }

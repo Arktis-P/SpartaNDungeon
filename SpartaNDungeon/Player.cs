@@ -174,7 +174,7 @@ namespace SpartaNDungeon
         }
 
         // display player's skill set
-        public void DisplayeSkills()
+        public void DisplaySkills()
         {
             // if skill set is empty, out empty msg
             if (skills.Count == 0 ) { Console.WriteLine("스킬셋이 비어 있습니다."); return; }

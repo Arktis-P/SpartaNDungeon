@@ -22,7 +22,7 @@ namespace SpartaNDungeon
         public int Dexterity { get; set; }
         public int Health { get; set; }
         public int Mana { get; set; }
-        public int Gold { get; set; }
+        public static int Gold { get; set; }
         public int Exp { get; set; }
 
         // intermediate stats

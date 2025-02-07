@@ -222,23 +222,33 @@ namespace SpartaNDungeon
             // when player is dead
             // show death msg
             Console.WriteLine();
-            Console.WriteLine($"{Name}이(가) 죽었습니다.");
+            Console.WriteLine($"{Name}이(가) 던전을 탐험하다 죽었습니다.");
             // ask if retry
             // [later] insert on UI class
             Console.WriteLine();
             Console.WriteLine("다시 시작하시겠습니까?");
+            Console.WriteLine();
             Console.WriteLine("1. 예");
             Console.WriteLine("2. 아니오");
-        
+
             // get player's input
+            UI ui = new UI();  // initiate new UI object
             int input;
             int.TryParse(Console.ReadLine(), out input);
             switch (input)
             {
                 case 1:  // to generation page
-                    break;
+                    Console.Clear();
+                    Console.WriteLine("게임을 다시 시작합니다.");
+                    Thread.Sleep(1000);
+
+                    ui.IntroductionPage();
+                    return;
                 case 2:  // to endgame page
-                    break;
+                    Console.Clear();
+
+                    ui.EndGame();
+                    return;
             }
         }
     }

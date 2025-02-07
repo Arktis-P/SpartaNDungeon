@@ -105,16 +105,5 @@ namespace SpartaNDungeon
             }
         }
 
-    class Program
-    {
-        static void Main(string[] args)
-        {
-
-            foreach (var item in Item.GetItemList())
-            {
-                Console.WriteLine(item.DisplayItem());
-            }
-
-        }
-    }
+   
 }

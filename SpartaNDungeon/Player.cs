@@ -32,7 +32,7 @@ namespace SpartaNDungeon
         public int LevelExp { get; private set; }
 
         // complex stats  
-        // inventory
+        public List<Item> inventory;
         // public List<Item> inventory;
         public List<ISkill> skills;
 
@@ -49,7 +49,7 @@ namespace SpartaNDungeon
             LevelExp = 100 * Level;  // requied exp increases as level increases
 
             // player's inventoy list
-            // [later] after item class is made
+            inventory = new List<Item>();
 
             // player's skill set
             skills = new List<ISkill>();
@@ -109,9 +109,38 @@ namespace SpartaNDungeon
 
         public enum JobType { Warrior = 1, Mage, Logue, Archer }
 
-        // display player's inventory for inventory checking and selling items, using & equipping items
-        public void DisplayInventory()
+        // display player's health
+        public void DisplayHealth()
         {
+            // (이름)의 현재 체력: 100 / 100
+            Console.WriteLine($"{Name}의 현재 체력: {Health} / {MaxHealth}");
+        }
+
+        // display player's gold
+        public void DisplayGold()
+        {
+            Console.WriteLine($"{Name}의 현재 잔고: {Gold} G");
+        }
+
+        // display player's inventory for inventory checking and selling items, using & equipping items
+        public void DisplayInventory(bool isManaging = false, bool isSelling = false)
+        {
+            // if inventory is empty, out empty msg
+            if (inventory.Count == 0) { Console.WriteLine("인벤토리가 비어 있습니다."); return; }
+
+            string item;
+            for (int i = 0; i < inventory.Count; i++)
+            {
+                item = "";  // initialize entire string for each item
+                item += isManaging ? $"{i + 1}. " : "-  ";
+                item += inventory[i].isEquip ? "(E)" : "   ";
+                item += inventory[i].Name + "\t| " + inventory[i].Desc;
+                // item += (item의 효과)
+                item += isSelling ? $"\t| {inventory[i].Price} G" : "";
+                // show on console
+                Console.WriteLine(item);
+            }
+
             return;
         }
 

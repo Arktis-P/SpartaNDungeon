@@ -41,7 +41,7 @@ namespace SpartaNDungeon
             {
                 player.Gold -= selectedItem.Price;
                 Console.WriteLine($"{selectedItem.Name} 구매완료!");
-                player.Inventory.Add(selectedItem); //구매한 아이템 인벤토리로
+                player.DisplayInventory.Add(selectedItem); //구매한 아이템 인벤토리로
             }
 
             else

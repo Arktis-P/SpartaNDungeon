@@ -10,13 +10,15 @@ namespace SpartaNDungeon
     {
         private string[] dungeonMenu = { "상태 보기", "전투 시작", "포션 사용" };
         public List<Monster> monsters = new List<Monster>(); // 출현 몬스터 지정
-        public int stage = 1;
+        public int Stage { get;  set; }
         public Player player;
-        public Dungeon(int stage, Player player)
+        public MonsterManager manager;
+        public Dungeon(int stage, Player player, MonsterManager manager)
         {
             this.player = player;
-            this.stage = stage;
+            this.Stage = stage;
             SetMonster(stage);
+            this.manager = manager;
         }
         public void DungeonPage()
         {
@@ -76,37 +78,64 @@ namespace SpartaNDungeon
                     DungeonPage();
                     break;
                 case 1:
-                    UsePotion();
+                    Item.UseItem();
                     break;
                 default:
                     break;
             }
         }
         
-        public void UsePotion() // 포션 사용
-        {
-            //개수 검사 후 사용
-            //Item에서 가져오기
-        }
+        
         
         public void SetMonster(int stage) // 해당 던전에서 출현하는 몬스터 저장
         {
+            List<Monster> randomMonsters = manager.RandomMonster();
             if(stage < 3)
             {
                 for(int i = 0; i < 3; i++)
                 {
-                    monsters.Add(MonsterManager.monsterList[i]);
+                    monsters.Add(randomMonsters[i]);
                 }
             }
             else
             {
-                foreach(Monster m in MonsterManager.monsterList)
-                {
-                    monsters.Add(m);
-                }
+                monsters.AddRange(randomMonsters);
             }
         }
 
+        public void Reward(int stage) // 1~stage 개수 만큼 보상 랜덤 지급
+        {
+            List<Item> reward = new List<Item>();
+            List<Item> potions = Item.GetItemList().Where(x => x.Type == ItemType.Potion).ToList();
+            List<Item> items = Item.GetItemList().Where(x => x.Type == ItemType.Armor || x.Type == ItemType.Weapon).ToList();
 
+            Random random = new Random();
+            int randomItem = random.Next(1, stage);
+  
+
+            for (int i = 0; i < randomItem; i++)
+            {
+                Item potion = potions[random.Next(potions.Count)];
+                reward.Add(potion);
+                Item item = items[random.Next(items.Count)];
+                reward.Add(item);
+                
+            }
+            int rewardGold = 500 * stage;
+            DisplayReward(reward, randomItem, rewardGold); // 보상 출력
+            player.Gold += rewardGold;
+            player.inventory.AddRange(reward); // 보상 인벤토리에 추가
+        }
+
+        public void DisplayReward(List<Item> reward,int randomItem, int rewardGold)
+        {
+            Console.WriteLine("[획득 아이템]");
+            Console.WriteLine($"{rewardGold} G");
+            foreach (Item item in reward)
+            {
+                Console.WriteLine($"{item.Name} - {randomItem}");
+            }
+
+        }
     }
 }

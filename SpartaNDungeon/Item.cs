@@ -3,7 +3,6 @@
 namespace SpartaNDungeon
 {
 
-
     public enum ItemType
     {
         Weapon,
@@ -22,7 +21,7 @@ namespace SpartaNDungeon
         public bool IsPurchase { get; set; }
         public bool IsEquip { get; set; }
 
-        // ✅ 아이템 리스트를 Item 클래스 내부로 이동
+        // 아이템 리스트를 Item 클래스 내부로 이동
         private static List<Item> itemList = new List<Item>
         {
             new Item("수련자의 갑옷", ItemType.Armor, 4, "수련에 도움을 주는 갑옷입니다.", 1000, 0),
@@ -40,90 +39,85 @@ namespace SpartaNDungeon
 
 
         public Item(string name, ItemType type, int value, string descrip, int cost, int count)
+        {
+            Name = name;
+            Type = type;
+            Value = value;
+            Descrip = descrip;
+            Cost = cost;
+            Count = count < 0 ? 0 : count; ;
+            IsPurchase = false;
+            IsEquip = false;
+
+        }
+
+        public string DisplayItem()
+        {
+            string str = IsEquip ? "[E] " : "";
+            str += $"- {Name} | {GetType()} | {Descrip} | {GetPriceString()}";
+            if (Type == ItemType.Potion)
             {
-                Name = name;
-                Type = type;
-                Value = value;
-                Descrip = descrip;
-                Cost = cost;
-                Count = count < 0 ? 0 : count; ;
-                IsPurchase = false;
+                str += $"  (보유량: {Count})";
+                //if(IsEquip==true)
+                //{
+                //    Count--;
+
+                //}
+            }
+            return str;
+        }
+
+        public string GetType()
+        {
+            if (Type == ItemType.Weapon)
+                return $"공격력+{Value}";
+            else if (Type == ItemType.Armor)
+                return $"방어력+{Value}";
+            else if (Type == ItemType.Potion)
+                return $"회복력+{Value}";
+
+            return "알 수 없는 아이템";
+        }
+
+        public string GetPriceString()
+        {
+           return IsPurchase ? "구매완료" : $"{Cost} G";
+        }
+
+        public static int UseItem(Player player, Item item)
+        {
+            if (item.Type == ItemType.Potion)
+            {
+                if (item.Count > 0)
+                {
+                    item.Count--;
+                    int health = player.Health += item.Value;
+                    return health >= 100 ? 100 : health;
+                }
+                else
+                {
+                    return player.Health;
+                }
+            }
+            return 0;
+        }
+        public void EquipItem(Player player)
+        {
+            if (IsEquip)
+            {
                 IsEquip = false;
+                if (Type == ItemType.Weapon) player.Attack -= Value;
+                if (Type == ItemType.Armor) player.Defense -= Value;
+                Console.WriteLine($"{Name}을(를) 해제했습니다.");
             }
-
-            public string DisplayItem()
+            else
             {
-                string str = IsEquip ? "[E] " : "";
-                str += $"- {Name} | {GetType()} | {Descrip} | {GetPriceString()}";
-                if (Type == ItemType.Potion)
-                {
-                    str += $"  (보유량: {Count})";
-                    //if(IsEquip==true)
-                    //{
-                    //    Count--;
-
-                    //}
-                }
-                return str;
+                IsEquip = true;
+                if (Type == ItemType.Weapon) player.Attack += Value;
+                if (Type == ItemType.Armor) player.Defense += Value;
+                Console.WriteLine($"{Name}을(를) 장착했습니다.");
             }
-
-            public string GetType()
-            {
-                if (Type == ItemType.Weapon)
-                    return $"공격력+{Value}";
-                else if (Type == ItemType.Armor)
-                    return $"방어력+{Value}";
-                else if (Type == ItemType.Potion)
-                    return $"회복력+{Value}";
-
-                return "알 수 없는 아이템";
-            }
-
-            public string GetPriceString()
-            {
-                return IsPurchase ? "구매완료" : $"{Cost} G";
-            }
-
-            public int UseItem(Player player )
-            {
-            //아이템 사용 로직 추가
-                if (Type == ItemType.Potion)
-                {
-                    if (Count > 0)
-                    {
-                        Count--;
-                        int health = player.Health += 30; // 사용 성공
-                        return health >= 100 ? 100 : health; // 체력은 100이 최대
-                    }
-                    else
-                    {
-                        //inventory.Remove(this);
-                        return player.Health; 
-                    }
-                }
-                
-                return 0;
-
-            }
-        //public void EquipItem(Player player)
-        //{
-        //    if (IsEquip)
-        //    {
-        //        IsEquip = false;
-        //        if (Type == ItemType.Weapon) player.Attack -= Value;
-        //        if (Type == ItemType.Armor) player.Defense -= Value;
-        //        Console.WriteLine($"{Name}을(를) 해제했습니다.");
-        //    }
-        //    else
-        //    {
-        //        IsEquip = true;
-        //        if (Type == ItemType.Weapon) player.Attack += Value;
-        //        if (Type == ItemType.Armor) player.Defense += Value;
-        //        Console.WriteLine($"{Name}을(를) 장착했습니다.");
-        //    }
-        //}
-
-
+        }
 
     }
 

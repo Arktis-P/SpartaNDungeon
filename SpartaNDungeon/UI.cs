@@ -310,7 +310,7 @@ namespace SpartaNDungeon
         }
 
         // end game
-        private void EndGame()
+        public void EndGame()
         {
             Console.Clear();
             Console.WriteLine("게임을 종료합니다.");

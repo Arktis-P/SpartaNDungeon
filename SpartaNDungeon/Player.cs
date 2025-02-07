@@ -13,7 +13,7 @@ namespace SpartaNDungeon
         // basic stats
         // name, job, level  // atk, def, luk, dex  // hp, mp  // gold
         public string Name { get; set; }
-        public string Job { get; }
+        public JobType Job { get; }
         public int Level { get; set; }
         public int Attack { get; set; }
         public int Defense { get; set; }
@@ -39,7 +39,7 @@ namespace SpartaNDungeon
         // player class initiate
         public Player(string name, int jobId)
         {
-            Name = name; Level = 1; Job = Enum.GetName(typeof(JobType), jobId);
+            Name = name; Level = 1; Job = (JobType)jobId;
             Attack = 5; Defense = 5; Intelligence = 5; Luck = 5; Dexterity = 5;
             Health = 100; Mana = 100;
             Gold = 1000; Exp = 0;
@@ -54,18 +54,16 @@ namespace SpartaNDungeon
             // player's skill set
             skills = new List<ISkill>();
             // add skills to player's skill set according to player's job
-            AddSkillsByJob(Job);
+            AddSkillsByJob(Job.ToString());
 
             // give player additional stat according to player's job
-            AddStatus(Job);
+            AddStatus();
         }
 
         // job gives additional stats
-        private void AddStatus(string job)
+        private void AddStatus()
         {
-            JobType.TryParse(job, out JobType jobType);
-
-            switch (jobType)
+            switch (Job)
             {
                 case JobType.Warrior:  // warrior
                     Attack += 5; Defense += 5;
@@ -100,8 +98,19 @@ namespace SpartaNDungeon
         // display player's status
         public void DisplayStatus()
         {
+            // translate job
+            string jobName;
+            switch (Job)
+            {
+                case JobType.Warrior: jobName = "전사"; break;
+                case JobType.Mage: jobName = "법사"; break;
+                case JobType.Logue: jobName = "도적"; break;
+                case JobType.Archer: jobName = "궁수"; break;
+                default: jobName = "무직"; break;
+            }
+            // show status
             Console.WriteLine($"LV. {Level}");  // Lv. 01
-            Console.WriteLine($"{Name} ( {Job} )");  // Chad ( 전사 )
+            Console.WriteLine($"{Name} ( {jobName} )");  // Chad ( 전사 )
             Console.WriteLine($"ATK : {Attack}\tDEF : {Defense}\tLUK : {Luck}\tDEX : {Dexterity}");  // ATK : 10    DEF : 10    LUK : 10    DEX : 10
             Console.WriteLine($"HP : {Health} / {MaxHealth}\tMP : {Mana} / {MaxMana}"); // HP : 100 / 100    MP : 100 / 100
             Console.WriteLine($"Gold : {Gold} G");  // Gold : 1000 G

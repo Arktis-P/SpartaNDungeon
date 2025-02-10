@@ -20,5 +20,25 @@ namespace SpartaNDungeon
                 Console.WriteLine("잘못된 입력입니다.");
             }
         }
+
+        public static void ColorWrite(string str, ConsoleColor color) // 텍스트 칼라 변경
+        {
+            Console.ForegroundColor = color;
+            Console.WriteLine(str);
+            Console.ResetColor();
+        }
+
+        public static void Loading() // 로딩
+        {
+            Console.Clear();
+            Console.Write("Loading");
+            string str = ".";
+
+            for (int i = 0; i < 10; i++)
+            {
+                Thread.Sleep(80);
+                Console.Write(str);
+            }
+        }
     }
 }

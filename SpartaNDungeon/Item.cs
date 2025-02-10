@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using Microsoft.VisualBasic;
+using System.Numerics;
 
 namespace SpartaNDungeon
 {
@@ -53,16 +54,11 @@ namespace SpartaNDungeon
 
         public string DisplayItem()
         {
-            string str = IsEquip ? "[E] " : "";
-            str += $"- {Name} | {GetType()} | {Descrip} | {GetPriceString()}";
+            //string str = IsEquip ? "[E] " : "";
+            string str = $"- {Name} | {GetType()} | {Descrip} | {GetPriceString()}";
             if (Type == ItemType.Potion)
             {
                 str += $"  (보유량: {Count})";
-                //if(IsEquip==true)
-                //{
-                //    Count--;
-
-                //}
             }
             return str;
         }
@@ -105,6 +101,7 @@ namespace SpartaNDungeon
         {
             if (IsEquip)
             {
+                // 장비 해제
                 IsEquip = false;
                 if (Type == ItemType.Weapon) player.Attack -= Value;
                 if (Type == ItemType.Armor) player.Defense -= Value;
@@ -112,14 +109,25 @@ namespace SpartaNDungeon
             }
             else
             {
+                // 같은 타입의 기존 장착 아이템 찾기
+                Item? equippedItem = player.inventory.Find(i => i.IsEquip && i.Type == Type);
+
+                if (equippedItem != null)
+                {
+                    equippedItem.IsEquip = false;
+                    if (equippedItem.Type == ItemType.Weapon) player.Attack -= equippedItem.Value;
+                    if (equippedItem.Type == ItemType.Armor) player.Defense -= equippedItem.Value;
+                    Console.WriteLine($"{equippedItem.Name}을(를) 해제했습니다.");
+                }
+
+                // 새 아이템 장착
                 IsEquip = true;
                 if (Type == ItemType.Weapon) player.Attack += Value;
                 if (Type == ItemType.Armor) player.Defense += Value;
                 Console.WriteLine($"{Name}을(를) 장착했습니다.");
             }
         }
-
     }
-
-   
 }
+
+    

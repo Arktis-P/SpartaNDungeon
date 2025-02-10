@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -30,14 +31,19 @@ namespace SpartaNDungeon
 
         public void DisplayItem()
         {
-            Console.WriteLine("--- 상점 --- ");
+            Console.WriteLine("====== 상점 ====== ");
+            Console.WriteLine($"보유 골드 : G ");
+            Console.WriteLine();
+            int index = 1;
+
             foreach (var saleItem in ItemSale)
             {
-                Console.WriteLine($"{saleItem.Name} ({saleItem.Cost}) gold");
+                Console.WriteLine($"{index}. {saleItem.Name} | {saleItem.Descrip} |  {saleItem.Cost}G");
+                index++;
             }
         }
         
-        public void BuyItem(Player player, Item item)
+        public void BuyItem(Player player,Item item)
         {
             if(player.Gold >= item.Cost)
             {

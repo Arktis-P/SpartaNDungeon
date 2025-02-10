@@ -45,6 +45,7 @@ namespace SpartaNDungeon
         public void IntroductionPage()  // 게임 시작 시 소개 화면  // connected from game over or ending page
         {
             Console.Clear();
+            Console.WriteLine();
             Console.WriteLine("\t스파르타의 협곡에 오신 것을 환영합니다.");
             Thread.Sleep(500);
             Console.WriteLine();
@@ -57,14 +58,14 @@ namespace SpartaNDungeon
             int jobId;
             Console.Clear();
             Console.WriteLine();
-            // get player name
-            Console.Write("\t당신의 이름을 알려주시겠습니까?\n\n>>  ");
+            Console.Write("\t당신의 이름을 알려주시겠습니까?\n\n>>  ");  // get player name
             name = Console.ReadLine();
             name = (name == null || name == "") ? "레오니르탄" : name;
             // get player job
             while (true)
             {
                 Console.Clear();
+                Console.WriteLine();
                 Console.WriteLine("\t당신의 직업을 선택해주십시오.");
                 Console.WriteLine();
                 Console.WriteLine("1. 전사\n2. 법사\n3. 도적\n4. 궁수");
@@ -363,6 +364,7 @@ namespace SpartaNDungeon
         public void EndGame()
         {
             Console.Clear();
+            Console.WriteLine();
             Console.WriteLine("  게임을 종료합니다.");
             Thread.Sleep(1000);  // wait for 1 second
             Environment.Exit(0);  // normal exit

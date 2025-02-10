@@ -37,13 +37,19 @@ namespace SpartaNDungeon
         // public List<Item> inventory;
         public List<ISkill> skills;
 
+        // clear variables
+        public bool WarriorClear { get; private set; }
+        public bool MageClear { get; private set; }
+        public bool RogueClear { get; private set; }
+        public bool ArcherClear { get; private set; }
+
         // player class initiate
         public Player(string name, int jobId)
         {
             Name = name; Level = 1; Job = (JobType)jobId;
             Attack = 5; Defense = 5; Intelligence = 5; Luck = 5; Dexterity = 5;
             Health = 100; Mana = 100;
-            Gold = 1000; Exp = 0;
+            Gold = 100000; Exp = 0;
 
             MaxHealth = 100;  // may change dynamically with player's other stats (ex. level, attack, etc.)
             MaxMana = 100;  // may change dynamically with player's other stats (ex. level, intelligence, etc.)
@@ -73,7 +79,7 @@ namespace SpartaNDungeon
                 case JobType.Mage:  // mage
                     Attack += 5; Intelligence += 5;
                     break;
-                case JobType.Logue:  // logue
+                case JobType.Rogue:  // rogue
                     Luck += 5; Dexterity += 5;
                     break;
                 case JobType.Archer:  // archer
@@ -124,7 +130,7 @@ namespace SpartaNDungeon
             {
                 case JobType.Warrior: jobName = "전사"; break;
                 case JobType.Mage: jobName = "법사"; break;
-                case JobType.Logue: jobName = "도적"; break;
+                case JobType.Rogue: jobName = "도적"; break;
                 case JobType.Archer: jobName = "궁수"; break;
                 default: jobName = "무직"; break;
             }
@@ -136,7 +142,7 @@ namespace SpartaNDungeon
             Console.WriteLine($"Gold : {Gold} G");  // Gold : 1000 G
         }
 
-        public enum JobType { Warrior = 1, Mage, Logue, Archer }
+        public enum JobType { Warrior = 1, Mage, Rogue, Archer }
 
         // display player's health
         public void DisplayHealth()
@@ -164,7 +170,7 @@ namespace SpartaNDungeon
                 item += isManaging ? $"{i + 1}. " : "-  ";
                 item += inventory[i].IsEquip ? "(E)" : "   ";
                 item += inventory[i].Name + "\t| " + inventory[i].Descrip;
-                item += inventory[i].GetType();
+                item += "\t| " + inventory[i].GetType();
                 item += isSelling ? $"\t| {inventory[i].Cost} G" : "";
                 // show on console
                 Console.WriteLine(item);
@@ -181,7 +187,7 @@ namespace SpartaNDungeon
         public void DisplaySkills()
         {
             // if skill set is empty, out empty msg
-            if (skills.Count == 0 ) { Console.WriteLine("스킬셋이 비어 있습니다."); return; }
+            if (skills.Count == 0) { Console.WriteLine("스킬셋이 비어 있습니다."); return; }
 
             string item;
             for (int i = 0; i < skills.Count; i++)
@@ -250,6 +256,41 @@ namespace SpartaNDungeon
                     ui.EndGame();
                     return;
             }
+        }
+        //
+        private void CheckClearStatus()
+        {
+            // check which job player has cleared the dungeon
+            switch (Job)
+            {
+                case JobType.Warrior:
+                    if (!WarriorClear) { WarriorClear = !WarriorClear; }
+                    break;
+                case JobType.Mage:
+                    if (!MageClear) { MageClear = !MageClear; }
+                    break;
+                case JobType.Rogue:
+                    if (!RogueClear) { RogueClear = !RogueClear; }
+                    break;
+                case JobType.Archer:
+                    if (!ArcherClear) { ArcherClear = !ArcherClear; }
+                    break;
+            }
+        }
+        public void DisplayClearStatus()
+        {
+            CheckClearStatus();
+            string str = "  ";
+            str += WarriorClear ? "■" : "□";
+            str += " 전사\t";
+            str += MageClear ? "■" : "□";
+            str += " 마법사\t";
+            str += RogueClear ? "■" : "□";
+            str += " 도적\t";
+            str += ArcherClear ? "■" : "□";
+            str += " 궁수\t";
+            Console.WriteLine();
+            Console.WriteLine(str);
         }
     }
 }

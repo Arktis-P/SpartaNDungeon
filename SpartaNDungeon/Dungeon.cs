@@ -25,8 +25,8 @@ namespace SpartaNDungeon
         public void DungeonPage()
         {
             Console.Clear();
-            Console.WriteLine("던전입장");
-            Console.WriteLine("이곳에서 던전으로 들어가기 전 활동을 할 수 있습니다.");
+            Console.WriteLine("협곡입장");
+            Console.WriteLine("미니언 생성까지 한 발자국 남았습니다.\n협곡에는 페르시아가 보낸 몬스터가 가득합니다.\n입장하기 전에 만반의 준비를 갖춰주십시오.");
             for(int i = 0; i < dungeonMenu.Length; i++)
             {
                 Console.WriteLine($"{i+1}. {dungeonMenu[i]}");

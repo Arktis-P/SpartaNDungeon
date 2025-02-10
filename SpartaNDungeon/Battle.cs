@@ -40,18 +40,11 @@ namespace SpartaNDungeon
             PlayerStatus();
             Console.WriteLine("\n1. 공격\n");
             Console.WriteLine("2. 스킬\n");
-            switch (ConsoleUtil.GetInput(1, 2))
-            {
-                case 1:
-                    StartBattle();
-                    break;
-                case 2:
-
-                    break;
-            }
+            int input = ConsoleUtil.GetInput(1, 2);
+            StartBattle(input);
 
         }
-        public void StartBattle()
+        public void StartBattle(int input)
         {
             while (true)
             {
@@ -59,7 +52,7 @@ namespace SpartaNDungeon
                 Console.WriteLine("Battle!!");
                 if (playerTurn)
                 {
-                    Attack();
+                    Attack(input);
                 }
                 else
                 {
@@ -113,7 +106,7 @@ namespace SpartaNDungeon
             }
             return playerAtk;
         }
-        public void Attack()
+        public void Attack(int attack)
         {
             MonsterStatus(); //공격할 몬스터 출력
             Console.WriteLine(); 
@@ -133,22 +126,42 @@ namespace SpartaNDungeon
                     break;
                 }
 
-                if (1 <input ||input > dungeon.monsters.Count)
-                {
-                    Console.WriteLine("잘못된 입력입니다.");
-                }
-
-                Monster selectedMonster = dungeon.monsters[input - 1];
-
-                if(selectedMonster.Hp <= 0)
+                if (1 <input ||input > dungeon.monsters.Count) // 몬스터 외 숫자 선택 시
                 {
                     Console.WriteLine("잘못된 입력입니다.");
                     continue;
                 }
 
-                int playerAtk = CalAttack();
+                Monster selectedMonster = dungeon.monsters[input - 1];
+
+                if(selectedMonster.Hp <= 0) // 이미 죽은 몬스터 선택 시
+                {
+                    Console.WriteLine("잘못된 입력입니다.");
+                    continue;
+                }
+
                 int prevHp = selectedMonster.Hp;
+                int playerAtk = 0;
+                if (attack == 1) // 공격 선택 시
+                {
+                    playerAtk = CalAttack();
+                }
+                else if (attack == 2) // 스킬 선택 시
+                {
+                    dungeon.player.DisplaySkills(); // 스킬 출력
+                    if (dungeon.player.skills.Count == 0) return;
+
+                    Console.WriteLine("사용할 스킬을 선택하세요.");
+                    int skillInput = ConsoleUtil.GetInput(1, 2);
+                    if (skillInput != 0)
+                    {
+                        playerAtk = dungeon.player.skills[skillInput-1].UseSkill(dungeon.player);
+                        Console.WriteLine($"{dungeon.player.skills[skillInput - 1].Name} 사용!");
+                    }
+                }
+                Console.WriteLine($"{selectedMonster.Name}에게 {playerAtk}의 피해를 줬습니다.");
                 selectedMonster.Hp -= playerAtk;
+
                 if (selectedMonster.Hp <= 0)
                 {
                     selectedMonster.Hp = 0;
@@ -168,12 +181,7 @@ namespace SpartaNDungeon
                 int prevHp = dungeon.player.Health;
                 dungeon.player.Health -= mon.Atk;
 
-                if(dungeon.player.Health <= 0)
-                {
-                    dungeon.player.Health = 0;
-                    PhaseResult(false, mon, mon.Atk);
-                    break;
-                }
+                dungeon.player.CheckDead();
                 PhaseResult(false, mon, mon.Atk);
             }
             while (true)

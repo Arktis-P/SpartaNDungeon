@@ -32,7 +32,7 @@ namespace SpartaNDungeon
         public void DisplayItem()
         {
             Console.WriteLine("====== 상점 ====== ");
-            Console.WriteLine($"보유 골드 : G ");
+            Console.WriteLine($"보유 골드 : {Player.Gold}G ");
             Console.WriteLine();
             int index = 1;
 
@@ -45,9 +45,9 @@ namespace SpartaNDungeon
         
         public void BuyItem(Player player,Item item)
         {
-            if(player.Gold >= item.Cost)
+            if(Player.Gold >= item.Cost)
             {
-                player.Gold -= item.Cost;
+                Player.Gold -= item.Cost;
                 Console.WriteLine($"{item.Name} 구매완료!");
                 player.AddItem(item); //구매한 아이템 인벤토리로
             }
@@ -56,11 +56,13 @@ namespace SpartaNDungeon
             {
                 Console.WriteLine("골드가 충분하지 않습니다.");
             }
+            Console.WriteLine();
+            Console.ReadKey();
         }
         public void SellItem(Player player,Item item)
         {
             int sellPrce = item.Cost / 2;
-            player.Gold += sellPrce;
+            Player.Gold += sellPrce;
             Console.WriteLine($"{item.Name}이/가 {sellPrce}gold 로 판매되었습니다!");
             player.RemoveItem(item); //판매한 아이템 인벤토리에서 제거
         }

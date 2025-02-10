@@ -148,7 +148,7 @@ namespace SpartaNDungeon
 
             //골드
             int rewardGold = 500 * stage;
-            player.Gold += rewardGold;
+            Player.Gold += rewardGold;
 
             DisplayReward(reward, randomPotion, rewardGold); // 보상 출력
         }

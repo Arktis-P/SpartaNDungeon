@@ -142,7 +142,7 @@ namespace SpartaNDungeon
                 Console.Clear();
                 Console.WriteLine();
                 Console.WriteLine("\t\t==== 상태보기 ====");
-                Console.WriteLine("당신의 현재 상태를 확인할 수 있습니다.");
+                Console.WriteLine("  당신의 현재 상태를 확인할 수 있습니다.");
                 // show options
                 Console.WriteLine();
                 player.DisplayStatus();
@@ -161,7 +161,7 @@ namespace SpartaNDungeon
                 Console.Clear();
                 Console.WriteLine();
                 Console.WriteLine("\t\t==== 인벤토리 ====");
-                Console.WriteLine("당신의 인벤토리를 확인하고, 장비를 관리할 수 있습니다.");
+                Console.WriteLine("  당신의 인벤토리를 확인하고, 장비를 관리할 수 있습니다.");
 
                 Console.WriteLine();
                 Console.WriteLine("\t[보유한 아이템 목록]");
@@ -191,7 +191,7 @@ namespace SpartaNDungeon
                 Console.Clear();
                 Console.WriteLine();
                 Console.WriteLine("\t\t==== 인벤토리 - 장착관리 ====");
-                Console.WriteLine("아이템을 장비하거나 해제할 수 있습니다.");
+                Console.WriteLine("  아이템을 장비하거나 해제할 수 있습니다.");
 
                 Console.WriteLine();
                 Console.WriteLine("\t[보유한 아이템 목록]");
@@ -231,8 +231,8 @@ namespace SpartaNDungeon
                 Console.Clear();
                 Console.WriteLine();
                 Console.WriteLine("\t\t==== 상점 ====");
-                Console.WriteLine("상점에 방문하신 것을 환영합니다.");
-                Console.WriteLine("필요한 아이템을 구매하고, 필요 없는 아이템을 판매할 수 있습니다.");
+                Console.WriteLine("  상점에 방문하신 것을 환영합니다.");
+                Console.WriteLine("  필요한 아이템을 구매하고, 필요 없는 아이템을 판매할 수 있습니다.");
                 // show options
                 Console.WriteLine();
                 Console.WriteLine("1. 구매하기\n2. 판매하기\n\n0. 나가기");
@@ -258,7 +258,10 @@ namespace SpartaNDungeon
                 Console.Clear();
                 Console.WriteLine();
                 Console.WriteLine("\t\t==== 상점 - 구매하기 ====");
-                Console.WriteLine("필요한 아이템을 구매할 수 있습니다.");
+                Console.WriteLine("  필요한 아이템을 구매할 수 있습니다.");
+                // display player Gold
+                Console.WriteLine();
+                Console.WriteLine($"보유 골드: {Player.Gold} G");
                 // show options
                 Console.WriteLine();
                 Console.WriteLine("\t[구매 가능한 아이템 목록]");
@@ -284,10 +287,11 @@ namespace SpartaNDungeon
                 Console.Clear();
                 Console.WriteLine();
                 Console.WriteLine("\t\t==== 상점 - 판매하기 ====");
-                Console.WriteLine("필요 없는 아이템을 판매할 수 있습니다.");
+                Console.WriteLine("  필요 없는 아이템을 판매할 수 있습니다.");
                 // show options
                 Console.WriteLine();
                 Console.WriteLine("\t[판매 가능한 아이템 목록]");
+                Console.WriteLine();
                 player.DisplayInventory(true, true);
                 Console.WriteLine();
                 Console.WriteLine("0. 나가기");
@@ -317,7 +321,7 @@ namespace SpartaNDungeon
                 Console.Clear();
                 Console.WriteLine("");
                 Console.WriteLine("\t\t==== 퀘스트 ====");
-                Console.WriteLine("퀘스트 기능은 현재 구현되지 않았습니다.");
+                Console.WriteLine("  퀘스트 기능은 현재 구현되지 않았습니다.");
                 // show option
                 Console.WriteLine("");
                 // 1~99. (퀘스트 목록 확인)
@@ -330,6 +334,9 @@ namespace SpartaNDungeon
                 StartPage(); return;
             }
         }
+        // ending page (when cleared game)
+        
+
         // save page
         private void SavePage()
         {
@@ -338,7 +345,7 @@ namespace SpartaNDungeon
                 Console.Clear();
                 Console.WriteLine("");
                 Console.WriteLine("\t\t==== 저장하기 ====");
-                Console.WriteLine("저장하기 기능은 현재 구현되지 않았습니다.");
+                Console.WriteLine("  저장하기 기능은 현재 구현되지 않았습니다.");
                 // show option
                 Console.WriteLine("");
                 // 1. 저장하기
@@ -356,7 +363,7 @@ namespace SpartaNDungeon
         public void EndGame()
         {
             Console.Clear();
-            Console.WriteLine("게임을 종료합니다.");
+            Console.WriteLine("  게임을 종료합니다.");
             Thread.Sleep(1000);  // wait for 1 second
             Environment.Exit(0);  // normal exit
         }

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Tracing;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,36 +14,64 @@ namespace SpartaNDungeon
         Shop shop;
         Dungeon dungeon;
         
-        public void IntroductionPage()  // 게임 시작 시 소개 화면
+        public void LoadingPage()  // loading page before game starts (no practical function)
+        {
+            string dots = "";
+            for (int i = 0; i < 5; i++)
+            {
+                dots += " .";
+                Console.Clear();
+                Console.WriteLine();
+                Console.WriteLine($"\t\t게임 로딩 중{dots}");
+                Thread.Sleep(200);
+            }
+            TitlePage();
+        }
+
+        private void TitlePage()  // show game title page
         {
             Console.Clear();
-            Console.WriteLine("이곳은 스파르타 던전으로 향하는 길입니다.");
-            Console.WriteLine("이곳을 지나가기 위해서는 당신에 대한 정보가 필요합니다.");
-            GeneratePage();
+            Console.WriteLine();
+            Console.WriteLine("\t\t이곳이!");
+            Thread.Sleep(500);
+            Console.WriteLine();
+            Console.WriteLine("\t\t바로!");
+            Thread.Sleep(500);
+            Console.WriteLine();
+            Console.WriteLine("\t\t스파르타다!");
+            if (ConsoleUtil.GetAnyKey() == true) { IntroductionPage(); }
+        }
+
+        public void IntroductionPage()  // 게임 시작 시 소개 화면  // connected from game over or ending page
+        {
+            Console.Clear();
+            Console.WriteLine("\t스파르타의 협곡에 오신 것을 환영합니다.");
+            Thread.Sleep(500);
+            Console.WriteLine();
+            Console.WriteLine("\t이곳에 입장하기 위해서는 당신에 대한 정보가 필요합니다.");
+            if (ConsoleUtil.GetAnyKey() == true) { GeneratePage(); }
         }
         private void GeneratePage()  // 캐릭터 생성 화면
         {
             string name;
             int jobId;
+            Console.Clear();
             Console.WriteLine();
             // get player name
-            Console.WriteLine("당신의 이름을 알려주세요.");
+            Console.Write("\t당신의 이름을 알려주시겠습니까?\n\n>>  ");
             name = Console.ReadLine();
-            name = name == null ? "르탄" : name;
+            name = (name == null || name == "") ? "레오니르탄" : name;
             // get player job
             while (true)
             {
-                Console.WriteLine("당신의 직업을 알려주세요.");
+                Console.Clear();
+                Console.WriteLine("\t당신의 직업을 선택해주십시오.");
                 Console.WriteLine();
                 Console.WriteLine("1. 전사\n2. 법사\n3. 도적\n4. 궁수");
                 // get player input
-                if(int.TryParse(Console.ReadLine(), out int input) && input >= 1 && input <= 4)
-                {
-                    jobId = input;
-                    InitializePlayer(name, jobId);
-                    return;
-                }
-                else { Console.WriteLine("잘못된 입력입니다."); break; }
+                jobId = ConsoleUtil.GetInput(1, 4);
+                // initialize player
+                InitializePlayer(name, jobId); break;
             }
         }
 
@@ -52,13 +82,20 @@ namespace SpartaNDungeon
 
             // show welcome 
             Console.Clear();
-            Console.WriteLine($"스파르타 던전 입구 마을에 오신 것을 환영합니다, {player.Name} 님!");
+            Console.WriteLine();
+            Console.WriteLine($"\t페르시아의 넥서스를 파괴해 스파르타의 협곡에 평화를 이끌어 주십시오, {player.Name} 님.");
+            Thread.Sleep(500);
+            Console.WriteLine();
+            Console.WriteLine("\t그곳까지 향하는 길이 순탄하지만은 않을 것입니다.");
+            Thread.Sleep(500);
+            ConsoleUtil.GetAnyKey();
         }
 
         public void StartPage() // 메인 화면
         {
             Console.Clear();
-            Console.WriteLine("스파르타 던전에 오신 여러분 환영합니다.");
+            Console.WriteLine();
+            Console.WriteLine("\t협곡으로 떠나기 전 철저히 준비해 주시길 바랍니다.");
             Console.WriteLine();
             Console.WriteLine("1. 상태보기");
             Console.WriteLine("2. 인벤토리");
@@ -66,6 +103,7 @@ namespace SpartaNDungeon
             Console.WriteLine("4. 던전입장");
             Console.WriteLine("5. 퀘스트");
             Console.WriteLine("6. 게임저장");
+            Console.WriteLine();
             Console.WriteLine("0. 게임종료");
             Console.WriteLine();
 
@@ -104,7 +142,7 @@ namespace SpartaNDungeon
                 Console.Clear();
                 Console.WriteLine();
                 Console.WriteLine("\t\t==== 상태보기 ====");
-                Console.WriteLine("캐릭터의 현재 상태를 확인할 수 있습니다.");
+                Console.WriteLine("당신의 현재 상태를 확인할 수 있습니다.");
                 // show options
                 Console.WriteLine();
                 player.DisplayStatus();
@@ -123,7 +161,7 @@ namespace SpartaNDungeon
                 Console.Clear();
                 Console.WriteLine();
                 Console.WriteLine("\t\t==== 인벤토리 ====");
-                Console.WriteLine("캐릭터의 인벤토리를 확인하고, 장비를 관리할 수 있습니다.");
+                Console.WriteLine("당신의 인벤토리를 확인하고, 장비를 관리할 수 있습니다.");
 
                 Console.WriteLine();
                 Console.WriteLine("\t[보유한 아이템 목록]");
@@ -193,10 +231,11 @@ namespace SpartaNDungeon
                 Console.Clear();
                 Console.WriteLine();
                 Console.WriteLine("\t\t==== 상점 ====");
-                Console.WriteLine("필요한 아이템을 구매하고 필요 없는 아이템을 판매할 수 있습니다.");
+                Console.WriteLine("상점에 방문하신 것을 환영합니다.");
+                Console.WriteLine("필요한 아이템을 구매하고, 필요 없는 아이템을 판매할 수 있습니다.");
                 // show options
                 Console.WriteLine();
-                Console.WriteLine("1. 구매하기\n2. 판매하기\n0. 나가기");
+                Console.WriteLine("1. 구매하기\n2. 판매하기\n\n0. 나가기");
 
                 // get player's input
                 int input = ConsoleUtil.GetInput(0, 2);

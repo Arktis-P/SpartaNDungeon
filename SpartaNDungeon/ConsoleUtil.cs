@@ -13,19 +13,24 @@ namespace SpartaNDungeon
         {
             while (true)
             {
-                Console.WriteLine("원하시는 행동을 입력해 주십시오. >> ");
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.Write("원하시는 행동을 입력해 주십시오. >>  ");
                 if (int.TryParse(Console.ReadLine(), out int inputNumber) && (inputNumber >= min) && (inputNumber <= max))
                     return inputNumber;
 
-                Console.WriteLine("잘못된 입력입니다.");
+                Console.WriteLine("\n\n잘못된 입력입니다.");
             }
         }
         // get any key of player
         public static bool GetAnyKey()
         {
+            Thread.Sleep(1000);
             while (true)
             {
-                Console.WriteLine("계속하려면 아무 키나 누르세요. >>");
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.Write("계속하려면 아무 키나 누르세요. >>  ");
                 Console.ReadKey();
                 return true;
             }

@@ -25,7 +25,6 @@ namespace SpartaNDungeon
         {
             ui = new UI();
             ui.LoadingPage();
-            ui.StartPage();
         }
     }
 }

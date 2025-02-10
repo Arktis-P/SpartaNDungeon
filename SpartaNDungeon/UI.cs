@@ -16,15 +16,18 @@ namespace SpartaNDungeon
         
         public void LoadingPage()  // loading page before game starts (no practical function)
         {
+            Console.Clear();
+            Console.WriteLine();
+            Console.Write($"\t\t게임 로딩 중");
+
             string dots = "";
             for (int i = 0; i < 5; i++)
             {
-                dots += " .";
-                Console.Clear();
-                Console.WriteLine();
-                Console.WriteLine($"\t\t게임 로딩 중{dots}");
+                dots = " .";
+                Console.Write(dots);
                 Thread.Sleep(200);
             }
+            Thread.Sleep(300);
             TitlePage();
         }
 
@@ -89,7 +92,7 @@ namespace SpartaNDungeon
             Console.WriteLine();
             Console.WriteLine("\t그곳까지 향하는 길이 순탄하지만은 않을 것입니다.");
             Thread.Sleep(500);
-            ConsoleUtil.GetAnyKey();
+            if (ConsoleUtil.GetAnyKey()) { StartPage(); }
         }
 
         public void StartPage() // 메인 화면
@@ -335,9 +338,50 @@ namespace SpartaNDungeon
                 StartPage(); return;
             }
         }
-        // ending page (when cleared game)
-        
+        // game clear page (when defeated Nexus tower)
+        public void EndingPage()
+        {
+            Console.Clear();
+            Console.WriteLine();
+            Console.WriteLine("\t\t==== 승리 ====");
+            Thread.Sleep(500);
+            Console.WriteLine();
+            Console.WriteLine("  페르시아의 넥서스가 파괴되었습니다!");
+            Console.WriteLine($"  스파르타의 협곡에 평화가 찾아왔습니다. 감사합니다, {player.Name} 님!");
+            Console.WriteLine();
+            // check player's job and convert its value
+            // show claer status ex) ■ 전사    □ 마법사   □ 도적    □ 궁수
+            // player.DisplayClearStauts();
+            if (ConsoleUtil.GetAnyKey()) { CreditPage(); }
+        }
 
+        // ending page (when cleared game)
+        public void CreditPage()
+        {
+            Console.Clear();
+            Console.WriteLine();
+            Console.WriteLine("\t      ==== 제작 ====");
+            Thread.Sleep(500);
+            Console.WriteLine();
+            Console.WriteLine("\t스파르타의 협곡에 오신 것을 환영합니다.");
+            Thread.Sleep(500);
+            Console.WriteLine();
+            Console.WriteLine("\t 기획 및 구상 : 손치완 ");
+            Thread.Sleep(500);
+            Console.WriteLine("\t      UI 구성 : 박규태 손치완");
+            Thread.Sleep(500);
+            Console.WriteLine("\t플레이어 기능 : 손치완");
+            Thread.Sleep(500);
+            Console.WriteLine("\t  아이템 기능 : 진희원");
+            Thread.Sleep(500);
+            Console.WriteLine("\t    상점 기능 : 이정구");
+            Thread.Sleep(500);
+            Console.WriteLine("\t  몬스터 기능 : 박규태");
+            Thread.Sleep(500);
+            Console.WriteLine("\t    전투 기능 : 박소희");
+            // get any key to continue
+            if (ConsoleUtil.GetAnyKey()) { LoadingPage(); }
+        }
         // save page
         private void SavePage()
         {

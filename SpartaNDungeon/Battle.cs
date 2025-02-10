@@ -218,7 +218,7 @@ namespace SpartaNDungeon
             Console.WriteLine("Battle!! - Result");
             if (dungeon.monsters.Count == monsterCnt)
             {
-                dungeon.Stage++;
+                dungeon.NextStage();
                 Console.WriteLine("Victory");
                 Console.WriteLine($"던전에서 몬스터 {monsterCnt}마리를 잡았습니다.");
                 dungeon.player.Exp += random.Next(dungeon.Stage, dungeon.Stage * 10 + 1);

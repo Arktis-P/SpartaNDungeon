@@ -167,5 +167,12 @@ namespace SpartaNDungeon
             }
 
         }
+
+        public void NextStage()
+        {
+            Stage++;
+            monsters.Clear();
+            SetMonster(Stage);
+        }
     }
 }

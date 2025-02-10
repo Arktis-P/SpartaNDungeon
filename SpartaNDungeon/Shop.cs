@@ -63,7 +63,9 @@ namespace SpartaNDungeon
         {
             int sellPrce = item.Cost / 2;
             Player.Gold += sellPrce;
-            Console.WriteLine($"{item.Name}이/가 {sellPrce}gold 로 판매되었습니다!");
+            Console.WriteLine($"{item.Name}을/를 판매하고, {item.Cost/2}G 를 받았습니다.");
+            Console.WriteLine();
+            Console.ReadKey();
             player.RemoveItem(item); //판매한 아이템 인벤토리에서 제거
         }
             

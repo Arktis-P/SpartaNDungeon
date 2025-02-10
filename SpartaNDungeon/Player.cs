@@ -44,6 +44,7 @@ namespace SpartaNDungeon
         public bool ArcherClear { get; private set; }
 
         // player class initiate
+        public Player() { }
         public Player(string name, int jobId)
         {
             Name = name; Level = 1; Job = (JobType)jobId;

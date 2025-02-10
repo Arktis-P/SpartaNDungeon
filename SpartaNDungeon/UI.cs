@@ -217,7 +217,7 @@ namespace SpartaNDungeon
                     {
                         Console.WriteLine($"{item.Name}은(는) 장비할 수 있는 아이템이 아닙니다.");
                     }
-                    break;
+                    InventoryManagePage(); return;
                 }
             }
         }

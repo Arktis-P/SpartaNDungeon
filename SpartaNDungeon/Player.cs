@@ -43,7 +43,7 @@ namespace SpartaNDungeon
             Name = name; Level = 1; Job = (JobType)jobId;
             Attack = 5; Defense = 5; Intelligence = 5; Luck = 5; Dexterity = 5;
             Health = 100; Mana = 100;
-            Gold = 1000; Exp = 0;
+            Gold = 100000; Exp = 0;
 
             MaxHealth = 100;  // may change dynamically with player's other stats (ex. level, attack, etc.)
             MaxMana = 100;  // may change dynamically with player's other stats (ex. level, intelligence, etc.)

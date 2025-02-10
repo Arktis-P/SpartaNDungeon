@@ -114,7 +114,6 @@ namespace SpartaNDungeon
         Dungeon dungeon;
 
         List<Monster> monsterList; // 몬스터 리스트
-        List<Monster> bossList; // 보스
         List<Monster> towerList; // 타워 리스트
 
         public MonsterManager()
@@ -127,16 +126,12 @@ namespace SpartaNDungeon
                 new Monster(10, "슈퍼 미니언", 30, 12, false)
             };
 
-            bossList = new List<Monster>
-            {
-                new Monster(30, "넥서스 포탑", 100, 25, false)
-            };
-
             towerList = new List<Monster>
             {
                 new Monster(10, "외곽 포탑", 40, 10, false),
                 new Monster(15, "내부 포탑", 50, 15, false),
-                new Monster(20, "억제기 포탑", 60, 20, false)
+                new Monster(20, "억제기 포탑", 60, 20, false),
+                new Monster(30, "넥서스 포탑", 100, 25, false)
             };
         }
 
@@ -149,8 +144,8 @@ namespace SpartaNDungeon
 
             if(dungeon.Stage == 6) // 스테이지 6에 보스 넥서스 포탑 등장
             {
-                summonMonster.Add(bossList[0]);
-                summonMonster.Add(bossList[0]);
+                summonMonster.Add(towerList[3]);
+                summonMonster.Add(towerList[3]);
             }
             else if(dungeon.Stage == 1) // 스테이지 1은 미니언, 대포미니언 및 공허충만 등장
             {

@@ -40,7 +40,7 @@ namespace SpartaNDungeon
         // clear variables
         public bool WarriorClear { get; private set; }
         public bool MageClear { get; private set; }
-        public bool LogueClear { get; private set; }
+        public bool RogueClear { get; private set; }
         public bool ArcherClear { get; private set; }
 
         // player class initiate
@@ -79,7 +79,7 @@ namespace SpartaNDungeon
                 case JobType.Mage:  // mage
                     Attack += 5; Intelligence += 5;
                     break;
-                case JobType.Logue:  // logue
+                case JobType.Rogue:  // rogue
                     Luck += 5; Dexterity += 5;
                     break;
                 case JobType.Archer:  // archer
@@ -130,7 +130,7 @@ namespace SpartaNDungeon
             {
                 case JobType.Warrior: jobName = "전사"; break;
                 case JobType.Mage: jobName = "법사"; break;
-                case JobType.Logue: jobName = "도적"; break;
+                case JobType.Rogue: jobName = "도적"; break;
                 case JobType.Archer: jobName = "궁수"; break;
                 default: jobName = "무직"; break;
             }
@@ -142,7 +142,7 @@ namespace SpartaNDungeon
             Console.WriteLine($"Gold : {Gold} G");  // Gold : 1000 G
         }
 
-        public enum JobType { Warrior = 1, Mage, Logue, Archer }
+        public enum JobType { Warrior = 1, Mage, Rogue, Archer }
 
         // display player's health
         public void DisplayHealth()
@@ -269,8 +269,8 @@ namespace SpartaNDungeon
                 case JobType.Mage:
                     if (!MageClear) { MageClear = !MageClear; }
                     break;
-                case JobType.Logue:
-                    if (!LogueClear) { LogueClear = !LogueClear; }
+                case JobType.Rogue:
+                    if (!RogueClear) { RogueClear = !RogueClear; }
                     break;
                 case JobType.Archer:
                     if (!ArcherClear) { ArcherClear = !ArcherClear; }
@@ -285,7 +285,7 @@ namespace SpartaNDungeon
             str += " 전사\t";
             str += MageClear ? "■" : "□";
             str += " 마법사\t";
-            str += LogueClear ? "■" : "□";
+            str += RogueClear ? "■" : "□";
             str += " 도적\t";
             str += ArcherClear ? "■" : "□";
             str += " 궁수\t";

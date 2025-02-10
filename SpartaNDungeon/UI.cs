@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics.Tracing;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
@@ -50,10 +51,46 @@ namespace SpartaNDungeon
             Console.Clear();
             Console.WriteLine();
             Console.WriteLine("\t스파르타의 협곡에 오신 것을 환영합니다.");
+            if (DataManager.CheckLoadData())
+            {
+                LoadPage();
+                return;
+            }
             Thread.Sleep(500);
             Console.WriteLine();
             Console.WriteLine("\t이곳에 입장하기 위해서는 당신에 대한 정보가 필요합니다.");
             if (ConsoleUtil.GetAnyKey() == true) { GeneratePage(); }
+        }
+        // ask if load saved data
+        private void LoadPage()
+        {
+            Console.Clear();
+            Console.WriteLine();
+            Console.WriteLine("\t저장된 데이터가 있습니다. 불러오시겠습니까?");
+            Console.WriteLine();
+            Console.WriteLine("1. 예\n2. 아니오");
+            // get player's input
+            int input = ConsoleUtil.GetInput(1, 2);
+            switch (input)
+            {
+                case 1:  // load saved data
+                    // load data from save file
+                    GameData gameData = DataManager.LoadData();
+                    player = gameData.PlayerData;
+                    Player.Gold = gameData.Gold;
+                    // show complete msg
+                    Console.Clear();
+                    Console.WriteLine();
+                    Console.WriteLine("\t저장된 데이터를 불러왔습니다.");
+                    Thread.Sleep(500);
+                    Console.WriteLine();
+                    Console.WriteLine($"\t스파르타의 협곡에 다시 오신 것을 환영합니다, {player.Name} 님!");
+                    if (ConsoleUtil.GetAnyKey()) { StartPage(); return; }
+                    return;
+                case 2:  // generate new player
+                    GeneratePage();
+                    return;
+            }
         }
         private void GeneratePage()  // 캐릭터 생성 화면
         {
@@ -392,18 +429,35 @@ namespace SpartaNDungeon
                 Console.Clear();
                 Console.WriteLine("");
                 Console.WriteLine("\t\t==== 저장하기 ====");
-                Console.WriteLine("  저장하기 기능은 현재 구현되지 않았습니다.");
+                Console.WriteLine("  현재 플레이 데이터를 파일에 저장할 수 있습니다.");
                 // show option
                 Console.WriteLine("");
                 // 1. 저장하기
                 // 0. 나가기
-                Console.WriteLine("0. 나가기");
+                Console.WriteLine("1. 저장하기\n\n0. 나가기");
 
                 // get player's input
-                int input = ConsoleUtil.GetInput(0, 0);
-                // back to startpage
-                StartPage(); return;
+                int input = ConsoleUtil.GetInput(0, 1);
+                switch (input)
+                {
+                    case 1:  // save data
+                        GameData gameData = new GameData(player, Player.Gold);
+                        DataManager.SaveData(gameData);
+                        SaveCompletePage();
+                        return;
+                    case 0:  // back to startpage
+                        StartPage(); return;
+                }
             }
+        }
+        private void SaveCompletePage()
+        {
+            Console.Clear();
+            Console.WriteLine();
+            Console.WriteLine("\t\t==== 저장하기 ====");
+            Console.WriteLine();
+            Console.WriteLine("  데이터를 저장했습니다!");
+            if (ConsoleUtil.GetAnyKey()) { SavePage(); }
         }
 
         // end game

@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace SpartaNDungeon
 {
@@ -28,22 +30,31 @@ namespace SpartaNDungeon
         public bool IsDead { get; set; } // 사망했는지 판단하는 횟수
 
 
-        // 몬스터는 플레이어의 레벨에 따라 레벨 및 각종 스탯이 상승한다.
+        
         public Monster(int level, string name, int hp, int atk,bool isDead) 
         {
-            int levelScale = (player.Level / 3); // 플레이어의 레벨 3업에 맟춰 레벨스케일링 발생
-
-            Level = (level + levelScale); // 레벨스케일링마다 1 증가
+            Level = level; 
             Name = name;
-            Hp = (hp + (levelScale * 2));  // 레벨스케일링마다 2 증가
-            Atk = (atk + (levelScale)); // 레벨스케일링마다 1 증가
+            Hp = hp;  
+            Atk = atk; 
             IsDead = isDead;
 
             Type = GetType(); // 몬스터 타입 판단
 
-            if(Type == MonsterType.Named) // 몬스터 타입이 Named로 결정된다면 추가 레벨 및 스탯 + 이름 앞에 "화난" 이 붙는다
+            LevelScale();
+        }
+
+        public void LevelScale() // 몬스터는 플레이어의 레벨에 따라 레벨 및 각종 스탯이 상승한다.
+        {
+            int levelScale = (player.Level / 3); // 플레이어의 레벨 3업에 맟춰 레벨스케일링 발생
+
+            Level = (Level + levelScale); // 레벨스케일링마다 1 증가
+            Hp = (Hp + (levelScale * 2));  // 레벨스케일링마다 2 증가
+            Atk = (Atk + (levelScale)); // 레벨스케일링마다 1 증가
+
+            if (Type == MonsterType.Named) // 몬스터 타입이 Named로 결정된다면 추가 레벨 및 스탯 + 이름 앞에 "[변이]" 가 붙는다
             {
-                Name = "화난 " + Name;
+                Name = "[변이] " + Name;
                 Level += 3 + (3 * levelScale); // 레벨이 2이하일 경우에도 네임드가 나와도 추가 스탯을 부여하기 위해 추가값을 따로 분리해서 더해준다
                 Hp += 5 + (5 * levelScale);
                 Atk += 2 + (2 * levelScale);
@@ -93,7 +104,6 @@ namespace SpartaNDungeon
             {
                 return (random.Next(0, 10) < 3) ? MonsterType.Named : MonsterType.Normal;
             }
-
         }
     }
 
@@ -104,21 +114,24 @@ namespace SpartaNDungeon
         Dungeon dungeon;
 
         List<Monster> monsterList; // 몬스터 리스트
-        List<Monster> bossLitst;
+        List<Monster> towerList; // 타워 리스트
 
         public MonsterManager()
         {
             monsterList = new List<Monster>
             {
                 new Monster(2, "미니언", 15, 6, false),
-                new Monster(5, "대포미니언", 25, 7, false),
                 new Monster(3, "공허충", 10, 10, false),
-                new Monster(10, "슈퍼 미니언", 30, 15, false)
+                new Monster(5, "대포미니언", 25, 7, false),
+                new Monster(10, "슈퍼 미니언", 30, 12, false)
             };
 
-            bossLitst = new List<Monster>
+            towerList = new List<Monster>
             {
-                new Monster(30, "보스", 80, 25, false)
+                new Monster(10, "외곽 포탑", 40, 10, false),
+                new Monster(15, "내부 포탑", 50, 15, false),
+                new Monster(20, "억제기 포탑", 60, 20, false),
+                new Monster(30, "넥서스 포탑", 100, 25, false)
             };
         }
 
@@ -129,19 +142,58 @@ namespace SpartaNDungeon
             int randomMon; // 랜덤한 몬스터를 지정할 변수
 
 
-            if(dungeon.Stage % 5 == 0) 
-            {
-                summonMonster.Add(bossLitst[0]);
-            }
-            else
+            if(dungeon.Stage == 6) // 스테이지 6에 보스 넥서스 포탑 등장
             {
                 for (int i = 0; i < randomCount; i++)
                 {
-                    randomMon = random.Next(summonMonster.Count); // 몬스터 리스트의 범위에서 랜덤하게 선택한다
-                    summonMonster.Add(monsterList[randomMon]); // 몬스터 소환
-                } 
+                    summonMonster.Add(monsterList[3]); // 슈퍼미니언만 등장
+                }
+                summonMonster.Add(towerList[3]);
+                summonMonster.Add(towerList[3]);
             }
-            
+            else if(dungeon.Stage == 1) // 스테이지 1은 미니언, 대포미니언 및 공허충만 등장
+            {
+                for (int i = 0; i < randomCount; i++) // 랜덤하게 1마리에서 4마리 생성
+                {
+                    randomMon = random.Next(0,3); 
+                    summonMonster.Add(monsterList[randomMon]); 
+                }
+            }
+            else if (dungeon.Stage == 2) // 스테이지 2는 미니언 + 외곽 포탑 등장
+            {
+                for (int i = 0; i < randomCount; i++)
+                {
+                    randomMon = random.Next(0, 3); // 미니언, 대포미니언 및 공허충만 등장
+                    summonMonster.Add(monsterList[randomMon]); 
+                }
+                summonMonster.Add(towerList[0]); // 타워는 고정적으로 등장해야하기 때문에 for문 밖에서 생성
+            }
+            else if (dungeon.Stage == 3) // 스테이지 3는 미니언 + 내부 포탑
+            {
+                for (int i = 0; i < randomCount; i++)
+                {
+                    randomMon = random.Next(0, 3); // 미니언, 대포미니언 및 공허충만 등장
+                    summonMonster.Add(monsterList[randomMon]); 
+                }
+                summonMonster.Add(towerList[1]); 
+            }
+            else if (dungeon.Stage == 4) // 스테이지 4는 미니언 + 억제기 포탑 등장
+            {
+                for (int i = 0; i < randomCount; i++)
+                {
+                    randomMon = random.Next(0, 3); // 미니언, 대포미니언 및 공허충만 등장
+                    summonMonster.Add(monsterList[randomMon]); 
+                }
+                summonMonster.Add(towerList[2]); 
+            }
+            else if (dungeon.Stage == 5) // 스테이지 5는 슈퍼미니언 + 대포미니언만 등장
+            {
+                for (int i = 0; i < randomCount; i++)
+                {
+                    randomMon = random.Next(2, 4); // 슈퍼미니언, 대포미니언만 등장
+                    summonMonster.Add(monsterList[randomMon]); 
+                }
+            }
 
             return summonMonster;
         }

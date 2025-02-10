@@ -8,7 +8,7 @@ namespace SpartaNDungeon
 {
     internal class Dungeon
     {
-        private string[] dungeonMenu = { "상태 보기", "전투 시작", "포션 사용" };
+        public string[] dungeonMenu = { "상태 보기", "전투 시작", "포션 사용" };
         public List<Monster> monsters = new List<Monster>(); // 출현 몬스터 지정
         public int Stage { get;  set; }
         public Player player;
@@ -18,42 +18,43 @@ namespace SpartaNDungeon
         {
             this.player = player;
             this.Stage = stage;
+            this.manager = new MonsterManager(Stage, player.Level);
             SetMonster(stage);
-            this.manager = manager;
+
         }
-        public void DungeonPage()
+        public void DungeonPage(UI ui)
         {
             Console.Clear();
-            Console.WriteLine("던전입장");
-            Console.WriteLine("이곳에서 던전으로 들어가기 전 활동을 할 수 있습니다.");
-            for(int i = 0; i < dungeonMenu.Length; i++)
+            Console.WriteLine("협곡입장");
+            Console.WriteLine("미니언 생성까지 한 발자국 남았습니다.\n협곡에는 페르시아가 보낸 몬스터가 가득합니다.\n입장하기 전에 만반의 준비를 갖춰주십시오.");
+            for (int i = 0; i < dungeonMenu.Length; i++)
             {
-                Console.WriteLine($"{i+1}. {dungeonMenu[i]}");
+                Console.WriteLine($"{i + 1}. {dungeonMenu[i]}");
             }
             Console.WriteLine("0. 나가기");
 
             Console.WriteLine("원하시는 행동을 입력해주세요");
-            switch (ConsoleUtil.GetInput(0,3))
+            switch (ConsoleUtil.GetInput(0, 3))
             {
                 case 0: // 나가기
                     ui.StartPage();
                     break;
                 case 1: // 상태 보기
-                    BattleStatusPage();
+                    BattleStatusPage(ui);
                     break;
                 case 2: // 전투 시작
                     Battle battle = new Battle(this);
-                    battle.EnterDungeon();
+                    battle.EnterDungeon(ui);
                     break;
                 case 3: // 포션 사용
-                    UsePotionPage();
+                    UsePotionPage(ui);
                     break;
                 default:
                     break;
             }
         }
 
-        public void BattleStatusPage() // 상태 보기
+        public void BattleStatusPage(UI ui) // 상태 보기
         {
             Console.Clear();
             Console.WriteLine("상태 보기");
@@ -63,10 +64,10 @@ namespace SpartaNDungeon
             player.DisplayStatus();
 
             Console.WriteLine("0. 나가기");
-            ConsoleUtil.GetInput(0, 0);
+            if (ConsoleUtil.GetInput(0, 0) == 0) DungeonPage(ui);
         }
         
-        public void UsePotionPage() // 포션 사용
+        public void UsePotionPage(UI ui) // 포션 사용
         {
             Console.WriteLine("회복");
             Console.WriteLine($"포션을 사용하면 체력을 30 회복할 수 있습니다.");
@@ -76,31 +77,36 @@ namespace SpartaNDungeon
             switch(ConsoleUtil.GetInput(0, 1))
             {
                 case 0:
-                    DungeonPage();
+                    DungeonPage(ui);
                     break;
                 case 1:
-                    UsePotion();
+                    UsePotion(ui);
                     break;
                 default:
                     break;
             }
         }
         
-        public void UsePotion()
+        public void UsePotion(UI ui)
         {
             // 개수 검사
             Item potion = player.inventory.FirstOrDefault(x => x.Type == ItemType.Potion);
-            if(potion != null)
+            if (potion != null)
             {
                 Console.WriteLine($"{potion.Name}을 사용했습니다.");
                 int newHp = Item.UseItem(player, potion);
-                Console.WriteLine($"체력 30 회복.\n HP {newHp-30} -> {newHp}");
+                Console.WriteLine($"체력 30 회복.\n HP {newHp - 30} -> {newHp}");
                 potion.Count--;
-                if(potion.Count <= 0)
+                if (potion.Count <= 0)
                 {
                     player.inventory.Remove(potion);
                 }
-                Console.WriteLine($"남은 포션: {potion.Count}개") ;
+                Console.WriteLine($"남은 포션: {potion.Count}개");
+            }
+            else
+            {
+                Console.WriteLine("사용할 포션이 없습니다.");
+                UsePotionPage(ui);
             }
         }
         
@@ -108,17 +114,7 @@ namespace SpartaNDungeon
         public void SetMonster(int stage) // 해당 던전에서 출현하는 몬스터 저장
         {
             List<Monster> randomMonsters = manager.RandomMonster();
-            if(stage < 3)
-            {
-                for(int i = 0; i < 3; i++)
-                {
-                    monsters.Add(randomMonsters[i]);
-                }
-            }
-            else
-            {
-                monsters.AddRange(randomMonsters);
-            }
+            monsters.AddRange(randomMonsters);
         }
 
         public void Reward(int stage) // 1~stage 개수 만큼 보상 랜덤 지급
@@ -165,6 +161,14 @@ namespace SpartaNDungeon
                 else Console.WriteLine($"{item.Name} - 1개");
             }
 
+        }
+
+        public void NextStage()
+        {
+            Stage++;
+            manager.stage++;
+            monsters.Clear();
+            SetMonster(Stage);
         }
     }
 }

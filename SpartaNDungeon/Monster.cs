@@ -116,7 +116,7 @@ namespace SpartaNDungeon
         List<Monster> monsterList; // 몬스터 리스트
         List<Monster> towerList; // 타워 리스트
 
-        private int stage;
+        public int stage;
 
         public MonsterManager(int stage, int playerLevel)
         {
@@ -146,7 +146,7 @@ namespace SpartaNDungeon
             int randomMon; // 랜덤한 몬스터를 지정할 변수
 
 
-            if(dungeon.Stage == 6) // 스테이지 6에 보스 넥서스 포탑 등장
+            if(stage == 6) // 스테이지 6에 보스 넥서스 포탑 등장
             {
                 for (int i = 0; i < randomCount; i++)
                 {
@@ -155,7 +155,7 @@ namespace SpartaNDungeon
                 summonMonster.Add(towerList[3]);
                 summonMonster.Add(towerList[3]);
             }
-            else if(dungeon.Stage == 1) // 스테이지 1은 미니언, 대포미니언 및 공허충만 등장
+            else if(stage == 1) // 스테이지 1은 미니언, 대포미니언 및 공허충만 등장
             {
                 for (int i = 0; i < randomCount; i++) // 랜덤하게 1마리에서 4마리 생성
                 {
@@ -163,7 +163,7 @@ namespace SpartaNDungeon
                     summonMonster.Add(monsterList[randomMon]); 
                 }
             }
-            else if (dungeon.Stage == 2) // 스테이지 2는 미니언 + 외곽 포탑 등장
+            else if (stage == 2) // 스테이지 2는 미니언 + 외곽 포탑 등장
             {
                 for (int i = 0; i < randomCount; i++)
                 {
@@ -172,7 +172,7 @@ namespace SpartaNDungeon
                 }
                 summonMonster.Add(towerList[0]); // 타워는 고정적으로 등장해야하기 때문에 for문 밖에서 생성
             }
-            else if (dungeon.Stage == 3) // 스테이지 3는 미니언 + 내부 포탑
+            else if (stage == 3) // 스테이지 3는 미니언 + 내부 포탑
             {
                 for (int i = 0; i < randomCount; i++)
                 {
@@ -181,7 +181,7 @@ namespace SpartaNDungeon
                 }
                 summonMonster.Add(towerList[1]); 
             }
-            else if (dungeon.Stage == 4) // 스테이지 4는 미니언 + 억제기 포탑 등장
+            else if (stage == 4) // 스테이지 4는 미니언 + 억제기 포탑 등장
             {
                 for (int i = 0; i < randomCount; i++)
                 {
@@ -190,7 +190,7 @@ namespace SpartaNDungeon
                 }
                 summonMonster.Add(towerList[2]); 
             }
-            else if (dungeon.Stage == 5) // 스테이지 5는 슈퍼미니언 + 대포미니언만 등장
+            else if (stage == 5) // 스테이지 5는 슈퍼미니언 + 대포미니언만 등장
             {
                 for (int i = 0; i < randomCount; i++)
                 {

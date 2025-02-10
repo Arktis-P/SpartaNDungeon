@@ -37,6 +37,12 @@ namespace SpartaNDungeon
         // public List<Item> inventory;
         public List<ISkill> skills;
 
+        // clear variables
+        public bool WarriorClear { get; private set; }
+        public bool MageClear { get; private set; }
+        public bool LogueClear { get; private set; }
+        public bool ArcherClear { get; private set; }
+
         // player class initiate
         public Player(string name, int jobId)
         {
@@ -181,7 +187,7 @@ namespace SpartaNDungeon
         public void DisplaySkills()
         {
             // if skill set is empty, out empty msg
-            if (skills.Count == 0 ) { Console.WriteLine("스킬셋이 비어 있습니다."); return; }
+            if (skills.Count == 0) { Console.WriteLine("스킬셋이 비어 있습니다."); return; }
 
             string item;
             for (int i = 0; i < skills.Count; i++)
@@ -250,6 +256,41 @@ namespace SpartaNDungeon
                     ui.EndGame();
                     return;
             }
+        }
+        //
+        private void CheckClearStatus()
+        {
+            // check which job player has cleared the dungeon
+            switch (Job)
+            {
+                case JobType.Warrior:
+                    if (!WarriorClear) { WarriorClear = !WarriorClear; }
+                    break;
+                case JobType.Mage:
+                    if (!MageClear) { MageClear = !MageClear; }
+                    break;
+                case JobType.Logue:
+                    if (!LogueClear) { LogueClear = !LogueClear; }
+                    break;
+                case JobType.Archer:
+                    if (!ArcherClear) { ArcherClear = !ArcherClear; }
+                    break;
+            }
+        }
+        public void DisplayClearStatus()
+        {
+            CheckClearStatus();
+            string str = "  ";
+            str += WarriorClear ? "■" : "□";
+            str += " 전사\t";
+            str += MageClear ? "■" : "□";
+            str += " 마법사\t";
+            str += LogueClear ? "■" : "□";
+            str += " 도적\t";
+            str += ArcherClear ? "■" : "□";
+            str += " 궁수\t";
+            Console.WriteLine();
+            Console.WriteLine(str);
         }
     }
 }

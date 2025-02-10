@@ -347,11 +347,13 @@ namespace SpartaNDungeon
             Thread.Sleep(500);
             Console.WriteLine();
             Console.WriteLine("  페르시아의 넥서스가 파괴되었습니다!");
+            Thread.Sleep(500);
             Console.WriteLine($"  스파르타의 협곡에 평화가 찾아왔습니다. 감사합니다, {player.Name} 님!");
+            Thread.Sleep(500);
             Console.WriteLine();
             // check player's job and convert its value
             // show claer status ex) ■ 전사    □ 마법사   □ 도적    □ 궁수
-            // player.DisplayClearStauts();
+            player.DisplayClearStatus();
             if (ConsoleUtil.GetAnyKey()) { CreditPage(); }
         }
 

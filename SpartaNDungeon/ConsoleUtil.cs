@@ -41,6 +41,8 @@ namespace SpartaNDungeon
             Console.ForegroundColor = color;
             Console.WriteLine(str);
             Console.ResetColor();
+            // Black DarkBle DarkGreen DarkCyan DarkRed DarkMagenta DarkYellow
+            // Gray Blue Green Cyan Red Magenta Yellow White
         }
 
         public static void Loading() // 로딩

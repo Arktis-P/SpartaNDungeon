@@ -31,7 +31,7 @@ namespace SpartaNDungeon
 
 
         
-        public Monster(int level, string name, int hp, int atk,bool isDead) 
+        public Monster(int level, string name, int hp, int atk, bool isDead, int stage, int playerLevel) 
         {
             Level = level; 
             Name = name;
@@ -39,14 +39,14 @@ namespace SpartaNDungeon
             Atk = atk; 
             IsDead = isDead;
 
-            Type = GetType(); // 몬스터 타입 판단
+            Type = GetMonsterType(stage); // 몬스터 타입 판단
 
-            LevelScale();
+            LevelScale(playerLevel);
         }
 
-        public void LevelScale() // 몬스터는 플레이어의 레벨에 따라 레벨 및 각종 스탯이 상승한다.
+        public void LevelScale(int playerLevel) // 몬스터는 플레이어의 레벨에 따라 레벨 및 각종 스탯이 상승한다.
         {
-            int levelScale = (player.Level / 3); // 플레이어의 레벨 3업에 맟춰 레벨스케일링 발생
+            int levelScale = (playerLevel/ 3); // 플레이어의 레벨 3업에 맟춰 레벨스케일링 발생
 
             Level = (Level + levelScale); // 레벨스케일링마다 1 증가
             Hp = (Hp + (levelScale * 2));  // 레벨스케일링마다 2 증가
@@ -94,9 +94,9 @@ namespace SpartaNDungeon
         }
 
         // 기본적으로 10%의 확률로 네임드 몬스터 탄생. 스테이지가 3층 이상일 경우 네임드 확률이 30%로 변경
-        private MonsterType GetType() 
+        private MonsterType GetMonsterType(int stage) 
         {
-            if(dungeon.Stage < 3)
+            if(stage < 3)
             {
                 return (random.Next(0, 10) == 0) ? MonsterType.Named : MonsterType.Normal;
             }
@@ -116,22 +116,26 @@ namespace SpartaNDungeon
         List<Monster> monsterList; // 몬스터 리스트
         List<Monster> towerList; // 타워 리스트
 
-        public MonsterManager()
+        private int stage;
+
+        public MonsterManager(int stage, int playerLevel)
         {
+            this.stage = stage;
+
             monsterList = new List<Monster>
             {
-                new Monster(2, "미니언", 15, 6, false),
-                new Monster(3, "공허충", 10, 10, false),
-                new Monster(5, "대포미니언", 25, 7, false),
-                new Monster(10, "슈퍼 미니언", 30, 12, false)
+                new Monster(2, "미니언", 15, 6, false, stage, playerLevel),
+                new Monster(3, "공허충", 10, 10, false, stage, playerLevel),
+                new Monster(5, "대포미니언", 25, 7, false, stage, playerLevel),
+                new Monster(10, "슈퍼 미니언", 30, 12, false, stage, playerLevel)
             };
 
             towerList = new List<Monster>
             {
-                new Monster(10, "외곽 포탑", 40, 10, false),
-                new Monster(15, "내부 포탑", 50, 15, false),
-                new Monster(20, "억제기 포탑", 60, 20, false),
-                new Monster(30, "넥서스 포탑", 100, 25, false)
+                new Monster(10, "외곽 포탑", 40, 10, false, stage, playerLevel),
+                new Monster(15, "내부 포탑", 50, 15, false, stage, playerLevel),
+                new Monster(20, "억제기 포탑", 60, 20, false, stage, playerLevel),
+                new Monster(30, "넥서스 포탑", 100, 25, false, stage, playerLevel)
             };
         }
 

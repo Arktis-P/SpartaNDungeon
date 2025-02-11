@@ -47,7 +47,7 @@ namespace SpartaNDungeon
             foreach (var saleItem in ItemSale)
             {
                 string indexStr = String.Format("{0,2}", index);
-                Console.WriteLine($"{indexStr}.  {ConsoleUtil.WriteSpace(saleItem.Name, nameMax)}| {ConsoleUtil.WriteSpace(saleItem.Descrip, descripMax)}| {saleItem.GetType()}\t| {saleItem.Cost} G");
+                Console.WriteLine($"{indexStr}.  {ConsoleUtil.WriteSpace(saleItem.Name, nameMax)}| {ConsoleUtil.WriteSpace(saleItem.Descrip, descripMax)}| {saleItem.GetType()}\t| {saleItem.GetPriceString()}");
                 index++;
             }
         }
@@ -70,6 +70,7 @@ namespace SpartaNDungeon
             else if (Player.Gold >= item.Cost)
             {
                 Player.Gold -= item.Cost;
+                item.IsPurchase = true;
                 player.AddItem(item); //구매한 아이템 인벤토리로
                 // to buy complete page
                 Console.Clear();

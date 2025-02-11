@@ -41,7 +41,7 @@ namespace SpartaNDungeon
 
             Type = GetMonsterType(stage); // 몬스터 타입 판단
 
-            LevelScale(playerLevel);
+            
         }
 
         // 같은 종류의 몬스터가 같은 값을 참조해 스탯(체력, 사망상태 등)을 공유하는 걸 막기 위해 생성할 때 클론으로 만든다.
@@ -57,40 +57,25 @@ namespace SpartaNDungeon
             Level = (Level + levelScale); // 레벨스케일링마다 1 증가
             Hp = (Hp + (levelScale * 2));  // 레벨스케일링마다 2 증가
             Atk = (Atk + (levelScale)); // 레벨스케일링마다 1 증가
+        }
 
-            if (Type == MonsterType.Named) // 몬스터 타입이 Named로 결정된다면 추가 레벨 및 스탯 + 이름 앞에 "[변이]" 가 붙는다
+        public void Mutation(int playerLevel) // 변이종 몬스터 판단
+        {
+            int levelScale = (playerLevel / 3); // 레벨스케일 반영
+
+            if (this.Type == MonsterType.Named) // 몬스터 타입이 Named로 결정된다면 추가 레벨 및 스탯 + 이름 앞에 "[변이]" 가 붙는다
             {
-                Name = "[변이] " + Name;
-                Level += 3 + (3 * levelScale); // 레벨이 2이하일 경우에도 네임드가 나와도 추가 스탯을 부여하기 위해 추가값을 따로 분리해서 더해준다
-                Hp += 5 + (5 * levelScale);
-                Atk += 2 + (2 * levelScale);
+                this.Name += "[변이] ";
+                this.Level += 3 + (3 * levelScale); // 레벨이 2이하일 경우에도 네임드가 나와도 추가 스탯을 부여하기 위해 추가값을 따로 분리해서 더해준다
+                this.Hp += 5 + (5 * levelScale);
+                this.Atk += 2 + (2 * levelScale);
             }
         }
 
         public string MonsterDisplay() // 몬스터의 정보 출력
         {
-            if (IsDead == true)
-            {
-                Console.ForegroundColor = ConsoleColor.DarkGray; // 몬스터 사망 시 몬스터의 글자 색깔을 DarkGray로 변경
                 string mon = $"Lv.{Level} {Name} {GetIsDead()}";
-                Console.ResetColor();
                 return mon;
-            }
-            else  // 몬스터가 살아있을 시 일반적인 글자 색 출력
-            {
-                if(Type == MonsterType.Named) // 네임드라면 노란색으로 글자 출력
-                {
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    string mon = $"Lv.{Level} {Name} {GetIsDead()}"; 
-                    Console.ResetColor();
-                    return mon;
-                }
-                else
-                {
-                    string mon = $"Lv.{Level} {Name} {GetIsDead()}"; // 노말이면 일반적인 글자 색 출력
-                    return mon;
-                }
-            } 
         }
 
         public string GetIsDead() // 몬스터 사망 시 HP를 출력하지 않고 대신 Dead 출력

@@ -64,9 +64,10 @@ namespace SpartaNDungeon
             skills = new List<ISkill>();
             // add skills to player's skill set according to player's job
             AddSkillsByJob(Job.ToString());
-
             // give player additional stat according to player's job
             AddStatus();
+            // give player default 3 potion
+            AddDefaultItem();
         }
 
         // job gives additional stats
@@ -88,6 +89,13 @@ namespace SpartaNDungeon
                     break;
                 default: break;  // default, no additional stats
             }
+        }
+        // give player default items (3 potions)
+        private void AddDefaultItem()
+        {
+            List<Item> itemList = Item.GetItemList();
+            Item item = itemList[itemList.Count()-1];
+            AddItem(item); AddItem(item); AddItem(item);
         }
 
         // skill related methods
@@ -287,16 +295,20 @@ namespace SpartaNDungeon
         {
             CheckClearStatus();
             string str = "  ";
-            str += WarriorClear ? "■" : "□";
-            str += " 전사\t";
-            str += MageClear ? "■" : "□";
-            str += " 마법사\t";
-            str += RogueClear ? "■" : "□";
-            str += " 도적\t";
-            str += ArcherClear ? "■" : "□";
-            str += " 궁수\t";
+            str += (WarriorClear ? "■" : "□") + " 전사\t";
+            str += (MageClear ? "■" : "□") +" 마법사\t";
+            str += (RogueClear ? "■" : "□") + " 도적\t";
+            str += (ArcherClear ? "■" : "□") + " 궁수\t";
             Console.WriteLine();
             Console.WriteLine(str);
         }
+        // check if player has cleared every 
+        public bool CheckAllClear()
+        {
+            bool isAllClear = false;
+            if (WarriorClear && MageClear && RogueClear && ArcherClear) { isAllClear = true; }
+            return isAllClear;
+        }
+
     }
 }

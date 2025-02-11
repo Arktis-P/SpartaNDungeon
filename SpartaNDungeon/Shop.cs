@@ -38,7 +38,7 @@ namespace SpartaNDungeon
 
             foreach (var saleItem in ItemSale)
             {
-                Console.WriteLine($"{index}.  {saleItem.Name}\t| {saleItem.Descrip}\t|  {saleItem.Cost} G");
+                Console.WriteLine($"{index}.  {saleItem.Name}\t| {saleItem.Descrip}\t| {saleItem.GetType()}\t| {saleItem.Cost} G");
                 index++;
             }
         }
@@ -51,7 +51,7 @@ namespace SpartaNDungeon
                 Console.WriteLine();    
                 Console.WriteLine("\t\t==== 상점 - 구매하기 ====");
                 Console.WriteLine();
-                Console.WriteLine($"이미 {item.Name}을 구매하였습니다.");
+                Console.WriteLine($"  이미 {item.Name}을 구매하였습니다.");
             }
 
 
@@ -76,7 +76,7 @@ namespace SpartaNDungeon
                 Console.WriteLine();
                 Console.WriteLine("\t\t==== 상점 - 구매하기 ====");
                 Console.WriteLine();
-                Console.WriteLine("골드가 충분하지 않습니다.");
+                Console.WriteLine("  골드가 충분하지 않습니다.");
             }
             ConsoleUtil.GetAnyKey();
         }
@@ -90,7 +90,7 @@ namespace SpartaNDungeon
             Console.WriteLine();
             Console.WriteLine("\t\t==== 상점 - 판매하기 ====");
             Console.WriteLine();
-            Console.WriteLine($"{item.Name}을/를 판매하고, {item.Cost/2} G를 받았습니다.");
+            Console.WriteLine($"  {item.Name}을/를 판매하고, {item.Cost/2} G를 받았습니다.");
             ConsoleUtil.GetAnyKey();
         }
             

@@ -106,25 +106,32 @@ namespace SpartaNDungeon
             Console.WriteLine(); 
             PlayerStatus(); // 내정보 출력
 
-            Console.WriteLine("\n0. 취소");
+            Console.WriteLine("\n0. 턴 넘기기");
             // 공격할 몬스터 입력받기
             while (true)
             {
                 Console.WriteLine("대상을 선택해주세요.");
-                int input = int.Parse(Console.ReadLine());
+                string inputStr = Console.ReadLine();
+                int input;
 
-                if (input == 0)
-                {
-                    //턴 넘기기
-                    playerTurn = false;
-                    break;
-                }
-
-                if (1 >input ||input > dungeon.monsters.Count) // 몬스터 외 숫자 선택 시
+                if (!int.TryParse(inputStr, out input))
                 {
                     Console.WriteLine("잘못된 입력입니다.");
                     continue;
                 }
+                if (input == 0)
+                {
+                    //턴 넘기기
+                    playerTurn = false;
+                    return;
+                }
+
+                else if (1 >input ||input > dungeon.monsters.Count) // 몬스터 외 숫자 선택 시
+                {
+                    Console.WriteLine("잘못된 입력입니다.");
+                    continue;
+                }
+                
                 selectedMonster = dungeon.monsters[input - 1];
 
 
@@ -174,12 +181,11 @@ namespace SpartaNDungeon
             {
                 if (mon.IsDead) continue; // 몬스터 죽어있으면 넘어가기
 
-                int prevHp = dungeon.player.Health;
                 dungeon.player.Health -= mon.Atk;
-
                 dungeon.player.CheckDead();
                 
                 PhaseResult(false, mon, mon.Atk);
+                prevHp -= mon.Atk;
                 playerTurn = true;
             }
         }

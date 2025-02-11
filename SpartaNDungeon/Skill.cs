@@ -8,26 +8,38 @@ namespace SpartaNDungeon
 {
     public interface ISkill
     {
-        string Name { get; set; }
-        string Desc { get; set; }
-        int ManaCost { get; set; }
-        int Multiplier { get; set; }  // basically multiple operation
-
         // how to calcualte damage done by player
         int CalculateDamage(Player player) { return 0; }
 
         int UseSkill(Player player) { return CalculateDamage(player); }
     }
 
-    // warrior class skills
-    public class WarriorSkill : ISkill
+    public class CSkill : ISkill
     {
         public string Name { get; set; }
         public string Desc { get; set; }
         public int ManaCost { get; set; }
         public int Multiplier { get; set; }
 
-        public WarriorSkill(string name, string desc, int manaCost, int multiplier)
+        public CSkill(string name, string desc, int manaCost, int multiplier)
+        {
+            Name = name; Desc = desc; ManaCost = manaCost; Multiplier = multiplier;
+        }
+
+        public int CalculateDamage(Player player) { return 0; }
+
+        public int UseSkill(Player player) { return CalculateDamage(player); }
+    }
+
+    // warrior class skills
+    public class WarriorSkill : CSkill
+    {
+        public string Name { get; set; }
+        public string Desc { get; set; }
+        public int ManaCost { get; set; }
+        public int Multiplier { get; set; }
+
+        public WarriorSkill(string name, string desc, int manaCost, int multiplier) : base(name, desc, manaCost, multiplier)
         {
             Name = name; Desc = desc; ManaCost = manaCost; Multiplier = multiplier;
         }
@@ -38,14 +50,14 @@ namespace SpartaNDungeon
     }
 
     // mage class skills
-    public class MageSkill : ISkill
+    public class MageSkill : CSkill
     {
         public string Name { get; set; }
         public string Desc { get; set; }
         public int ManaCost { get; set; }
         public int Multiplier { get; set; }
 
-        public MageSkill(string name, string desc, int manaCost, int multiplier)
+        public MageSkill(string name, string desc, int manaCost, int multiplier) : base(name, desc, manaCost, multiplier)
         {
             Name = name; Desc = desc; ManaCost = manaCost; Multiplier = multiplier;
         }
@@ -56,14 +68,14 @@ namespace SpartaNDungeon
     }
 
     // logue class skills
-    public class LogueSkill : ISkill
+    public class LogueSkill : CSkill
     {
         public string Name { get; set; }
         public string Desc { get; set; }
         public int ManaCost { get; set; }
         public int Multiplier { get; set; }
 
-        public LogueSkill(string name, string desc, int manaCost, int multiplier)
+        public LogueSkill(string name, string desc, int manaCost, int multiplier) : base(name, desc, manaCost, multiplier)
         {
             Name = name; Desc = desc; ManaCost = manaCost; Multiplier = multiplier;
         }
@@ -74,14 +86,14 @@ namespace SpartaNDungeon
     }
 
     // archer class skills
-    public class ArcherSkill : ISkill
+    public class ArcherSkill : CSkill
     {
         public string Name { get; set; }
         public string Desc { get; set; }
         public int ManaCost { get; set; }
         public int Multiplier { get; set; }
 
-        public ArcherSkill(string name, string desc, int manaCost, int multiplier)
+        public ArcherSkill(string name, string desc, int manaCost, int multiplier) : base(name, desc, manaCost, multiplier)
         {
             Name = name; Desc = desc; ManaCost = manaCost; Multiplier = multiplier;
         }
@@ -94,12 +106,12 @@ namespace SpartaNDungeon
     // skill database
     static class SkillDatabase
     {
-        static Dictionary<string, ISkill> AllSkills { get; set; }
+        static Dictionary<string, CSkill> AllSkills { get; set; }
 
         static SkillDatabase()
         {
             // database for all skills
-            AllSkills = new Dictionary<string, ISkill>();
+            AllSkills = new Dictionary<string, CSkill>();
             InitializeSkills();
         }
 
@@ -116,23 +128,23 @@ namespace SpartaNDungeon
             AddSkill(new ArcherSkill("연속사격", "여러 발의 화살을 연속으로 쏘아 DEX x 4의 피해를 입힙니다.", 100, 4));
         }
 
-        static void AddSkill(ISkill skill)
+        static void AddSkill(CSkill skill)
         {
             AllSkills.Add(skill.Name, skill);
         }
 
         // get skill object with its name
-        static public ISkill GetSkill(string name)
+        static public CSkill GetSkill(string name)
         {
-            // if there's name on keys, return ISkill object
+            // if there's name on keys, return CSkill object
             if (AllSkills.ContainsKey(name)) { return AllSkills[name]; }
             // if not, return null
             return null;
         }
 
-        static public List<ISkill> GetSkillsByJob(string job)
+        static public List<CSkill> GetSkillsByJob(string job)
         {
-            List<ISkill> skills = new List<ISkill>();
+            List<CSkill> skills = new List<CSkill>();
 
             // check if skill is for the job and add to skills list
             foreach (var skill in AllSkills.Values)

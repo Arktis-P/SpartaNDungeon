@@ -13,7 +13,7 @@ namespace SpartaNDungeon
         // basic stats
         // name, job, level  // atk, def, luk, dex  // hp, mp  // gold
         public string Name { get; set; }
-        public JobType Job { get; }
+        public JobType Job { get; set; }
         public int Level { get; set; }
         public int Attack { get; set; }
         public int Defense { get; set; }
@@ -27,15 +27,15 @@ namespace SpartaNDungeon
 
         // intermediate stats
         // max health  // level exp 
-        public int MaxHealth { get; }
-        public int MaxMana { get; }
+        public int MaxHealth { get; set; }
+        public int MaxMana { get; set; }
         public int LevelExp { get; private set; }
         public int SkillDamage { get; set; }
 
         // complex stats  
-        public List<Item> inventory;
+        public List<Item> inventory { get; set; }
         // public List<Item> inventory;
-        public List<ISkill> skills;
+        public List<CSkill> skills { get; set; }
 
         // clear variables
         public bool WarriorClear { get; private set; }
@@ -61,9 +61,9 @@ namespace SpartaNDungeon
             inventory = new List<Item>();
 
             // player's skill set
-            skills = new List<ISkill>();
+            skills = new List<CSkill>();
             // add skills to player's skill set according to player's job
-            AddSkillsByJob(Job.ToString());
+            AddSkillsByJob(Job);
             // give player additional stat according to player's job
             AddStatus();
             // give player default 3 potion
@@ -94,20 +94,21 @@ namespace SpartaNDungeon
         private void AddDefaultItem()
         {
             List<Item> itemList = Item.GetItemList();
-            Item item = itemList[itemList.Count()-1];
+            Item item = itemList[itemList.Count() - 1];
             AddItem(item); AddItem(item); AddItem(item);
         }
 
         // skill related methods
         // add only skills for each job of player
-        private void AddSkillsByJob(string job)
+        public void AddSkillsByJob(JobType jobType)
         {
+            string job = jobType.ToString();
             skills.AddRange(SkillDatabase.GetSkillsByJob(job));
         }
         // if player use skill, returns damage (int) value 
         public void UseSkill(string name)
         {
-            ISkill usedSkill = SkillDatabase.GetSkill(name);
+            CSkill usedSkill = SkillDatabase.GetSkill(name);
 
             // check if player has used skill in its skill set
             // check if player has enough mana
@@ -216,7 +217,7 @@ namespace SpartaNDungeon
             string item;
             for (int i = 0; i < skills.Count; i++)
             {
-                ISkill skill = skills[i];
+                CSkill skill = skills[i];
                 item = "";  // initializze entire string for each item
                 // 1. 기본 공격
                 item = $"{i + 2}. {skill.Name}\t| {skill.Desc}\t| 필요 마나: {skill.ManaCost}";

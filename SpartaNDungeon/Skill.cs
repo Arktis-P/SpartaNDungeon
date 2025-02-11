@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -26,9 +27,14 @@ namespace SpartaNDungeon
             Name = name; Desc = desc; ManaCost = manaCost; Multiplier = multiplier;
         }
 
-        public int CalculateDamage(Player player) { return 0; }
+        private int CalculateDamage(Player player)
+        {
+            int[] bases = { player.Attack, player.Intelligence, player.Luck, player.Dexterity };
+            int damage = bases[(int)player.Job - 1] * Multiplier;
+            return damage;
+        }
 
-        public int UseSkill(Player player) { return CalculateDamage(player); }
+        public int UseSkill(Player player) { player.Mana -= this.ManaCost; return CalculateDamage(player); }
     }
 
     // warrior class skills
@@ -44,9 +50,14 @@ namespace SpartaNDungeon
             Name = name; Desc = desc; ManaCost = manaCost; Multiplier = multiplier;
         }
 
-        private int CalculateDamage(Player player) { return player.Attack * Multiplier; }
+        private int CalculateDamage(Player player)
+        {
+            int[] bases = { player.Attack, player.Intelligence, player.Luck, player.Dexterity };
+            int damage = bases[(int)player.Job - 1] * Multiplier;
+            return damage;
+        }
 
-        public int UseSkill(Player player) { return CalculateDamage(player); }
+        public int UseSkill(Player player) { player.Mana -= this.ManaCost; return CalculateDamage(player); }
     }
 
     // mage class skills
@@ -62,9 +73,14 @@ namespace SpartaNDungeon
             Name = name; Desc = desc; ManaCost = manaCost; Multiplier = multiplier;
         }
 
-        public int CalculateDamage(Player player) { return player.Intelligence * Multiplier; }
+        private int CalculateDamage(Player player)
+        {
+            int[] bases = { player.Attack, player.Intelligence, player.Luck, player.Dexterity };
+            int damage = bases[(int)player.Job - 1] * Multiplier;
+            return damage;
+        }
 
-        public int UseSkill(Player player) { return CalculateDamage(player); }
+        public int UseSkill(Player player) { player.Mana -= this.ManaCost; return CalculateDamage(player); }
     }
 
     // logue class skills
@@ -80,9 +96,14 @@ namespace SpartaNDungeon
             Name = name; Desc = desc; ManaCost = manaCost; Multiplier = multiplier;
         }
 
-        public int CalculateDamage(Player player) { return player.Luck * Multiplier; }
+        private int CalculateDamage(Player player)
+        {
+            int[] bases = { player.Attack, player.Intelligence, player.Luck, player.Dexterity };
+            int damage = bases[(int)player.Job - 1] * Multiplier;
+            return damage;
+        }
 
-        public int UseSkill(Player player) { return CalculateDamage(player); }
+        public int UseSkill(Player player) { player.Mana -= this.ManaCost; return CalculateDamage(player); }
     }
 
     // archer class skills
@@ -98,9 +119,14 @@ namespace SpartaNDungeon
             Name = name; Desc = desc; ManaCost = manaCost; Multiplier = multiplier;
         }
 
-        public int CalculateDamage(Player player) { return player.Dexterity * Multiplier; }
+        private int CalculateDamage(Player player)
+        {
+            int[] bases = { player.Attack, player.Intelligence, player.Luck, player.Dexterity };
+            int damage = bases[(int)player.Job - 1] * Multiplier;
+            return damage;
+        }
 
-        public int UseSkill(Player player) { return CalculateDamage(player); }
+        public int UseSkill(Player player) { player.Mana -= this.ManaCost; return CalculateDamage(player); }
     }
 
     // skill database

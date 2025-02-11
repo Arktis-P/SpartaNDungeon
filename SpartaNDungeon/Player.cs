@@ -121,13 +121,12 @@ namespace SpartaNDungeon
 
                 // show use log
                 Console.WriteLine();
-                Console.WriteLine($"{usedSkill.Name} 스킬을 사용했습니다. {SkillDamage} 만큼의 피해를 주었습니다.");
+                Console.WriteLine($"{usedSkill.Name} 스킬을 사용!");
             }
             else
             {
                 Console.WriteLine();
                 Console.WriteLine($"{usedSkill.Name} 스킬을 사용하기에 마나가 충분하지 않습니다. (현재 마나: {Mana})");
-                return;
             }
         }
 

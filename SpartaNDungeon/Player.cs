@@ -184,6 +184,11 @@ namespace SpartaNDungeon
 
         public void RemoveItem(Item item) { inventory.Remove(item); return; }
 
+        public bool HasItem(Item item)
+        {
+            return inventory.Contains(item); //인벤토리에 아이템보유여부 확인
+        }
+
         // display player's skill set
         public void DisplaySkills()
         {

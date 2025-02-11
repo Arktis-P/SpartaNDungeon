@@ -191,9 +191,17 @@ namespace SpartaNDungeon
                 item += ConsoleUtil.WriteSpace(inventory[i].Name, nameMax) + "\t| " + ConsoleUtil.WriteSpace(inventory[i].Descrip, descripMax);
                 item += "\t| " + inventory[i].GetType();
                 item += isSelling ? $"\t| {inventory[i].Cost} G" : "";
-                // show on console
-                Console.WriteLine(item);
+                // 장착한 아이템은 초록색으로 변경
+                if (inventory[i].IsEquip)
+                {
+                    ConsoleUtil.ColorWrite(item, ConsoleColor.Green);
+                }
+                else
+                {
+                    Console.WriteLine(item);
+                }
             }
+
 
             return;
         }

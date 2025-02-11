@@ -79,7 +79,6 @@ namespace SpartaNDungeon
                     GameData gameData = DataManager.LoadData();
                     player = gameData.PlayerData;
                     Player.Gold = gameData.Gold;
-                    player.inventory = gameData.Inventory;
                     Item.LoadItemList(gameData.Items);  // override item list
                     // show complete msg
                     Console.Clear();
@@ -497,7 +496,7 @@ namespace SpartaNDungeon
                 switch (input)
                 {
                     case 1:  // save data
-                        GameData gameData = new GameData(player, Player.Gold, player.inventory, Item.GetItemList());
+                        GameData gameData = new GameData(player, Player.Gold, Item.GetItemList());
                         DataManager.SaveData(gameData);
                         SaveCompletePage();
                         return;

@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualBasic;
 using System.Numerics;
+using System.Text;
 
 namespace SpartaNDungeon
 {
@@ -106,69 +107,98 @@ namespace SpartaNDungeon
             }
             return 0;
         }
-        public void EquipItem(Player player)
+        public string EquipItem(Player player)
         {
+            StringBuilder message = new StringBuilder();
+
             if (IsEquip)
             {
-                // 장비 해제
                 IsEquip = false;
-                if (Type == ItemType.Weapon) player.Attack -= Value;
-                if (Type == ItemType.Armor) player.Defense -= Value;
-                Console.WriteLine($"{Name}을(를) 해제했습니다.");
+                if (Type == ItemType.Weapon)
+                {
+                    player.Attack -= Value;
+                    message.AppendLine($"{Name}을(를) 해제했습니다. 공격력이 {Value} 감소했습니다.");
+                }
+                if (Type == ItemType.Armor)
+                {
+                    player.Defense -= Value;
+                    message.AppendLine($"{Name}을(를) 해제했습니다. 방어력이 {Value} 감소했습니다.");
+                }
             }
             else
             {
-                // 같은 타입의 기존 장착 아이템 찾기
-                Item? equippedItem = player.inventory.Find(i => i.IsEquip && i.Type == Type);
 
+                Item? equippedItem = player.inventory.Find(i => i.IsEquip && i.Type == Type);
                 if (equippedItem != null)
                 {
                     equippedItem.IsEquip = false;
-                    if (equippedItem.Type == ItemType.Weapon) player.Attack -= equippedItem.Value;
-                    if (equippedItem.Type == ItemType.Armor) player.Defense -= equippedItem.Value;
-                    Console.WriteLine($"{equippedItem.Name}을(를) 해제했습니다.");
+                    if (equippedItem.Type == ItemType.Weapon)
+                    {
+                        player.Attack -= equippedItem.Value;
+                        message.AppendLine($"{equippedItem.Name}을(를) 해제했습니다. 공격력이 {equippedItem.Value} 감소했습니다.");
+                    }
+                    if (equippedItem.Type == ItemType.Armor)
+                    {
+                        player.Defense -= equippedItem.Value;
+                        message.AppendLine($"{equippedItem.Name}을(를) 해제했습니다. 방어력이 {equippedItem.Value} 감소했습니다.");
+                    }
                 }
 
-                // 새 아이템 장착
-                if(Type==ItemType.Potion)
+                if (Type == ItemType.Potion)
                 {
-                    Console.WriteLine("회복물약은 장착할 수 없습니다.");
-                    return;
+                    return "회복 물약은 장착할 수 없습니다.";
                 }
                 else
                 {
                     IsEquip = true;
-                    if (Type == ItemType.Weapon) player.Attack += Value;
-                    if (Type == ItemType.Armor) player.Defense += Value;
-                    Console.WriteLine($"{Name}을(를) 장착했습니다.");
-                    SetBonus(player);
+                    if (Type == ItemType.Weapon)
+                    {
+                        player.Attack += Value;
+                        message.AppendLine($"{Name}을(를) 장착했습니다. 공격력이 {Value} 증가했습니다.");
+                    }
+                    if (Type == ItemType.Armor)
+                    {
+                        player.Defense += Value;
+                        message.AppendLine($"{Name}을(를) 장착했습니다. 방어력이 {Value} 증가했습니다.");
+                    }
                 }
-                
             }
+
+            message.Append(SetBonus(player));
+
+            return message.ToString();
         }
-        private void SetBonus(Player player) // 아이템 세트 효과
+
+
+        public string SetBonus(Player player)
         {
+            StringBuilder message = new StringBuilder();
             var equippedItems = player.inventory.Where(i => i.IsEquip).ToList();
 
             int hasSetBonus = 0;
-            if (equippedItems.Any(i => i.Name == "몰락한 왕의 검") && equippedItems.Any(i => i.Name == "지배자의 피갑옷"))  hasSetBonus = 1;
-            if (equippedItems.Any(i => i.Name == "심연의 갑옷") && equippedItems.Any(i => i.Name == "어둠불꽃 횃불")) hasSetBonus = 2;
+            if (equippedItems.Any(i => i.Name == "몰락한 왕의 검") && equippedItems.Any(i => i.Name == "지배자의 피갑옷"))
+                hasSetBonus = 1;
+            if (equippedItems.Any(i => i.Name == "심연의 갑옷") && equippedItems.Any(i => i.Name == "어둠불꽃 횃불"))
+                hasSetBonus = 2;
 
-             switch (hasSetBonus)
+            switch (hasSetBonus)
             {
                 case 1:
                     player.Attack += 2;
                     player.Defense += 1;
-                    Console.WriteLine("세트 효과 발동! 공격력: 2 | 방어력: 1 추가 증가했습니다.");
+                    message.AppendLine("세트 효과 발동! 공격력: 2 | 방어력: 1 추가 증가했습니다.");
                     break;
                 case 2:
                     player.Attack += 1;
                     player.Defense += 2;
-                    Console.WriteLine("세트 효과 발동! 공격력: 1 | 방어력: 2 추가 증가했습니다.");
+                    message.AppendLine("세트 효과 발동! 공격력: 1 | 방어력: 2 추가 증가했습니다.");
                     break;
+                
             }
-            
+
+            return message.ToString();
         }
+
     }
 }
 

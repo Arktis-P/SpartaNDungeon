@@ -78,6 +78,7 @@ namespace SpartaNDungeon
                     GameData gameData = DataManager.LoadData();
                     player = gameData.PlayerData;
                     Player.Gold = gameData.Gold;
+                    player.inventory = gameData.Inventory;
                     // show complete msg
                     Console.Clear();
                     Console.WriteLine();
@@ -442,7 +443,7 @@ namespace SpartaNDungeon
                 switch (input)
                 {
                     case 1:  // save data
-                        GameData gameData = new GameData(player, Player.Gold);
+                        GameData gameData = new GameData(player, Player.Gold, player.inventory);
                         DataManager.SaveData(gameData);
                         SaveCompletePage();
                         return;

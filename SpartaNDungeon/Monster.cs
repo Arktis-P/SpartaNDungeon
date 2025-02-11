@@ -69,28 +69,8 @@ namespace SpartaNDungeon
 
         public string MonsterDisplay() // 몬스터의 정보 출력
         {
-            if (IsDead == true)
-            {
-                Console.ForegroundColor = ConsoleColor.DarkGray; // 몬스터 사망 시 몬스터의 글자 색깔을 DarkGray로 변경
                 string mon = $"Lv.{Level} {Name} {GetIsDead()}";
-                Console.ResetColor();
                 return mon;
-            }
-            else  // 몬스터가 살아있을 시 일반적인 글자 색 출력
-            {
-                if(Type == MonsterType.Named) // 네임드라면 노란색으로 글자 출력
-                {
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    string mon = $"Lv.{Level} {Name} {GetIsDead()}"; 
-                    Console.ResetColor();
-                    return mon;
-                }
-                else
-                {
-                    string mon = $"Lv.{Level} {Name} {GetIsDead()}"; // 노말이면 일반적인 글자 색 출력
-                    return mon;
-                }
-            } 
         }
 
         public string GetIsDead() // 몬스터 사망 시 HP를 출력하지 않고 대신 Dead 출력

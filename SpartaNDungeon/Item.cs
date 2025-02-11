@@ -95,9 +95,9 @@ namespace SpartaNDungeon
             {
                 if (item.Count > 0)
                 {
+                    player.Health = Math.Min(100, player.Health + item.Value);
                     item.Count--;
-                    int health = player.Health += item.Value;
-                    return health >= 100 ? 100 : health;
+                    return player.Health;
                 }
                 else
                 {
@@ -130,11 +130,20 @@ namespace SpartaNDungeon
                 }
 
                 // 새 아이템 장착
-                IsEquip = true;
-                if (Type == ItemType.Weapon) player.Attack += Value;
-                if (Type == ItemType.Armor) player.Defense += Value;
-                Console.WriteLine($"{Name}을(를) 장착했습니다.");
-                SetBonus(player);
+                if(Type==ItemType.Potion)
+                {
+                    Console.WriteLine("회복물약은 장착할 수 없습니다.");
+                    return;
+                }
+                else
+                {
+                    IsEquip = true;
+                    if (Type == ItemType.Weapon) player.Attack += Value;
+                    if (Type == ItemType.Armor) player.Defense += Value;
+                    Console.WriteLine($"{Name}을(를) 장착했습니다.");
+                    SetBonus(player);
+                }
+                
             }
         }
         private void SetBonus(Player player) // 아이템 세트 효과

@@ -73,8 +73,8 @@ namespace SpartaNDungeon
         {
             Console.WriteLine("[내정보]");
             Console.WriteLine($"Lv.{dungeon.player.Level} {dungeon.player.Name} ({dungeon.player.Job})");
-            Console.WriteLine($"HP {prevHp}/{dungeon.player.Health}");
-            Console.WriteLine($"MP {prevMp}/{dungeon.player.Mana}");
+            Console.WriteLine($"HP {dungeon.player.Health}/{dungeon.player.MaxHealth}");
+            Console.WriteLine($"MP {dungeon.player.Mana}/{dungeon.player.MaxMana}");
         }
 
         public void MonsterStatus() // 몬스터 상태 출력
@@ -174,7 +174,6 @@ namespace SpartaNDungeon
             {
                 if (mon.IsDead) continue; // 몬스터 죽어있으면 넘어가기
 
-                Console.WriteLine($"Lv. {mon.Level} {mon.Name}의 공격!");
                 int prevHp = dungeon.player.Health;
                 dungeon.player.Health -= mon.Atk;
 
@@ -186,9 +185,8 @@ namespace SpartaNDungeon
         }
         public void PhaseResult(bool playerTurn, Monster select, int atk)
         {
-            Thread.Sleep(2000);
             Console.Clear();
-            Console.WriteLine("Battle!!");
+            Console.WriteLine("Battle!!\n");
             if (playerTurn)
             {
                 Console.WriteLine($"{dungeon.player.Name}의 공격!");
@@ -197,6 +195,7 @@ namespace SpartaNDungeon
                 Console.WriteLine($"Lv.{select.Level} {select.Name}");
                 Console.Write($"HP {select.Hp + atk} -> {select.GetIsDead()}");
                 if (select.IsDead) select.Hp = 0;
+                Thread.Sleep(2000);
             }
             else
             {
@@ -204,13 +203,14 @@ namespace SpartaNDungeon
                 Console.WriteLine($"{dungeon.player.Name} 을(를) 맞췄습니다. [데미지: {atk}]");
                 Console.WriteLine($"\nLv.{dungeon.player.Level} {dungeon.player.Name}");
                 Console.WriteLine($"HP {prevHp} -> {dungeon.player.Health}");
+                Thread.Sleep(2000);
             }
-            Console.WriteLine("\n0. 다음");
         }
 
         public void BattleResult()
         {
-            Console.WriteLine("Battle!! - Result");
+            Console.Clear();
+            Console.WriteLine("Battle!! - Result\n");
             if (dungeon.monsters.Count == monsterCnt)
             {
                 dungeon.NextStage();

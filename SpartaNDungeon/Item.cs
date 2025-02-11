@@ -46,6 +46,10 @@ namespace SpartaNDungeon
         {
             return itemList;
         }
+        public static void LoadItemList(List<Item> items)
+        {
+            itemList = items; return;
+        }
 
 
         public Item(string name, ItemType type, int value, string descrip,  int cost, int count)

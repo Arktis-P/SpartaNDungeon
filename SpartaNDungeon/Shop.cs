@@ -34,11 +34,20 @@ namespace SpartaNDungeon
             // Console.WriteLine("====== 상점 ====== ");
             // Console.WriteLine($"보유 골드 : {Player.Gold} G ");
             Console.WriteLine();
-            int index = 1;
+            List<string> names = new List<string>();
+            List<string> descrips = new List<string>();
+            foreach (Item iitem in ItemSale)
+            {
+                names.Add(iitem.Name); descrips.Add(iitem.Descrip);
+            }
+            int nameMax = ConsoleUtil.CalcuatedMaxNumber(names);
+            int descripMax = ConsoleUtil.CalcuatedMaxNumber(descrips);
 
+            int index = 1;
             foreach (var saleItem in ItemSale)
             {
-                Console.WriteLine($"{index}.  {saleItem.Name}\t| {saleItem.Descrip}\t|  {saleItem.Cost} G");
+                string indexStr = String.Format("{0,2}", index);
+                Console.WriteLine($"{indexStr}.  {ConsoleUtil.WriteSpace(saleItem.Name, nameMax)}| {ConsoleUtil.WriteSpace(saleItem.Descrip, descripMax)}| {saleItem.GetType()}\t| {saleItem.Cost} G");
                 index++;
             }
         }
@@ -51,7 +60,7 @@ namespace SpartaNDungeon
                 Console.WriteLine();    
                 Console.WriteLine("\t\t==== 상점 - 구매하기 ====");
                 Console.WriteLine();
-                Console.WriteLine($"이미 {item.Name}을 구매하였습니다.");
+                Console.WriteLine($"  이미 {item.Name}을 구매하였습니다.");
             }
 
 
@@ -76,7 +85,7 @@ namespace SpartaNDungeon
                 Console.WriteLine();
                 Console.WriteLine("\t\t==== 상점 - 구매하기 ====");
                 Console.WriteLine();
-                Console.WriteLine("골드가 충분하지 않습니다.");
+                Console.WriteLine("  골드가 충분하지 않습니다.");
             }
             ConsoleUtil.GetAnyKey();
         }
@@ -90,7 +99,7 @@ namespace SpartaNDungeon
             Console.WriteLine();
             Console.WriteLine("\t\t==== 상점 - 판매하기 ====");
             Console.WriteLine();
-            Console.WriteLine($"{item.Name}을/를 판매하고, {item.Cost/2} G를 받았습니다.");
+            Console.WriteLine($"  {item.Name}을/를 판매하고, {item.Cost/2} G를 받았습니다.");
             ConsoleUtil.GetAnyKey();
         }
             

@@ -186,7 +186,7 @@ namespace SpartaNDungeon
             for (int i = 0; i < inventory.Count; i++)
             {
                 item = "";  // initialize entire string for each item
-                item += isManaging ? $"{i + 1}. " : "-  ";
+                item += isManaging ? String.Format("{0,2}. ", i+1) : "-  ";
                 item += inventory[i].IsEquip ? "(E)" : "   ";
                 item += ConsoleUtil.WriteSpace(inventory[i].Name, nameMax) + "\t| " + ConsoleUtil.WriteSpace(inventory[i].Descrip, descripMax);
                 item += "\t| " + inventory[i].GetType();

@@ -34,11 +34,20 @@ namespace SpartaNDungeon
             // Console.WriteLine("====== 상점 ====== ");
             // Console.WriteLine($"보유 골드 : {Player.Gold} G ");
             Console.WriteLine();
-            int index = 1;
+            List<string> names = new List<string>();
+            List<string> descrips = new List<string>();
+            foreach (Item iitem in ItemSale)
+            {
+                names.Add(iitem.Name); descrips.Add(iitem.Descrip);
+            }
+            int nameMax = ConsoleUtil.CalcuatedMaxNumber(names);
+            int descripMax = ConsoleUtil.CalcuatedMaxNumber(descrips);
 
+            int index = 1;
             foreach (var saleItem in ItemSale)
             {
-                Console.WriteLine($"{index}.  {saleItem.Name}\t| {saleItem.Descrip}\t| {saleItem.GetType()}\t| {saleItem.Cost} G");
+                string indexStr = String.Format("{0,2}", index);
+                Console.WriteLine($"{indexStr}.  {ConsoleUtil.WriteSpace(saleItem.Name, nameMax)}| {ConsoleUtil.WriteSpace(saleItem.Descrip, descripMax)}| {saleItem.GetType()}\t| {saleItem.Cost} G");
                 index++;
             }
         }

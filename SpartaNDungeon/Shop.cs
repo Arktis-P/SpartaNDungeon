@@ -45,7 +45,20 @@ namespace SpartaNDungeon
         
         public void BuyItem(Player player,Item item)
         {
-            if(Player.Gold >= item.Cost)
+            if (player.HasItem(item))
+            {
+                Console.Clear();
+                Console.WriteLine();    
+                Console.WriteLine("\t\t==== 상점 - 구매하기 ====");
+                Console.WriteLine();
+                Console.WriteLine($"이미 {item.Name}을 구매하였습니다.");
+            }
+
+
+
+
+
+            else if (Player.Gold >= item.Cost)
             {
                 Player.Gold -= item.Cost;
                 player.AddItem(item); //구매한 아이템 인벤토리로

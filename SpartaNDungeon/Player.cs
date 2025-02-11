@@ -241,12 +241,14 @@ namespace SpartaNDungeon
         // increase player's level and initiate related values (exp, level exp)
         private void Levelup()
         {
-            // increase level
-            Level++;
-            // initiate exp to 0
-            Exp = 0;
-            // set new level exp
-            LevelExp = 100 * Level;
+            Level++;  // increase level
+            Exp = 0;  // initiate exp to 0
+            LevelExp = 100 * Level;  // set new level exp
+            Health = MaxHealth; Mana = MaxMana;  // heal health and mana
+            // level up msg
+            Console.WriteLine();
+            Console.WriteLine($"  축하합니다! {Name}의 레벨이 {Level}(으)로 올랐습니다.");
+            Console.WriteLine("  체력과 마나가 회복됩니다.");
         }
 
         // check if player is dead

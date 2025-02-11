@@ -272,7 +272,7 @@ namespace SpartaNDungeon
                 dungeon.NextStage();
                 Console.WriteLine("Victory");
                 Console.WriteLine($"던전에서 몬스터 {monsterCnt}마리를 잡았습니다.");
-                dungeon.player.Exp += random.Next(Dungeon.Stage, Dungeon.Stage * 10 + 1);
+                dungeon.player.Exp += random.Next(Dungeon.Stage * 50 , Dungeon.Stage * 100);
             }
             else if (dungeon.player.Health == 0) Console.WriteLine("You Lose");
 
@@ -283,6 +283,7 @@ namespace SpartaNDungeon
 
             dungeon.Reward(Dungeon.Stage);
 
+            dungeon.player.CheckLevelUp();  // check if level up possible
         }
     }
 }

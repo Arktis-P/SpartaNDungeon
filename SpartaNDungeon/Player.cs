@@ -64,9 +64,10 @@ namespace SpartaNDungeon
             skills = new List<ISkill>();
             // add skills to player's skill set according to player's job
             AddSkillsByJob(Job.ToString());
-
             // give player additional stat according to player's job
             AddStatus();
+            // give player default 3 potion
+            AddDefaultItem();
         }
 
         // job gives additional stats
@@ -88,6 +89,13 @@ namespace SpartaNDungeon
                     break;
                 default: break;  // default, no additional stats
             }
+        }
+        // give player default items (3 potions)
+        private void AddDefaultItem()
+        {
+            List<Item> itemList = Item.GetItemList();
+            Item item = itemList[itemList.Count()-1];
+            AddItem(item); AddItem(item); AddItem(item);
         }
 
         // skill related methods

@@ -164,7 +164,7 @@ namespace SpartaNDungeon
                 item += isManaging ? $"{i + 1}. " : "-  ";
                 item += inventory[i].IsEquip ? "(E)" : "   ";
                 item += inventory[i].Name + "\t| " + inventory[i].Descrip;
-                item += inventory[i].GetType();
+                item += "\t| " + inventory[i].GetType();
                 item += isSelling ? $"\t| {inventory[i].Cost} G" : "";
                 // show on console
                 Console.WriteLine(item);

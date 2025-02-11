@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Tracing;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -214,7 +215,7 @@ namespace SpartaNDungeon
                     // check if item is equipable (type == weapon or armor)
                     if (item.Type == ItemType.Weapon || item.Type == ItemType.Armor)
                     {
-                        item.EquipItem(player);
+                        EquipItemPage(item);
                     }
                     else
                     {
@@ -223,6 +224,23 @@ namespace SpartaNDungeon
                     InventoryManagePage(); return;
                 }
             }
+        }
+        private void EquipItemPage(Item item)
+        {
+            // equip item
+            item.EquipItem(player);
+            // set equip message
+            string equipMessage = "  ";
+            equipMessage += $"{item.Name}을(를) " + (item.IsEquip ? "장비" : "해제") + "했습니다. ";
+            equipMessage += (item.Type == ItemType.Weapon ? "공격" : "방어") + "력이 ";
+            equipMessage += $"{item.Value}" + (item.IsEquip ? "증가" : "감소") + "했습니다.";
+            // equip msg
+            Console.Clear();
+            Console.WriteLine();
+            Console.WriteLine("\t\t==== 인벤토리 - 장착관리 ====");
+            Console.WriteLine();
+            Console.WriteLine(equipMessage);
+            ConsoleUtil.GetAnyKey();
         }
 
         // shop page

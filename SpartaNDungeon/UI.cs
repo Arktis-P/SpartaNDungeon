@@ -322,7 +322,7 @@ namespace SpartaNDungeon
                 Console.WriteLine("  필요한 아이템을 구매할 수 있습니다.");
                 // display player Gold
                 Console.WriteLine();
-                Console.WriteLine($"보유 골드: {Player.Gold} G");
+                Console.WriteLine($"  보유 골드: {Player.Gold} G");
                 // show options
                 Console.WriteLine();
                 Console.WriteLine("\t[구매 가능한 아이템 목록]");

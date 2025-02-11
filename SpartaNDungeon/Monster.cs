@@ -107,12 +107,11 @@ namespace SpartaNDungeon
         List<Monster> monsterList; // 몬스터 리스트
         List<Monster> towerList; // 타워 리스트
 
-        public int stage;
+        public int stage = Dungeon.Stage;
         public int playerLevel;
 
-        public MonsterManager(int stage, int playerLevel)
+        public MonsterManager(int playerLevel)
         {
-            this.stage = stage;
             this.playerLevel = playerLevel;
 
             monsterList = new List<Monster>

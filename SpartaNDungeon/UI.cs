@@ -143,7 +143,7 @@ namespace SpartaNDungeon
             Console.WriteLine("2. 인벤토리");
             Console.WriteLine("3. 상점");
             Console.WriteLine("4. 던전입장");
-            Console.WriteLine("5. 퀘스트");
+            if (player.CheckAllClear()) { Console.WriteLine("5. 퀘스트"); }
             Console.WriteLine("6. 게임저장");
             Console.WriteLine();
             Console.WriteLine("0. 게임종료");
@@ -165,6 +165,7 @@ namespace SpartaNDungeon
                     DungeonPage();  // to dungeon page
                     break;
                 case 5:
+                    if (player.CheckAllClear()) { NotQuestPage(); break; }
                     QuestPage();  // to quest page
                     break;
                 case 6:
@@ -372,6 +373,23 @@ namespace SpartaNDungeon
         {
             dungeon.DungeonPage();
         }
+        // when quest is limited
+        private void NotQuestPage()
+        {
+            while (true)
+            {
+                Console.Clear();
+                Console.WriteLine("\t\t==== 퀘스트 ====");
+                Console.WriteLine("  퀘스트 기능은 아직 해금되지 않았습니다.");
+                // show option
+                Console.WriteLine();
+                Console.WriteLine("0. 나가기");
+                // get player's input
+                int input = ConsoleUtil.GetInput(0, 0);
+                StartPage(); return;
+            }
+        }
+
         // quest page
         private void QuestPage()
         {
@@ -380,7 +398,7 @@ namespace SpartaNDungeon
                 Console.Clear();
                 Console.WriteLine("");
                 Console.WriteLine("\t\t==== 퀘스트 ====");
-                Console.WriteLine("  퀘스트 기능은 현재 구현되지 않았습니다.");
+                Console.WriteLine("  진행할 수 있는 퀘스트를 확인하고, 퀘스트를 수주할 수 있습니다.");
                 // show option
                 Console.WriteLine("");
                 // 1~99. (퀘스트 목록 확인)
@@ -436,9 +454,24 @@ namespace SpartaNDungeon
             Console.WriteLine("\t  몬스터 기능 : 박규태");
             Thread.Sleep(500);
             Console.WriteLine("\t    전투 기능 : 박소희");
+            // check if all clear // if all clear, pop all clear msg up
+            if (player.CheckAllClear()) { AllClearMessage(); return; }
             // get any key to continue
             if (ConsoleUtil.GetAnyKey()) { LoadingPage(); }
         }
+        // msg page for all clear page
+        private void AllClearMessage()
+        {
+            Console.Clear();
+            Console.WriteLine();
+            Console.WriteLine("  퀘스트 기능이 해금되었습니다.");
+            Thread.Sleep(500);
+            Console.WriteLine();
+            Console.WriteLine("  무한 모드가 해금되었습니다.");
+            ConsoleUtil.GetAnyKey();
+            LoadingPage();
+        }
+
         // save page
         private void SavePage()
         {

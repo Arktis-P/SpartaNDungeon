@@ -10,14 +10,14 @@ namespace SpartaNDungeon
     {
         //public string[] dungeonMenu = { "상태 보기", "전투 시작", "포션 사용" };
         public List<Monster> monsters = new List<Monster>(); // 출현 몬스터 지정
-        public int Stage { get;  set; }
+        public static int Stage { get;  set; }
         public Player player;
         public MonsterManager manager;
         public UI ui;
         public Dungeon(int stage, Player player, MonsterManager manager)
         {
             this.player = player;
-            this.Stage = stage;
+            Dungeon.Stage = stage;
             this.manager = new MonsterManager(Stage, player.Level);
             SetMonster(stage);
 

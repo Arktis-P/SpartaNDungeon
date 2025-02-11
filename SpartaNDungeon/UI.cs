@@ -266,21 +266,23 @@ namespace SpartaNDungeon
         }
         private void EquipItemPage(Item item)
         {
-            // equip item
-            item.EquipItem(player);
-            // set equip message
-            string equipMessage = "  ";
-            equipMessage += $"{item.Name}을(를) " + (item.IsEquip ? "장비" : "해제") + "했습니다. ";
-            equipMessage += (item.Type == ItemType.Weapon ? "공격" : "방어") + "력이 ";
-            equipMessage += $"{item.Value}" + (item.IsEquip ? "증가" : "감소") + "했습니다.";
-            // equip msg
+            StringBuilder equipMessage = new StringBuilder();
+
+            // 아이템 장착/해제 후 메시지 받아오기
+            string resultMessage = item.EquipItem(player);
+
+            // 메시지 추가
+            equipMessage.AppendLine(resultMessage);
+
+            // 화면 정리 후 메시지 출력
             Console.Clear();
             Console.WriteLine();
             Console.WriteLine("\t\t==== 인벤토리 - 장착관리 ====");
             Console.WriteLine();
-            Console.WriteLine(equipMessage);
+            Console.WriteLine(equipMessage.ToString());
             ConsoleUtil.GetAnyKey();
         }
+
 
         // shop page
         private void ShopPage()

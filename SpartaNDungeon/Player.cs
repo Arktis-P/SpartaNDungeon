@@ -295,16 +295,20 @@ namespace SpartaNDungeon
         {
             CheckClearStatus();
             string str = "  ";
-            str += WarriorClear ? "■" : "□";
-            str += " 전사\t";
-            str += MageClear ? "■" : "□";
-            str += " 마법사\t";
-            str += RogueClear ? "■" : "□";
-            str += " 도적\t";
-            str += ArcherClear ? "■" : "□";
-            str += " 궁수\t";
+            str += (WarriorClear ? "■" : "□") + " 전사\t";
+            str += (MageClear ? "■" : "□") +" 마법사\t";
+            str += (RogueClear ? "■" : "□") + " 도적\t";
+            str += (ArcherClear ? "■" : "□") + " 궁수\t";
             Console.WriteLine();
             Console.WriteLine(str);
         }
+        // check if player has cleared every 
+        public bool CheckAllClear()
+        {
+            bool isAllClear = false;
+            if (WarriorClear && MageClear && RogueClear && ArcherClear) { isAllClear = true; }
+            return isAllClear;
+        }
+
     }
 }

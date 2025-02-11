@@ -79,9 +79,21 @@ namespace SpartaNDungeon
 
         public void MonsterStatus() // 몬스터 상태 출력
         {
+            Console.WriteLine("Battle!");
+            Monster currentMon = null;
             for (int i = 0; i < dungeon.monsters.Count; i++)
             {
-                Console.WriteLine($"{(i + 1)}. {dungeon.monsters[i].MonsterDisplay()}");
+                currentMon = dungeon.monsters[i];
+                if (currentMon.IsDead) // 몬스터 사망 시 이름 회색으로 출력
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkGray;
+                    Console.WriteLine($"{(i + 1)}. {dungeon.monsters[i].MonsterDisplay()}");
+                    Console.ResetColor();
+                }
+                else
+                {
+                    Console.WriteLine($"{(i + 1)}. {dungeon.monsters[i].MonsterDisplay()}"); // 노말이면 일반적인 글자 색 출력
+                }
             }
         }
 
@@ -196,7 +208,7 @@ namespace SpartaNDungeon
         public void MonsterAttack()
         {
             Console.WriteLine("Battle!");
-            foreach(Monster mon in dungeon.monsters)
+            foreach (Monster mon in dungeon.monsters)
             {
                 if (mon.IsDead) continue; // 몬스터 죽어있으면 넘어가기
 
@@ -207,6 +219,7 @@ namespace SpartaNDungeon
                 prevHp -= mon.Atk;
                 playerTurn = true;
             }
+
         }
         public void PhaseResult(bool playerTurn, Monster select, int atk)
         {
@@ -247,7 +260,7 @@ namespace SpartaNDungeon
 
             Console.WriteLine("[캐릭터 정보]");
             Console.WriteLine($"\nLv.{dungeon.player.Level} {dungeon.player.Name}");
-            Console.WriteLine($"HP {prevHp} -> {dungeon.player.Health}");
+            Console.WriteLine($"HP {dungeon.player.Health}");
             Console.WriteLine($"exp {prevExp} -> {dungeon.player.Exp}");
 
             dungeon.Reward(dungeon.Stage);

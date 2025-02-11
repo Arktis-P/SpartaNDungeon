@@ -61,7 +61,7 @@ namespace SpartaNDungeon
 
         public void Mutation(int playerLevel) // 변이종 몬스터 판단
         {
-            int levelScale = (playerLevel / 3);
+            int levelScale = (playerLevel / 3); // 레벨스케일 반영
 
             if (this.Type == MonsterType.Named) // 몬스터 타입이 Named로 결정된다면 추가 레벨 및 스탯 + 이름 앞에 "[변이]" 가 붙는다
             {

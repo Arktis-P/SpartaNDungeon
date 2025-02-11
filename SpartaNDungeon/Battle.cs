@@ -39,7 +39,7 @@ namespace SpartaNDungeon
             while (true)
             {
                 Console.Clear();
-                Console.WriteLine("Battle!!");
+
                 if (playerTurn)
                 {
                     Attack();
@@ -100,17 +100,18 @@ namespace SpartaNDungeon
             Monster selectedMonster = null;
             int playerAtk = 0;
 
-            Console.WriteLine($"{dungeon.player.Name}의 턴!");
-            MonsterStatus(); //공격할 몬스터 출력
-            Console.WriteLine(); 
-            Console.WriteLine(); 
-            PlayerStatus(); // 내정보 출력
-
-            Console.WriteLine("\n0. 턴 넘기기");
             // 공격할 몬스터 입력받기
             while (true)
             {
-                Console.WriteLine("대상을 선택해주세요.");
+                Console.Clear();
+                Console.WriteLine("Battle!");
+                Console.WriteLine($"{dungeon.player.Name}의 턴!");
+                MonsterStatus(); //공격할 몬스터 출력
+                Console.WriteLine();
+                PlayerStatus(); // 내정보 출력
+                Console.WriteLine("\n0. 턴 넘기기");
+
+                Console.WriteLine("\n대상을 선택해주세요.");
                 string inputStr = Console.ReadLine();
                 int input;
 
@@ -126,12 +127,12 @@ namespace SpartaNDungeon
                     return;
                 }
 
-                else if (1 >input ||input > dungeon.monsters.Count) // 몬스터 외 숫자 선택 시
+                else if (1 > input || input > dungeon.monsters.Count) // 몬스터 외 숫자 선택 시
                 {
                     Console.WriteLine("잘못된 입력입니다.");
                     continue;
                 }
-                
+
                 selectedMonster = dungeon.monsters[input - 1];
 
 
@@ -142,41 +143,51 @@ namespace SpartaNDungeon
                 }
 
                 int prevHp = selectedMonster.Hp;
-
-                Console.WriteLine("\n1. 기본 공격");
-                dungeon.player.DisplaySkills(); // 스킬 출력
-
-                int inputSkill = ConsoleUtil.GetInput(1, dungeon.player.skills.Count + 1);
-                if (inputSkill == 1) // 공격 선택 시
+                while (true)
                 {
-                    playerAtk = CalAttack();
-                }
-                else // 스킬 선택 시
-                {
-                    if (dungeon.player.skills.Count == 0) return;
+                    Console.WriteLine("\n0. 대상 다시 선택");
+                    Console.WriteLine("\n1. 기본 공격");
+                    dungeon.player.DisplaySkills(); // 스킬 출력
 
-                    if (inputSkill != 0)
+                    int inputSkill = ConsoleUtil.GetInput(0, dungeon.player.skills.Count + 1);
+                    if (inputSkill == 0)
                     {
-                        playerAtk = dungeon.player.skills[inputSkill -2].UseSkill(dungeon.player);
-                        Console.WriteLine($"{dungeon.player.skills[inputSkill -2].Name} 사용!");
+                        selectedMonster = null;
+                        break;
                     }
-                }
-                Console.WriteLine($"{selectedMonster.Name}에게 {playerAtk}의 피해를 줬습니다.");
-                selectedMonster.Hp -= playerAtk;
+                    else if (inputSkill == 1) // 공격 선택 시
+                    {
+                        playerAtk = CalAttack();
+                    }
+                    else // 스킬 선택 시
+                    {
+                        if (dungeon.player.skills.Count == 0) return;
 
-                if (selectedMonster.Hp <= 0)
-                {
-                    selectedMonster.IsDead = true;
-                    monsterCnt++;
+                        if (inputSkill != 0)
+                        {
+                            playerAtk = dungeon.player.skills[inputSkill - 2].UseSkill(dungeon.player);
+                            Console.WriteLine($"{dungeon.player.skills[inputSkill - 2].Name} 사용!");
+                        }
+                    }
+                    Console.WriteLine($"{selectedMonster.Name}에게 {playerAtk}의 피해를 줬습니다.");
+                    selectedMonster.Hp -= playerAtk;
+
+                    if (selectedMonster.Hp <= 0)
+                    {
+                        selectedMonster.IsDead = true;
+                        monsterCnt++;
+                    }
+                    playerTurn = false;
+
+                    PhaseResult(true, selectedMonster, playerAtk);
+                    return;
                 }
-                playerTurn = false;
-                break;
             }
-            PhaseResult(true, selectedMonster, playerAtk);
         }
 
         public void MonsterAttack()
         {
+            Console.WriteLine("Battle!");
             foreach(Monster mon in dungeon.monsters)
             {
                 if (mon.IsDead) continue; // 몬스터 죽어있으면 넘어가기

@@ -14,15 +14,13 @@ namespace SpartaNDungeon
         public int Gold { get; set; }
         // add more static variables if necessary
         // lists saved in player
-        public List<Item> Inventory { get; set; }
         public List<Item> Items { get; set; }
 
         // initialize
         public GameData() { }
-        public GameData(Player playerData, int gold, List<Item> inventory, List<Item> items)
+        public GameData(Player playerData, int gold, List<Item> items)
         {
             PlayerData = playerData; Gold = gold;
-            Inventory = inventory;
             Items = items;
         }
     }

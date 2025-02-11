@@ -31,17 +31,23 @@ namespace SpartaNDungeon
 
 
         
-        public Monster(int level, string name, int hp, int atk, bool isDead, int stage, int playerLevel) 
+        public Monster(int level, string name, int hp, int atk, int stage, int playerLevel) 
         {
             Level = level; 
             Name = name;
             Hp = hp;  
             Atk = atk; 
-            IsDead = isDead;
+            IsDead = false;
 
             Type = GetMonsterType(stage); // 몬스터 타입 판단
 
             LevelScale(playerLevel);
+        }
+
+        // 같은 종류의 몬스터가 같은 값을 참조해 스탯(체력, 사망상태 등)을 공유하는 걸 막기 위해 생성할 때 클론으로 만든다.
+        public Monster Clone(int stage, int playerLevel) 
+        {
+            return new Monster(Level, Name, Hp, Atk, stage, playerLevel);
         }
 
         public void LevelScale(int playerLevel) // 몬스터는 플레이어의 레벨에 따라 레벨 및 각종 스탯이 상승한다.
@@ -117,25 +123,27 @@ namespace SpartaNDungeon
         List<Monster> towerList; // 타워 리스트
 
         public int stage;
+        public int playerLevel;
 
         public MonsterManager(int stage, int playerLevel)
         {
             this.stage = stage;
+            this.playerLevel = playerLevel;
 
             monsterList = new List<Monster>
             {
-                new Monster(2, "미니언", 15, 6, false, stage, playerLevel),
-                new Monster(3, "공허충", 10, 10, false, stage, playerLevel),
-                new Monster(5, "대포미니언", 25, 7, false, stage, playerLevel),
-                new Monster(10, "슈퍼 미니언", 30, 12, false, stage, playerLevel)
+                new Monster(2, "미니언", 13, 6, stage, playerLevel),
+                new Monster(3, "공허충", 10, 10, stage, playerLevel),
+                new Monster(5, "대포미니언", 18, 7, stage, playerLevel),
+                new Monster(10, "슈퍼 미니언", 30, 12, stage, playerLevel)
             };
 
             towerList = new List<Monster>
             {
-                new Monster(10, "외곽 포탑", 40, 10, false, stage, playerLevel),
-                new Monster(15, "내부 포탑", 50, 15, false, stage, playerLevel),
-                new Monster(20, "억제기 포탑", 60, 20, false, stage, playerLevel),
-                new Monster(30, "넥서스 포탑", 100, 25, false, stage, playerLevel)
+                new Monster(10, "외곽 포탑", 40, 10, stage, playerLevel),
+                new Monster(15, "내부 포탑", 50, 15, stage, playerLevel),
+                new Monster(20, "억제기 포탑", 60, 20, stage, playerLevel),
+                new Monster(30, "넥서스 포탑", 100, 25, stage, playerLevel)
             };
         }
 
@@ -150,17 +158,17 @@ namespace SpartaNDungeon
             {
                 for (int i = 0; i < randomCount; i++)
                 {
-                    summonMonster.Add(monsterList[3]); // 슈퍼미니언만 등장
+                    summonMonster.Add(monsterList[3].Clone(stage, playerLevel)); // 슈퍼미니언만 등장
                 }
-                summonMonster.Add(towerList[3]);
-                summonMonster.Add(towerList[3]);
+                summonMonster.Add(towerList[3].Clone(stage, playerLevel));
+                summonMonster.Add(towerList[3].Clone(stage, playerLevel));
             }
             else if(stage == 1) // 스테이지 1은 미니언, 대포미니언 및 공허충만 등장
             {
                 for (int i = 0; i < randomCount; i++) // 랜덤하게 1마리에서 4마리 생성
                 {
                     randomMon = random.Next(0,3); 
-                    summonMonster.Add(monsterList[randomMon]); 
+                    summonMonster.Add(monsterList[randomMon].Clone(stage, playerLevel)); 
                 }
             }
             else if (stage == 2) // 스테이지 2는 미니언 + 외곽 포탑 등장
@@ -168,34 +176,34 @@ namespace SpartaNDungeon
                 for (int i = 0; i < randomCount; i++)
                 {
                     randomMon = random.Next(0, 3); // 미니언, 대포미니언 및 공허충만 등장
-                    summonMonster.Add(monsterList[randomMon]); 
+                    summonMonster.Add(monsterList[randomMon].Clone(stage, playerLevel)); 
                 }
-                summonMonster.Add(towerList[0]); // 타워는 고정적으로 등장해야하기 때문에 for문 밖에서 생성
+                summonMonster.Add(towerList[0].Clone(stage, playerLevel)); // 타워는 고정적으로 등장해야하기 때문에 for문 밖에서 생성
             }
             else if (stage == 3) // 스테이지 3는 미니언 + 내부 포탑
             {
                 for (int i = 0; i < randomCount; i++)
                 {
                     randomMon = random.Next(0, 3); // 미니언, 대포미니언 및 공허충만 등장
-                    summonMonster.Add(monsterList[randomMon]); 
+                    summonMonster.Add(monsterList[randomMon].Clone(stage, playerLevel)); 
                 }
-                summonMonster.Add(towerList[1]); 
+                summonMonster.Add(towerList[1].Clone(stage, playerLevel)); 
             }
             else if (stage == 4) // 스테이지 4는 미니언 + 억제기 포탑 등장
             {
                 for (int i = 0; i < randomCount; i++)
                 {
                     randomMon = random.Next(0, 3); // 미니언, 대포미니언 및 공허충만 등장
-                    summonMonster.Add(monsterList[randomMon]); 
+                    summonMonster.Add(monsterList[randomMon].Clone(stage, playerLevel)); 
                 }
-                summonMonster.Add(towerList[2]); 
+                summonMonster.Add(towerList[2].Clone(stage, playerLevel)); 
             }
             else if (stage == 5) // 스테이지 5는 슈퍼미니언 + 대포미니언만 등장
             {
                 for (int i = 0; i < randomCount; i++)
                 {
                     randomMon = random.Next(2, 4); // 슈퍼미니언, 대포미니언만 등장
-                    summonMonster.Add(monsterList[randomMon]); 
+                    summonMonster.Add(monsterList[randomMon].Clone(stage, playerLevel)); 
                 }
             }
 

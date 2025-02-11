@@ -166,7 +166,7 @@ namespace SpartaNDungeon
                     DungeonPage();  // to dungeon page
                     break;
                 case 5:
-                    if (player.CheckAllClear()) { NotQuestPage(); break; }
+                    if (!player.CheckAllClear()) { NotQuestPage(); break; }
                     QuestPage();  // to quest page
                     break;
                 case 6:

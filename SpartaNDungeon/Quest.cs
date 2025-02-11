@@ -99,12 +99,13 @@ namespace SpartaNDungeon
         {
             Quest[] questSet = new Quest[2];
             // use index to find quests from quests
-            Quest killQuest = GetQuest(killQuestNames[killStage]);
-            Quest collectQuest = GetQuest(collectQuestNames[collectStage]);
+            Quest killQuest = GetQuest(killQuestNames[killStage - 1]);
+            Quest collectQuest = GetQuest(collectQuestNames[collectStage - 1]);
             // add two quests in questSet
             questSet[0] = killQuest; questSet[1] = collectQuest;
 
             return questSet;
         }
+        // display 
     }
 }

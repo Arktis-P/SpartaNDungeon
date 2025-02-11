@@ -315,7 +315,7 @@ namespace SpartaNDungeon
         // check if player has cleared every 
         public bool CheckAllClear()
         {
-            bool isAllClear = false;
+            bool isAllClear = true;
             if (WarriorClear && MageClear && RogueClear && ArcherClear) { isAllClear = true; }
             return isAllClear;
         }

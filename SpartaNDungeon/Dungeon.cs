@@ -92,7 +92,6 @@ namespace SpartaNDungeon
         
         public void UsePotion(UI ui, Item potion)
         {
-            Console.Clear();
             if (potion != null)
             {
                 Console.WriteLine($"\n{potion.Name}을 사용했습니다.");
@@ -111,6 +110,7 @@ namespace SpartaNDungeon
             {
                 Console.WriteLine("사용할 포션이 없습니다.");
             }
+            Thread.Sleep(1000);
             UsePotionPage(ui);
         }
         

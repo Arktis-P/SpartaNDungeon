@@ -172,13 +172,23 @@ namespace SpartaNDungeon
             // if inventory is empty, out empty msg
             if (inventory.Count == 0) { Console.WriteLine("인벤토리가 비어 있습니다."); return; }
 
+            List<string> itemNames = new List<string>();
+            List<string> itemDescrips = new List<string>();
+            foreach (Item iitem in inventory)
+            {
+                itemNames.Add(iitem.Name); itemDescrips.Add(iitem.Descrip);
+            }
+
+            int nameMax = ConsoleUtil.CalcuatedMaxNumber(itemNames);
+            int descripMax = ConsoleUtil.CalcuatedMaxNumber(itemDescrips);
+
             string item;
             for (int i = 0; i < inventory.Count; i++)
             {
                 item = "";  // initialize entire string for each item
                 item += isManaging ? $"{i + 1}. " : "-  ";
                 item += inventory[i].IsEquip ? "(E)" : "   ";
-                item += inventory[i].Name + "\t| " + inventory[i].Descrip;
+                item += ConsoleUtil.WriteSpace(inventory[i].Name, nameMax) + "\t| " + ConsoleUtil.WriteSpace(inventory[i].Descrip, descripMax);
                 item += "\t| " + inventory[i].GetType();
                 item += isSelling ? $"\t| {inventory[i].Cost} G" : "";
                 // show on console

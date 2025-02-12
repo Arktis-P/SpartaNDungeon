@@ -18,6 +18,7 @@ namespace SpartaNDungeon
         int prevHp = 0; // 입장 플레이어 체력
         int prevMp = 0;
         int prevExp = 0;
+        bool critical = false;
 
         public Battle(Dungeon dungeon)
         {
@@ -119,10 +120,7 @@ namespace SpartaNDungeon
         {
             int randomAtk = (int)Math.Ceiling(dungeon.player.Attack * 0.1);
             int playerAtk = dungeon.player.Attack + random.Next(-randomAtk, randomAtk + 1);
-            if(random.Next(0, 1) < 0.15) // 크리티컬 추후 Luk에 따라 변경
-            {
-                playerAtk = (int)(playerAtk * 1.6);
-            }
+
             return playerAtk;
         }
         public void Attack()
@@ -194,7 +192,11 @@ namespace SpartaNDungeon
 
                 int damage = (inputSkill == 1) ? CalAttack() : UseSkill(inputSkill);
                 if (damage == -1) continue;
-
+                if (random.NextDouble() < dungeon.player.Dexterity)
+                {
+                    damage *= 2;
+                    critical = true;
+                }
                 ExecuteAttack(monster, damage);
                 return true;
             }
@@ -212,7 +214,12 @@ namespace SpartaNDungeon
 
         public void ExecuteAttack(Monster monster, int damage)
         {
-            Console.WriteLine($"{monster.Name}에게 {damage}의 피해를 줬습니다.");
+            if(random.NextDouble() < 0.1) // 몬스터 회피 10%
+            {
+                Console.WriteLine($"Lv.{monster.Level} {monster.Name} 을(를) 공격했지만 아무일도 일어나지 않았습니다.");
+                damage = 0;
+            }
+            else Console.WriteLine($"{monster.Name}에게 {damage}의 피해를 줬습니다.");
             monster.Hp -= damage;
             if (monster.Hp <= 0)
             {
@@ -228,13 +235,21 @@ namespace SpartaNDungeon
             Console.WriteLine("Battle!");
             foreach (Monster mon in dungeon.monsters)
             {
+                int damage = 0;
                 if (mon.IsDead) continue; // 몬스터 죽어있으면 넘어가기
-
-                dungeon.player.Health -= mon.Atk;
+                if (random.NextDouble() < dungeon.player.Luck / 100.0) //회피 시
+                {
+                    Console.WriteLine("회피 성공!");
+                }
+                else
+                { //방어력의 절반만큼 빼고 데미지 계산
+                    damage = (int)Math.Ceiling(mon.Atk - dungeon.player.Defense * .5);
+                    dungeon.player.Health -= Math.Max(damage, 0); //데미지가 음수일 때 0으로 처리
+                }
                 dungeon.player.CheckDead();
                 
-                PhaseResult(false, mon, mon.Atk);
-                prevHp -= mon.Atk;
+                PhaseResult(false, mon, damage);
+                prevHp -= damage;
                 playerTurn = true;
             }
 
@@ -246,7 +261,14 @@ namespace SpartaNDungeon
             if (playerTurn)
             {
                 Console.WriteLine($"{dungeon.player.Name}의 공격!");
-                Console.WriteLine($"Lv.{select.Level} {select.Name} 을(를) 맞췄습니다. [데미지: {atk}]");
+                Console.Write($"Lv.{select.Level} {select.Name} 을(를) 맞췄습니다. [데미지: {atk}]");
+                if (critical)
+                {
+                    Console.WriteLine(" - 치명타 공격!!");
+                    critical = false;
+                }
+                else Console.WriteLine();
+
                 Console.WriteLine();
                 Console.WriteLine($"Lv.{select.Level} {select.Name}");
                 Console.Write($"HP {select.Hp + atk} -> {select.GetIsDead()}");
@@ -282,7 +304,7 @@ namespace SpartaNDungeon
             Console.WriteLine($"exp {prevExp} -> {dungeon.player.Exp}");
 
             dungeon.Reward(Dungeon.Stage);
-
+            dungeon.player.Mana += (10 + dungeon.player.Intelligence); // 스테이지 종료 시 마나 회복
             dungeon.player.CheckLevelUp();  // check if level up possible
         }
     }

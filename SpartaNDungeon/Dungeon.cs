@@ -25,10 +25,15 @@ namespace SpartaNDungeon
         public void DungeonPage(UI ui)
         {
             Console.Clear();
-            Console.WriteLine("협곡입장");
-            Console.WriteLine("미니언 생성까지 한 발자국 남았습니다.\n협곡에는 페르시아가 보낸 몬스터가 가득합니다.\n입장하기 전에 만반의 준비를 갖춰주십시오.\n");
+            Console.WriteLine();
+            Console.WriteLine("\t\t==== 협곡입장 ====");
+            Console.Write("  미니언 생성까지 한 발자국 남았습니다.\n  협곡에는 ");
+            ConsoleUtil.ColorWritePart("페르시아", ConsoleColor.Red);
+            Console.WriteLine("가 보낸 몬스터가 가득합니다.\n  입장하기 전에 만반의 준비를 갖춰주십시오.\n");
             Console.WriteLine("\n1. 상태 보기");
-            Console.WriteLine($"2. 전투 시작 (현재 스테이지: {Stage})");
+            Console.Write($"2. 전투 시작 (현재 스테이지: ");
+            ConsoleUtil.ColorWritePart(Stage.ToString(), ConsoleColor.Green);
+            Console.WriteLine(")");
             Console.WriteLine("3. 포션 사용\n");
             Console.WriteLine("0. 나가기");
 
@@ -55,8 +60,8 @@ namespace SpartaNDungeon
         public void BattleStatusPage(UI ui) // 상태 보기
         {
             Console.Clear();
-            Console.WriteLine("상태 보기");
-            Console.WriteLine("던전에 입장할 캐릭터의 정보가 표시됩니다.");
+            Console.WriteLine("\t\t==== 상태 보기 ====");
+            Console.WriteLine("  던전에 입장할 캐릭터의 정보가 표시됩니다.\n");
 
             //플레이어 정보 출력
             player.DisplayStatus();

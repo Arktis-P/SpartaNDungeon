@@ -37,13 +37,13 @@ namespace SpartaNDungeon
         {
             Console.Clear();
             Console.WriteLine();
-            Console.WriteLine("\t\t이곳이!");
+            ConsoleUtil.ColorWrite("\t\t이곳이!", ConsoleColor.Red);
             Thread.Sleep(500);
             Console.WriteLine();
-            Console.WriteLine("\t\t바로!");
+            ConsoleUtil.ColorWrite("\t\t바로!", ConsoleColor.Red);
             Thread.Sleep(500);
             Console.WriteLine();
-            Console.WriteLine("\t\t스파르타다!");
+            ConsoleUtil.ColorWrite("\t\t스파르타다!", ConsoleColor.Red);
             if (ConsoleUtil.GetAnyKey() == true) { IntroductionPage(); }
         }
 
@@ -87,7 +87,9 @@ namespace SpartaNDungeon
                     Console.WriteLine("\t저장된 데이터를 불러왔습니다.");
                     Thread.Sleep(500);
                     Console.WriteLine();
-                    Console.WriteLine($"\t스파르타의 협곡에 다시 오신 것을 환영합니다, {player.Name} 님!");
+                    Console.Write($"\t스파르타의 협곡에 다시 오신 것을 환영합니다, ");
+                    ConsoleUtil.ColorWritePart(player.Name, ConsoleColor.DarkCyan);
+                    Console.WriteLine(" 님!");
                     if (ConsoleUtil.GetAnyKey()) { StartPage(); return; }
                     return;
                 case 2:  // generate new player
@@ -127,7 +129,10 @@ namespace SpartaNDungeon
             // show welcome 
             Console.Clear();
             Console.WriteLine();
-            Console.WriteLine($"\t페르시아의 넥서스를 파괴해 스파르타의 협곡에 평화를 이끌어 주십시오, {player.Name} 님.");
+            ConsoleUtil.ColorWritePart("\t페르시아", ConsoleColor.Red);
+            Console.Write($"의 넥서스를 파괴해 스파르타의 협곡에 평화를 이끌어 주십시오, ");
+            ConsoleUtil.ColorWritePart(player.Name, ConsoleColor.DarkCyan);
+            Console.WriteLine(" 님.");
             Thread.Sleep(500);
             Console.WriteLine();
             Console.WriteLine("\t그곳까지 향하는 길이 순탄하지만은 않을 것입니다.");
@@ -325,7 +330,9 @@ namespace SpartaNDungeon
                 Console.WriteLine("  필요한 아이템을 구매할 수 있습니다.");
                 // display player Gold
                 Console.WriteLine();
-                Console.WriteLine($"  보유 골드: {Player.Gold} G");
+                Console.Write($"  보유 골드: ");
+                ConsoleUtil.ColorWritePart(Player.Gold.ToString(), ConsoleColor.DarkYellow);
+                Console.WriteLine(" G");
                 // show options
                 Console.WriteLine();
                 Console.WriteLine("\t[구매 가능한 아이템 목록]");
@@ -422,12 +429,14 @@ namespace SpartaNDungeon
         {
             Console.Clear();
             Console.WriteLine();
-            Console.WriteLine("\t\t==== 승리 ====");
+            ConsoleUtil.ColorWrite("\t\t==== 승리 ====", ConsoleColor.Green);
             Thread.Sleep(500);
             Console.WriteLine();
             Console.WriteLine("  페르시아의 넥서스가 파괴되었습니다!");
             Thread.Sleep(500);
-            Console.WriteLine($"  스파르타의 협곡에 평화가 찾아왔습니다. 감사합니다, {player.Name} 님!");
+            Console.Write($"  스파르타의 협곡에 평화가 찾아왔습니다. 감사합니다, ");
+            ConsoleUtil.ColorWritePart(player.Name, ConsoleColor.DarkCyan);
+            Console.WriteLine(" 님!");
             Thread.Sleep(500);
             Console.WriteLine();
             // check player's job and convert its value
@@ -460,6 +469,8 @@ namespace SpartaNDungeon
             Console.WriteLine("\t  몬스터 기능 : 박규태");
             Thread.Sleep(500);
             Console.WriteLine("\t    전투 기능 : 박소희");
+            Thread.Sleep(500);
+            Console.WriteLine("\t  퀘스트 기능 : 이정구");
             // check if all clear // if all clear, pop all clear msg up
             if (player.CheckAllClear()) { AllClearMessage(); return; }
             // get any key to continue

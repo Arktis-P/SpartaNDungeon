@@ -72,9 +72,11 @@ namespace SpartaNDungeon
         public void PlayerStatus() // 플레이어 상태 출력
         {
             Console.WriteLine("[내정보]");
-            Console.WriteLine($"Lv.{dungeon.player.Level} {dungeon.player.Name} ({dungeon.player.Job})");
-            Console.WriteLine($"HP {dungeon.player.Health}/{dungeon.player.MaxHealth}");
-            Console.WriteLine($"MP {dungeon.player.Mana}/{dungeon.player.MaxMana}");
+            Console.Write($"Lv.{dungeon.player.Level} ");
+            ConsoleUtil.ColorWritePart(dungeon.player.Name, ConsoleColor.DarkCyan);
+            Console.WriteLine(" ({dungeon.player.Job})");
+            Console.WriteLine($"HP {dungeon.player.Health} / {dungeon.player.MaxHealth}");
+            Console.WriteLine($"MP {dungeon.player.Mana} / {dungeon.player.MaxMana}");
         }
 
         // 레벨 스케일과 변이 판단을 위한 HashSet. 스케일링 및 변이 판단 후 여기에 저장되어 중복을 확인하는 데 사용한다
@@ -141,7 +143,7 @@ namespace SpartaNDungeon
             while (true)
             {
                 Console.Clear();
-                Console.WriteLine("Battle!\n");
+                ConsoleUtil.ColorWrite("Battle!\n", ConsoleColor.DarkRed);
                 MonsterStatus();
                 Console.WriteLine();
                 PlayerStatus();
@@ -242,10 +244,11 @@ namespace SpartaNDungeon
         public void PhaseResult(bool playerTurn, Monster select, int atk)
         {
             Console.Clear();
-            Console.WriteLine("Battle!!\n");
+            ConsoleUtil.ColorWrite("Battle!!\n",ConsoleColor.DarkRed);
             if (playerTurn)
             {
-                Console.WriteLine($"{dungeon.player.Name}의 공격!");
+                ConsoleUtil.ColorWritePart(dungeon.player.Name, ConsoleColor.DarkCyan);
+                Console.WriteLine("의 공격!");
                 Console.WriteLine($"Lv.{select.Level} {select.Name} 을(를) 맞췄습니다. [데미지: {atk}]");
                 Console.WriteLine();
                 Console.WriteLine($"Lv.{select.Level} {select.Name}");
@@ -256,8 +259,10 @@ namespace SpartaNDungeon
             else
             {
                 Console.WriteLine($"Lv.{select.Level} {select.Name}의 공격!");
-                Console.WriteLine($"{dungeon.player.Name} 을(를) 맞췄습니다. [데미지: {atk}]");
-                Console.WriteLine($"\nLv.{dungeon.player.Level} {dungeon.player.Name}");
+                ConsoleUtil.ColorWritePart(dungeon.player.Name, ConsoleColor.DarkCyan);
+                Console.WriteLine($"을(를) 맞췄습니다. [데미지: {atk}]");
+                Console.Write($"\nLv.{dungeon.player.Level} ");
+                ConsoleUtil.ColorWrite(dungeon.player.Name, ConsoleColor.DarkCyan);
                 Console.WriteLine($"HP {prevHp} -> {dungeon.player.Health}");
                 Thread.Sleep(2000);
             }
@@ -266,18 +271,19 @@ namespace SpartaNDungeon
         public void BattleResult()
         {
             Console.Clear();
-            Console.WriteLine("Battle!! - Result\n");
+            ConsoleUtil.ColorWrite("Battle!! - Result\n", ConsoleColor.DarkRed);
             if (dungeon.monsters.Count == monsterCnt)
             {
                 dungeon.NextStage();
-                Console.WriteLine("Victory");
+                ConsoleUtil.ColorWrite("승리!",ConsoleColor.Green);
                 Console.WriteLine($"던전에서 몬스터 {monsterCnt}마리를 잡았습니다.");
                 dungeon.player.Exp += random.Next(Dungeon.Stage * 50 , Dungeon.Stage * 100);
             }
             else if (dungeon.player.Health == 0) Console.WriteLine("You Lose");
 
-            Console.WriteLine("[캐릭터 정보]");
-            Console.WriteLine($"\nLv.{dungeon.player.Level} {dungeon.player.Name}");
+            Console.WriteLine("\n[캐릭터 정보]");
+            Console.Write($"\nLv.{dungeon.player.Level} ");
+            ConsoleUtil.ColorWrite(dungeon.player.Name, ConsoleColor.DarkCyan);
             Console.WriteLine($"HP {dungeon.player.Health}");
             Console.WriteLine($"exp {prevExp} -> {dungeon.player.Exp}");
 

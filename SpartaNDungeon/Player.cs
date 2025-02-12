@@ -154,10 +154,13 @@ namespace SpartaNDungeon
             }
             // show status
             Console.WriteLine($"LV. {Level}");  // Lv. 01
-            Console.WriteLine($"{Name} ( {jobName} )");  // Chad ( 전사 )
-            Console.WriteLine($"ATK : {Attack}\tDEF : {Defense}\tLUK : {Luck}\tDEX : {Dexterity}");  // ATK : 10    DEF : 10    LUK : 10    DEX : 10
-            Console.WriteLine($"HP : {Health} / {MaxHealth}\tMP : {Mana} / {MaxMana}"); // HP : 100 / 100    MP : 100 / 100
-            Console.WriteLine($"Gold : {Gold} G");  // Gold : 1000 G
+            ConsoleUtil.ColorWritePart(Name, ConsoleColor.DarkCyan);
+            Console.WriteLine($" ( {jobName} )");  // Chad ( 전사 )
+            Console.WriteLine("ATK : {0,3}  DEF : {1,3}  INT : {2,3}  LUK : {3,3}  DEX : {4,3}", Attack, Defense, Intelligence, Luck, Dexterity);  // ATK : 10    DEF : 10    LUK : 10    DEX : 10
+            Console.WriteLine($"HP : {Health} / {MaxHealth}\tMP : {Mana} / {MaxMana}"); // HP : 100 / 100    MP : 50 / 50
+            Console.Write($"Gold : ");  // Gold : 1000 G
+            ConsoleUtil.ColorWritePart(Gold.ToString(), ConsoleColor.DarkYellow);
+            Console.WriteLine(" G");
         }
 
         public enum JobType { Warrior = 1, Mage, Rogue, Archer }
@@ -179,7 +182,7 @@ namespace SpartaNDungeon
         public void DisplayInventory(bool isManaging = false, bool isSelling = false)
         {
             // if inventory is empty, out empty msg
-            if (inventory.Count == 0) { Console.WriteLine("인벤토리가 비어 있습니다."); return; }
+            if (inventory.Count == 0) { Console.WriteLine("  인벤토리가 비어 있습니다."); return; }
 
             List<string> itemNames = new List<string>();
             List<string> itemDescrips = new List<string>();
@@ -228,7 +231,7 @@ namespace SpartaNDungeon
         public void DisplaySkills()
         {
             // if skill set is empty, out empty msg
-            if (skills.Count == 0) { Console.WriteLine("스킬셋이 비어 있습니다."); return; }
+            if (skills.Count == 0) { Console.WriteLine("  스킬셋이 비어 있습니다."); return; }
 
             string item;
             for (int i = 0; i < skills.Count; i++)
@@ -264,7 +267,10 @@ namespace SpartaNDungeon
             UpdateStatus();  // update status change
             // level up msg
             Console.WriteLine();
-            Console.WriteLine($"  축하합니다! {Name}의 레벨이 {Level}(으)로 올랐습니다.");
+            ConsoleUtil.ColorWritePart(Name, ConsoleColor.DarkCyan);
+            Console.Write("의 레벨이 ");
+            ConsoleUtil.ColorWritePart(Level.ToString(), ConsoleColor.Green);
+            Console.WriteLine("(으)로 올랐습니다.");
             Console.WriteLine("  당신은 더욱 강력해지는 것을 느낍니다.");
             Console.WriteLine("  체력과 마나가 회복되었습니다.");
         }
@@ -279,8 +285,11 @@ namespace SpartaNDungeon
         {
             // when player is dead
             // show death msg
+            Console.Clear();
             Console.WriteLine();
-            Console.WriteLine($"{Name}이(가) 던전을 탐험하다 죽었습니다.");
+            ConsoleUtil.ColorWrite("\t\t==== 패배 ====", ConsoleColor.Red);
+            ConsoleUtil.ColorWritePart(Name, ConsoleColor.DarkCyan);
+            Console.WriteLine("이(가) 협곡에서 죽었습니다.");
             // ask if retry
             // [later] insert on UI class
             Console.WriteLine();

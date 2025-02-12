@@ -45,6 +45,12 @@ namespace SpartaNDungeon
             // Black DarkBle DarkGreen DarkCyan DarkRed DarkMagenta DarkYellow
             // Gray Blue Green Cyan Red Magenta Yellow White
         }
+        public static void ColorWritePart(string str, ConsoleColor color)  // change color of word by word
+        {
+            Console.ForegroundColor = color;
+            Console.Write(str);
+            Console.ResetColor();
+        }
 
         public static void Loading() // 로딩
         {

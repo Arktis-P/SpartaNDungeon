@@ -46,9 +46,11 @@ namespace SpartaNDungeon
             int index = 1;
             foreach (var saleItem in ItemSale)
             {
+                if (saleItem.GetPriceString() == "구매완료") { Console.ForegroundColor = ConsoleColor.DarkGray; }
                 string indexStr = String.Format("{0,2}", index);
                 Console.WriteLine($"{indexStr}.  {ConsoleUtil.WriteSpace(saleItem.Name, nameMax)}| {ConsoleUtil.WriteSpace(saleItem.Descrip, descripMax)}| {saleItem.GetType()}\t| {saleItem.GetPriceString()}");
                 index++;
+                Console.ResetColor();
             }
         }
         

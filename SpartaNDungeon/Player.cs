@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Reflection.Metadata;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -104,7 +105,7 @@ namespace SpartaNDungeon
         {
             List<Item> itemList = Item.GetItemList();
             Item item = itemList[itemList.Count() - 1];
-            AddItem(item); AddItem(item); AddItem(item);
+            AddItem(item);
         }
 
         // skill related methods
@@ -188,6 +189,11 @@ namespace SpartaNDungeon
             List<string> itemDescrips = new List<string>();
             foreach (Item iitem in inventory)
             {
+                if (iitem.Type == ItemType.Potion)
+                {
+                    string tempName = $"{iitem.Name} ({iitem.Count}개)";
+                    itemNames.Add(tempName); itemDescrips.Add(iitem.Descrip); break;
+                }
                 itemNames.Add(iitem.Name); itemDescrips.Add(iitem.Descrip);
             }
 
@@ -200,7 +206,8 @@ namespace SpartaNDungeon
                 item = "";  // initialize entire string for each item
                 item += isManaging ? String.Format("{0,2}. ", i+1) : "-  ";
                 item += inventory[i].IsEquip ? "(E)" : "   ";
-                item += ConsoleUtil.WriteSpace(inventory[i].Name, nameMax) + "\t| " + ConsoleUtil.WriteSpace(inventory[i].Descrip, descripMax);
+                item += inventory[i].Type == ItemType.Potion ? ConsoleUtil.WriteSpace($"{inventory[i].Name} ({inventory[i].Count}개)", nameMax) : ConsoleUtil.WriteSpace(inventory[i].Name, nameMax);
+                item += "\t| " + ConsoleUtil.WriteSpace(inventory[i].Descrip, descripMax);
                 item += "\t| " + inventory[i].GetType();
                 item += isSelling ? $"\t| {inventory[i].Cost} G" : "";
                 // 장착한 아이템은 초록색으로 변경

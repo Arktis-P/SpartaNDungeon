@@ -157,11 +157,12 @@ namespace SpartaNDungeon
             Console.WriteLine("4. 던전입장");
             if (player.CheckAllClear()) { Console.WriteLine("5. 퀘스트"); }
             Console.WriteLine("6. 게임저장");
+            Console.WriteLine("7. 몬스터 도감");
             Console.WriteLine();
             Console.WriteLine("0. 게임종료");
             Console.WriteLine();
 
-            int input = ConsoleUtil.GetInput(0, 6); // input의 입력 범위를 1부터 6까지 제한
+            int input = ConsoleUtil.GetInput(0, 7); // input의 입력 범위를 1부터 6까지 제한
             switch(input)
             {
                 case 1:
@@ -182,6 +183,9 @@ namespace SpartaNDungeon
                     break;
                 case 6:
                     SavePage();  // to save page
+                    break;
+                case 7:
+                    MonsterWikiPage();  // to save page
                     break;
                 case 0:
                     EndGame();  // to end game page
@@ -429,6 +433,31 @@ namespace SpartaNDungeon
                 StartPage(); return;
             }
         }
+
+        // Monster Wiki page
+        private void MonsterWikiPage()
+        {
+            manager = new MonsterManager(1);
+            Console.Clear();
+            Console.WriteLine();
+            Console.WriteLine("\t몬스터 도감");
+            Console.WriteLine("이곳에선 몬스터들의 정보를 알 수 있습니다.");
+            Console.WriteLine();
+            string str = "\t=====몬스터 목록=====";
+            ConsoleUtil.ColorWrite(str, ConsoleColor.Green);
+            manager.MonsterWiki();
+            Console.WriteLine();
+
+            Console.WriteLine("0. 돌아가기");
+            int input = ConsoleUtil.GetInput(0, 0);
+
+            switch (input)
+            {
+                case 0:
+                    StartPage(); return;
+            }
+        }
+
         // game clear page (when defeated Nexus tower)
         public void EndingPage()
         {

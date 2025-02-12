@@ -230,6 +230,8 @@ namespace SpartaNDungeon
             if (monster.Hp <= 0)
             {
                 monster.IsDead = true;
+                // check quest monster, if yes count 1 up
+                QuestManager.QuestCountUp(monster);
                 monsterCnt++;
             }
             playerTurn = false;

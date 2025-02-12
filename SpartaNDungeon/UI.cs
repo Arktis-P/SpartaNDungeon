@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics.Tracing;
@@ -405,7 +406,7 @@ namespace SpartaNDungeon
         }
 
         // quest page
-        private void QuestPage()
+        public void QuestPage()
         {
             while (true)
             {
@@ -418,13 +419,52 @@ namespace SpartaNDungeon
                 // 1~99. (퀘스트 목록 확인)
                 QuestManager.DisplayQuest();
                 // 0. 나가기
-                Console.WriteLine("0. 나가기");
+                Console.WriteLine("\n0. 나가기");
 
                 // get player's input
                 int input = ConsoleUtil.GetInput(0, QuestManager.questList.Count);
                 if (input == 0) { StartPage(); }
-                else if (input >= 1 && input <= QuestManager.questList.Count) { QuestManager.SelectQuest(input); }
+                else if (input >= 1 && input <= QuestManager.questList.Count) { SelectQuestPage(input); }
             }
+        }
+
+        private void SelectQuestPage(int input)
+        {
+            if (QuestManager.isQuest)
+            {
+                if (QuestManager.CheckQuestSatisfie(input)) { QuestManager.CompleteQuest(input); CompleteQuestPage(); }  // if quest satisfied
+                else { QuestExistPage(); }
+            }
+            else  // if isQuest is empty
+            {
+                if (!QuestManager.CheckQuestCompleted(input)) { QuestManager.SelectQuest(input); }
+                else { QuestAlreadyCompletedPage(); }
+            }
+
+        }
+        private void QuestAlreadyCompletedPage()
+        {
+            Console.Clear(); Console.WriteLine("\x1b[3J");
+            Console.WriteLine("\n\t\t==== 퀘스트 ====");
+            Console.WriteLine("  이미 완료한 퀘스트입니다.");
+            ConsoleUtil.GetAnyKey(); QuestPage();
+        }
+        private void CompleteQuestPage()
+        {
+            Console.Clear(); Console.WriteLine("\x1b[3J");
+            Console.WriteLine("\n\t\t==== 퀘스트 ====");
+            Console.WriteLine("  축하합니다! 퀘스트를 완료했습니다.");
+            Console.Write("  완료 보상으로 ");
+            ConsoleUtil.ColorWritePart(QuestManager.reward.ToString(), ConsoleColor.DarkYellow);
+            Console.WriteLine(" G를 획득했습니다.");
+            ConsoleUtil.GetAnyKey(); QuestPage();
+        }
+        private void QuestExistPage()
+        {
+            Console.Clear(); Console.WriteLine("\x1b[3J");
+            Console.WriteLine("\n\t\t==== 퀘스트 ====");
+            Console.WriteLine("  한 번에 여러 개의 퀘스트를 수주할 수 없습니다.");
+            ConsoleUtil.GetAnyKey(); QuestPage();
         }
 
         // Monster Wiki page

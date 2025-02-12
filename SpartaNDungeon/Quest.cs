@@ -16,7 +16,7 @@ namespace SpartaNDungeon
         public int Reward { get; set; }  // reward (mostly gold) as quest reward 
 
         public bool IsSelected; 
-        public bool IsSatisfied;  // if satisfied the clear condition
+        public bool IsSatisfied => CurrentCount >= TargetCount;  // if satisfied the clear condition
         public bool IsCompleted;  // if quest is already completed
 
 
@@ -27,7 +27,7 @@ namespace SpartaNDungeon
             Name = name; Desc = desc;
             TargetMonster = targetMonster; TargetCount = targetCount;
             Reward = reward;
-            IsSelected = false; IsSatisfied = false; IsCompleted = false;
+            IsSelected = false; IsCompleted = false;
             // get quset list
             // Quests = QuestList.GetAllQuests();
         }
@@ -50,6 +50,7 @@ namespace SpartaNDungeon
             {
                 IsSelected = false;
                 IsCompleted = true;
+                Player.Gold += Reward;
             }
             // if not satisfied, show cannot complete caution msg
         }
@@ -65,7 +66,7 @@ namespace SpartaNDungeon
             MonsterManager manager = new MonsterManager(0);
             questList = new List<Quest>
             {
-                new Quest("미니언 처치","미니언을 5마리 처치하십시오.",manager.monsterList[0],5,25),
+                new Quest("미니언 처치","미니언을 5마리 처치하십시오.",manager.monsterList[0],1,25),
                 new Quest("공허충 처치","공허충을 5마리 처치하십시오.",manager.monsterList[1],5,50),
                 new Quest("대포미니언 처치","대포미니언을 5마리 처치하십시오.",manager.monsterList[2],5,100),
                 new Quest("슈퍼 미니언 처치","슈퍼 미니언을 5마리 처치하십시오.",manager.monsterList[3],5,150)
@@ -85,8 +86,10 @@ namespace SpartaNDungeon
 
     static class QuestManager
     {
-        private static bool isQuest = false;
+        public static bool isQuest = false;
+        private static UI ui = new UI();
         private static Quest quest;
+        public static int reward;
         public static List<Quest> questList = QuestList.GetAllQuests();
         static QuestManager() { }
 
@@ -112,27 +115,50 @@ namespace SpartaNDungeon
             {
                 str = "";  // initializing
                 str += String.Format("{0,2}. ", i + 1) + (q.IsSelected ? "(V)" : "   ");
-                str += ConsoleUtil.WriteSpace(q.Name, nameMax) + "| " + ConsoleUtil.WriteSpace(q.Desc, descMax) + "| ";
-                str += $"{q.CurrentCount} / {q.TargetCount} 마리";
-                str += q.IsSatisfied ? " | 완료 가능" : "";
+                str += ConsoleUtil.WriteSpace(q.Name, nameMax) + "| " + ConsoleUtil.WriteSpace(q.Desc, descMax);
+                if (!q.IsCompleted)
+                {
+                    str += "| " + $"{q.CurrentCount} / {q.TargetCount}마리";
+                    str += q.IsSatisfied ? " | 완료 가능" : "";
+                }
                 
                 i++;
 
                 // check if selected, display in blue
                 // check if satisfied, display in green
                 // check if already completed, to disply in gray
-                if (q.IsSelected) { ConsoleUtil.ColorWrite(str, ConsoleColor.DarkCyan); }
+                if (q.IsCompleted) { ConsoleUtil.ColorWrite(str, ConsoleColor.Gray); }
                 else if (q.IsSatisfied) { ConsoleUtil.ColorWrite(str, ConsoleColor.Green); }
-                else if (q.IsCompleted) { ConsoleUtil.ColorWrite(str, ConsoleColor.Gray); }
+                else if (q.IsSelected) { ConsoleUtil.ColorWrite(str, ConsoleColor.DarkCyan); }
                 else { Console.WriteLine(str); }
             }
         }
         public static void SelectQuest(int input)
         {
-            if (quest != null) { Console.WriteLine("  퀘스트는 한 번에 하나씩만 수주할 수 있습니다."); }
             isQuest = !isQuest;
+            questList[input - 1].SelectQuest();
             quest = questList[input - 1];
-            quest.SelectQuest();
+            reward = quest.Reward;
+        }
+        public static bool CheckQuestCompleted(int input)
+        {
+            bool isCompleted = false;
+            Quest temp = questList[input - 1];
+            if (temp.IsCompleted) { isCompleted = true; }
+            return isCompleted;
+        }
+        public static bool CheckQuestSatisfie(int input)
+        {
+            bool isSatisfied = false;
+            Quest temp = questList[input - 1];
+            if (temp.IsSatisfied) { isSatisfied = true; }
+            return isSatisfied;
+        }
+        public static void CompleteQuest(int input)
+        {
+            questList[input - 1].CompleteQuest();
+            quest = null;
+            isQuest = false;
         }
 
         public static void ActivateQuestManager(Quest targetQuest)

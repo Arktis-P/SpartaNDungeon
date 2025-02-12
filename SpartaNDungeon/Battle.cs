@@ -312,6 +312,8 @@ namespace SpartaNDungeon
 
             dungeon.Reward(Dungeon.Stage);
             dungeon.player.Mana += (10 + dungeon.player.Intelligence); // 스테이지 종료 시 마나 회복
+            if (dungeon.player.Mana >= dungeon.player.MaxMana) dungeon.player.Mana = dungeon.player.MaxMana;
+            
             dungeon.player.CheckLevelUp();  // check if level up possible
         }
     }

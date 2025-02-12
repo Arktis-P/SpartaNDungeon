@@ -84,14 +84,14 @@ namespace SpartaNDungeon
     }
 
     // logue class skills
-    public class LogueSkill : CSkill
+    public class RogueSkill : CSkill
     {
         public string Name { get; set; }
         public string Desc { get; set; }
         public int ManaCost { get; set; }
         public int Multiplier { get; set; }
 
-        public LogueSkill(string name, string desc, int manaCost, int multiplier) : base(name, desc, manaCost, multiplier)
+        public RogueSkill(string name, string desc, int manaCost, int multiplier) : base(name, desc, manaCost, multiplier)
         {
             Name = name; Desc = desc; ManaCost = manaCost; Multiplier = multiplier;
         }
@@ -148,8 +148,8 @@ namespace SpartaNDungeon
             AddSkill(new WarriorSkill("연속베기", "하나의 적을 연속으로 ATT x 5의 피해를 입힙니다.", 75, 4));
             AddSkill(new MageSkill("파이어볼", "불덩이를 발사하여 적에게 INT x 2의 피해를 입힙니다.", 30, 2));
             AddSkill(new MageSkill("메테오", "하늘에서 커다란 불덩이를 떨어뜨려 적에게 INT x 4의 피해를 입힙니다.", 70, 4));
-            AddSkill(new LogueSkill("암습", "조용하게 적에게 접근해 LUK x 2의 피해를 입힙니다.", 35, 2));
-            AddSkill(new LogueSkill("급습", "빠르게 적에게 접근해 LUK x 4의 피해를 입힙니다.", 75, 4));
+            AddSkill(new RogueSkill("암습", "조용하게 적에게 접근해 LUK x 2의 피해를 입힙니다.", 35, 2));
+            AddSkill(new RogueSkill("급습", "빠르게 적에게 접근해 LUK x 4의 피해를 입힙니다.", 75, 4));
             AddSkill(new ArcherSkill("동시사격", "한 번에 두 개의 화살을 쏘아 DEX x 2의 피해를 입힙니다.", 35, 2));
             AddSkill(new ArcherSkill("연속사격", "여러 발의 화살을 연속으로 쏘아 DEX x 4의 피해를 입힙니다.", 75, 4));
         }

@@ -52,8 +52,8 @@ namespace SpartaNDungeon
             Health = 100; Mana = 50;
             Gold = 100000; Exp = 0;
 
-            MaxHealth = 100;  // may change dynamically with player's other stats (ex. level, attack, etc.)
-            MaxMana = 100;  // may change dynamically with player's other stats (ex. level, intelligence, etc.)
+            MaxHealth = 90 + Level * 10;  // may change dynamically with player's other stats (ex. level, attack, etc.)
+            MaxMana = 50 + Intelligence * 10;  // may change dynamically with player's other stats (ex. level, intelligence, etc.)
             LevelExp = 100 * Level;  // requied exp increases as level increases
             SkillDamage = 0;
 
@@ -94,7 +94,9 @@ namespace SpartaNDungeon
         // update changed stats after add stat
         private void UpdateStatus()
         {
-            Mana += Intelligence * 10;
+            MaxHealth = 90 + Level * 10;
+            MaxMana = 50 + Intelligence * 10;
+            Health = MaxHealth; Mana = MaxMana;
         }
 
         // give player default items (3 potions)
@@ -251,11 +253,20 @@ namespace SpartaNDungeon
             Level++;  // increase level
             Exp = 0;  // initiate exp to 0
             LevelExp = 100 * Level;  // set new level exp
-            Health = MaxHealth; Mana = MaxMana;  // heal health and mana
+            Attack++; Defense++; Intelligence++; Luck++; Dexterity++;
+            switch (Job)  // additional stat increase for each job
+            {
+                case JobType.Warrior: Attack++; break;
+                case JobType.Mage: Intelligence++; break;
+                case JobType.Rogue: Luck++; break;
+                case JobType.Archer: Dexterity++; break;
+            }
+            UpdateStatus();  // update status change
             // level up msg
             Console.WriteLine();
             Console.WriteLine($"  축하합니다! {Name}의 레벨이 {Level}(으)로 올랐습니다.");
-            Console.WriteLine("  체력과 마나가 회복됩니다.");
+            Console.WriteLine("  당신은 더욱 강력해지는 것을 느낍니다.");
+            Console.WriteLine("  체력과 마나가 회복되었습니다.");
         }
 
         // check if player is dead

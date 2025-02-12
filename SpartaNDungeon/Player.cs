@@ -43,8 +43,10 @@ namespace SpartaNDungeon
         public bool RogueClear { get; private set; }
         public bool ArcherClear { get; private set; }
 
+        public List<Quest> ActiveQuests { get; set; } = new List<Quest>();
+
         // player class initiate
-        public Player() { }
+        
         public Player(string name, int jobId)
         {
             Name = name; Level = 1; Job = (JobType)jobId;
@@ -69,6 +71,16 @@ namespace SpartaNDungeon
             // give player default 3 potion
             AddDefaultItem();
         }
+
+        public void StartQuest(Quest quest)
+        {
+            ActiveQuests.Add(quest);
+            Console.WriteLine($"퀘스트 시작: {quest.QuestName} - {quest.Description}");
+
+        }
+
+        
+
 
         // job gives additional stats
         private void AddStatus()

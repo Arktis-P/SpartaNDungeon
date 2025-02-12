@@ -43,9 +43,10 @@ namespace SpartaNDungeon
             IsDead = false;
 
             Type = GetMonsterType(stage); // 몬스터 타입 판단
-
             
         }
+
+
 
         // 같은 종류의 몬스터가 같은 값을 참조해 스탯(체력, 사망상태 등)을 공유하는 걸 막기 위해 생성할 때 클론으로 만든다.
         public Monster Clone(int stage, int playerLevel) 
@@ -161,14 +162,25 @@ namespace SpartaNDungeon
                 new Monster(10, "크세르크세스 1세", 120, 25, stage, "관대하지 않은 자. 스파르타를 위해 죽여야한다", playerLevel)
             };
         }
+        
 
-        public List<Monster> RandomMonster() // 전투에서 랜덤하게 등장할 몬스터를 정한다
+        public List<Monster> RandomMonster(List<Quest> quests) // 전투에서 랜덤하게 등장할 몬스터를 정한다
         {
             List<Monster> summonMonster = new List<Monster>();
             int min = 1 , max = 1; // 스테이지마다 등장 몬스터를 조절할 변수
             int randomCount = random.Next(min, max); // 한 전투에 나타나는 몬스터의 개체 수.
             int randomMon; // 랜덤한 일반 몬스터를 지정할 변수
             int randomElite; // 랜덤한 엘리트 몬스터를 지정할 변수
+
+            //몬스터가 생길 때 퀘스트를 업데이트
+            foreach (var quest in quests)
+            {
+                foreach(var monster in summonMonster)
+                {
+                    quest.UpdateQuest(monster); //퀘스트 진행상황 업데이트
+                }
+            }
+
 
             if(stage == 6) // 스테이지 6에 넥서스 포탑 등장
             {
@@ -264,6 +276,11 @@ namespace SpartaNDungeon
                 Console.WriteLine($" 이름 : {monster.Name} |  체력 : {monster.Hp} |  공격력 : {monster.Atk} \n {monster.Info}");
                 Console.WriteLine();
             }
+        }
+
+        internal List<Monster> RandomMonster()
+        {
+            throw new NotImplementedException();
         }
     }
 }

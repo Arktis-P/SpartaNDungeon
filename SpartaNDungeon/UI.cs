@@ -266,15 +266,7 @@ namespace SpartaNDungeon
                 else
                 {
                     Item item = player.inventory[input - 1];
-                    // check if item is equipable (type == weapon or armor)
-                    if (item.Type == ItemType.Weapon || item.Type == ItemType.Armor)
-                    {
-                        EquipItemPage(item);
-                    }
-                    else
-                    {
-                        Console.WriteLine($"{item.Name}은(는) 장비할 수 있는 아이템이 아닙니다.");
-                    }
+                    EquipItemPage(item);
                     InventoryManagePage(); return;
                 }
             }

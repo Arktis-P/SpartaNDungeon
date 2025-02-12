@@ -62,6 +62,7 @@ namespace SpartaNDungeon
                 Console.WriteLine();    
                 Console.WriteLine("\t\t==== 상점 - 구매하기 ====");
                 Console.WriteLine();
+                ConsoleUtil.ColorWrite(item.Name, ConsoleColor.Gray); //구매한 아이템은 회색 글씨로
                 Console.WriteLine($"  이미 {item.Name}을 구매하였습니다.");
             }
 
@@ -75,6 +76,7 @@ namespace SpartaNDungeon
                 item.IsPurchase = true;
                 player.AddItem(item); //구매한 아이템 인벤토리로
                 // to buy complete page
+
                 Console.Clear();
                 Console.WriteLine();
                 Console.WriteLine("\t\t==== 상점 - 구매하기 ====");
@@ -97,12 +99,14 @@ namespace SpartaNDungeon
             int sellPrce = item.Cost / 2;
             Player.Gold += sellPrce;
             player.RemoveItem(item); //판매한 아이템 인벤토리에서 제거
+            item.IsPurchase = false;
             // to sell complete page
             Console.Clear();
             Console.WriteLine();
             Console.WriteLine("\t\t==== 상점 - 판매하기 ====");
             Console.WriteLine();
             Console.WriteLine($"  {item.Name}을/를 판매하고, {item.Cost/2} G를 받았습니다.");
+            ConsoleUtil.ColorWrite(item.Name, ConsoleColor.White);// 다시 흰색 글씨로 변환
             ConsoleUtil.GetAnyKey();
         }
             

@@ -123,12 +123,11 @@ namespace SpartaNDungeon
         public List<Monster> eliteList; // 엘리트 몬스터 리스트
         public List<Monster> boss; // 보스
 
-        public int stage;
+        public int stage = Dungeon.Stage;
         public int playerLevel;
 
-        public MonsterManager(int stage, int playerLevel)
+        public MonsterManager(int playerLevel)
         {
-            this.stage = stage;
             this.playerLevel = playerLevel;
 
             monsterList = new List<Monster>

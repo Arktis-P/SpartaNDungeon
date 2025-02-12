@@ -79,7 +79,8 @@ namespace SpartaNDungeon
                     GameData gameData = DataManager.LoadData();
                     player = gameData.PlayerData;
                     Player.Gold = gameData.Gold;
-                    player.inventory = gameData.Inventory;
+                    Dungeon.Stage = gameData.Stage;
+                    Item.LoadItemList(gameData.Items);  // override item list
                     // show complete msg
                     Console.Clear();
                     Console.WriteLine();
@@ -266,21 +267,23 @@ namespace SpartaNDungeon
         }
         private void EquipItemPage(Item item)
         {
-            // equip item
-            item.EquipItem(player);
-            // set equip message
-            string equipMessage = "  ";
-            equipMessage += $"{item.Name}을(를) " + (item.IsEquip ? "장비" : "해제") + "했습니다. ";
-            equipMessage += (item.Type == ItemType.Weapon ? "공격" : "방어") + "력이 ";
-            equipMessage += $"{item.Value}" + (item.IsEquip ? "증가" : "감소") + "했습니다.";
-            // equip msg
+            StringBuilder equipMessage = new StringBuilder();
+
+            // 아이템 장착/해제 후 메시지 받아오기
+            string resultMessage = item.EquipItem(player);
+
+            // 메시지 추가
+            equipMessage.AppendLine(resultMessage);
+
+            // 화면 정리 후 메시지 출력
             Console.Clear();
             Console.WriteLine();
             Console.WriteLine("\t\t==== 인벤토리 - 장착관리 ====");
             Console.WriteLine();
-            Console.WriteLine(equipMessage);
+            Console.WriteLine(equipMessage.ToString());
             ConsoleUtil.GetAnyKey();
         }
+
 
         // shop page
         private void ShopPage()
@@ -372,7 +375,8 @@ namespace SpartaNDungeon
         // dungeon page
         private void DungeonPage()
         {
-            dungeon = new Dungeon(1, player, manager);
+            if (Dungeon.Stage == 0) { Dungeon.Stage = 1; }
+            dungeon = new Dungeon(Dungeon.Stage, player, manager);
             dungeon.DungeonPage(this);
         }
         // when quest is limited
@@ -494,7 +498,7 @@ namespace SpartaNDungeon
                 switch (input)
                 {
                     case 1:  // save data
-                        GameData gameData = new GameData(player, Player.Gold, player.inventory);
+                        GameData gameData = new GameData(player, Player.Gold, Dungeon.Stage, Item.GetItemList());
                         DataManager.SaveData(gameData);
                         SaveCompletePage();
                         return;

@@ -77,14 +77,24 @@ namespace SpartaNDungeon
             Console.WriteLine($"MP {dungeon.player.Mana}/{dungeon.player.MaxMana}");
         }
 
+        // 레벨 스케일과 변이 판단을 위한 HashSet. 스케일링 및 변이 판단 후 여기에 저장되어 중복을 확인하는 데 사용한다
+        private HashSet<Monster> scaledMon = new HashSet<Monster>(); // 레벨 스케일과 변이 중복 방지용 HashSet
+
         public void MonsterStatus() // 몬스터 상태 출력
         {
-            Console.WriteLine("Battle!");
-            Monster currentMon = null;
             for (int i = 0; i < dungeon.monsters.Count; i++)
             {
-                currentMon = dungeon.monsters[i];
-                if (currentMon.IsDead) // 몬스터 사망 시 이름 회색으로 출력
+                Monster currentMon = dungeon.monsters[i];
+
+                // 아직 레벨스케일링과 변이 판단이 되지않은 몬스터들만 LevelScale(), Mutation() 실행
+                if (!scaledMon.Contains(currentMon))
+                {
+                    currentMon.LevelScale(dungeon.player.Level);
+                    currentMon.Mutation(dungeon.player.Level);
+                    scaledMon.Add(currentMon); // HashSet에 저장 후 비교해서 중복을 방지한다.
+                }
+
+                if (currentMon.IsDead == true) // 몬스터가 사망할 경우 텍스트 색을 회색으로 변경
                 {
                     Console.ForegroundColor = ConsoleColor.DarkGray;
                     Console.WriteLine($"{(i + 1)}. {dungeon.monsters[i].MonsterDisplay()}");
@@ -92,7 +102,15 @@ namespace SpartaNDungeon
                 }
                 else
                 {
-                    Console.WriteLine($"{(i + 1)}. {dungeon.monsters[i].MonsterDisplay()}"); // 노말이면 일반적인 글자 색 출력
+                    if (currentMon.Type == MonsterType.Named) // 몬스터가 변이종일 경우 텍스트 색을 노란색으로 변경
+                    {
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine($"{(i + 1)}. {dungeon.monsters[i].MonsterDisplay()}");
+                        Console.ResetColor();
+                    }
+                    else
+                        Console.WriteLine($"{(i + 1)}. {dungeon.monsters[i].MonsterDisplay()}");
+
                 }
             }
         }
@@ -254,7 +272,7 @@ namespace SpartaNDungeon
                 dungeon.NextStage();
                 Console.WriteLine("Victory");
                 Console.WriteLine($"던전에서 몬스터 {monsterCnt}마리를 잡았습니다.");
-                dungeon.player.Exp += random.Next(dungeon.Stage, dungeon.Stage * 10 + 1);
+                dungeon.player.Exp += random.Next(Dungeon.Stage * 50 , Dungeon.Stage * 100);
             }
             else if (dungeon.player.Health == 0) Console.WriteLine("You Lose");
 
@@ -263,8 +281,9 @@ namespace SpartaNDungeon
             Console.WriteLine($"HP {dungeon.player.Health}");
             Console.WriteLine($"exp {prevExp} -> {dungeon.player.Exp}");
 
-            dungeon.Reward(dungeon.Stage);
+            dungeon.Reward(Dungeon.Stage);
 
+            dungeon.player.CheckLevelUp();  // check if level up possible
         }
     }
 }

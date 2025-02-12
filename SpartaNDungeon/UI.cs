@@ -84,7 +84,7 @@ namespace SpartaNDungeon
                     GameData gameData = DataManager.LoadData();
                     player = gameData.PlayerData;
                     Player.Gold = gameData.Gold;
-                    player.inventory = gameData.Inventory;
+                    Dungeon.Stage = gameData.Stage;
                     Item.LoadItemList(gameData.Items);  // override item list
                     // show complete msg
                     Console.Clear();
@@ -380,7 +380,8 @@ namespace SpartaNDungeon
         // dungeon page
         private void DungeonPage()
         {
-            dungeon = new Dungeon(1, player, manager);
+            if (Dungeon.Stage == 0) { Dungeon.Stage = 1; }
+            dungeon = new Dungeon(Dungeon.Stage, player, manager);
             dungeon.DungeonPage(this);
         }
         // when quest is limited
@@ -502,7 +503,7 @@ namespace SpartaNDungeon
                 switch (input)
                 {
                     case 1:  // save data
-                        GameData gameData = new GameData(player, Player.Gold, player.inventory, Item.GetItemList());
+                        GameData gameData = new GameData(player, Player.Gold, Dungeon.Stage, Item.GetItemList());
                         DataManager.SaveData(gameData);
                         SaveCompletePage();
                         return;

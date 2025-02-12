@@ -27,15 +27,15 @@ namespace SpartaNDungeon
             prevMp = dungeon.player.Mana;
             prevExp = dungeon.player.Exp;
         }
-        public void EnterDungeon(UI ui)
+        public void EnterDungeon()
         {
             Console.Clear();
             Shuffle(dungeon.monsters);
 
-            StartBattle(ui);
+            StartBattle();
 
         }
-        public void StartBattle(UI ui)
+        public void StartBattle()
         {
             while (true)
             {
@@ -57,7 +57,7 @@ namespace SpartaNDungeon
 
             }
             Console.WriteLine("\n0. 다음");
-            if(ConsoleUtil.GetInput(0,0) == 0) dungeon.DungeonPage(ui);
+            if(ConsoleUtil.GetInput(0,0) == 0) dungeon.DungeonPage();
 
         }
         public void Shuffle(List<Monster> list) // 배열 섞기
@@ -250,7 +250,8 @@ namespace SpartaNDungeon
                 else
                 { //방어력의 절반만큼 빼고 데미지 계산
                     damage = (int)Math.Ceiling(mon.Atk - dungeon.player.Defense * .5);
-                    dungeon.player.Health -= Math.Max(damage, 0); //데미지가 음수일 때 0으로 처리
+                    if (damage < 0) damage = 1;
+                    dungeon.player.Health -= damage; //데미지가 음수일 때 0으로 처리
                 }
                 dungeon.player.CheckDead();
                 
@@ -297,10 +298,10 @@ namespace SpartaNDungeon
             Console.WriteLine("Battle!! - Result\n");
             if (dungeon.monsters.Count == monsterCnt)
             {
-                dungeon.NextStage();
                 Console.WriteLine("Victory");
                 Console.WriteLine($"던전에서 몬스터 {monsterCnt}마리를 잡았습니다.");
                 dungeon.player.Exp += random.Next(Dungeon.Stage * 50 , Dungeon.Stage * 100);
+                dungeon.NextStage();
             }
             else if (dungeon.player.Health == 0) Console.WriteLine("You Lose");
 

@@ -440,7 +440,8 @@ namespace SpartaNDungeon
             manager = new MonsterManager(1);
             Console.Clear();
             Console.WriteLine();
-            Console.WriteLine("\t이곳에선 몬스터들의 정보를 알 수 있습니다.");
+            Console.WriteLine("\t\t==== 몬스터 위키 ====");
+            Console.WriteLine("  이곳에서 몬스터의 정보를 확인할 수 있습니다.");
             Console.WriteLine();
             string str = "\t[몬스터 목록]";
             ConsoleUtil.ColorWrite(str, ConsoleColor.Green);
@@ -465,8 +466,10 @@ namespace SpartaNDungeon
         {
             Console.Clear();
             manager = new MonsterManager(1);
+            Console.WriteLine("\n\t\t==== 몬스터 위키 ====");
+            Console.WriteLine("  이곳에서 몬스터의 정보를 확인할 수 있습니다.");
             Console.WriteLine();
-            string str = "\t=====몬스터 목록=====";
+            string str = "\t[몬스터 목록]";
             ConsoleUtil.ColorWrite(str, ConsoleColor.Green);
             manager.MonsterWikiSecond();
             Console.WriteLine();
@@ -493,8 +496,10 @@ namespace SpartaNDungeon
         {
             Console.Clear();
             manager = new MonsterManager(1);
+            Console.WriteLine("\n\t\t==== 몬스터 위키 ====");
+            Console.WriteLine("  이곳에서 몬스터의 정보를 확인할 수 있습니다.");
             Console.WriteLine();
-            string str = "\t=====몬스터 목록=====";
+            string str = "\t[몬스터 목록]";
             ConsoleUtil.ColorWrite(str, ConsoleColor.Green);
             manager.MonsterWikiThird();
             Console.WriteLine();
@@ -521,7 +526,8 @@ namespace SpartaNDungeon
             ConsoleUtil.ColorWrite("\t\t==== 승리 ====", ConsoleColor.Green);
             Thread.Sleep(500);
             Console.WriteLine();
-            Console.WriteLine("  페르시아의 넥서스가 파괴되었습니다!");
+            ConsoleUtil.ColorWritePart("  페르시아", ConsoleColor.Red);
+            Console.WriteLine("의 넥서스가 파괴되었습니다!");
             Thread.Sleep(500);
             Console.Write($"  스파르타의 협곡에 평화가 찾아왔습니다. 감사합니다, ");
             ConsoleUtil.ColorWritePart(player.Name, ConsoleColor.DarkCyan);
@@ -560,6 +566,8 @@ namespace SpartaNDungeon
             Console.WriteLine("\t    전투 기능 : 박소희");
             Thread.Sleep(500);
             Console.WriteLine("\t  퀘스트 기능 : 이정구");
+            Thread.Sleep(500);
+            Console.WriteLine("\t게임을 플레이해주셔서 감사합니다.");
             // check if all clear // if all clear, pop all clear msg up
             if (player.CheckAllClear()) { AllClearMessage(); return; }
             // get any key to continue

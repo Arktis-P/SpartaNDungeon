@@ -416,13 +416,14 @@ namespace SpartaNDungeon
                 // show option
                 Console.WriteLine();
                 // 1~99. (퀘스트 목록 확인)
+                QuestManager.DisplayQuest();
                 // 0. 나가기
                 Console.WriteLine("0. 나가기");
 
                 // get player's input
-                int input = ConsoleUtil.GetInput(0, 0);
-                // back to startpage
-                StartPage(); return;
+                int input = ConsoleUtil.GetInput(0, QuestManager.questList.Count);
+                if (input == 0) { StartPage(); }
+                else if (input >= 1 && input <= QuestManager.questList.Count) { QuestManager.SelectQuest(input); }
             }
         }
 

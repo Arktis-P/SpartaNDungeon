@@ -6,106 +6,143 @@ using System.Threading.Tasks;
 
 namespace SpartaNDungeon
 {
-    public enum QuestType { Kill = 1, Collect };
-    abstract class Quest
+    class Quest
     {
-        public string Name { get; }  // name of the quest
-        public string Desc { get; }  // description of the quest
-        public QuestType Type { get; }  // type of the quest (kill / collect)
-        public int Stage { get; }  // which stage of kill or collect quest
+        public string Name { get; set; }  // quest name
+        public string Desc { get; set; }  // quest description
+        public Monster TargetMonster { get; set; }  // target monster for the qeust
+        public int TargetCount { get; set; }  // how many monsters needed to be defeated
+        public int CurrentCount { get; set; }  // how many monsters defeated at the moment
+        public int Reward { get; set; }  // reward (mostly gold) as quest reward 
 
-        public Quest(string name, string desc, int typeInt, int stage)
+        public bool IsSelected; 
+        public bool IsSatisfied;  // if satisfied the clear condition
+        public bool IsCompleted;  // if quest is already completed
+
+
+        // public List<Quest> Quests;  // list of quests
+
+        public Quest(string name, string desc, Monster targetMonster, int targetCount, int reward)
         {
-            Name = name; Desc = desc; Type = (QuestType)typeInt; Stage = stage;
-        }
-    }
-
-    interface IKillQeust
-    {
-        public string TargetMonster { get; }
-        public int TargetCount { get; }
-    }
-
-    interface ICollectQuest
-    {
-        public string TargetItem { get; }
-        public int TargetCount { get; }
-    }
-
-    class KillQuest : Quest, IKillQeust
-    {
-        public string TargetMonster { get; }
-        public int TargetCount { get; }
-
-        public KillQuest(string name, string desc, int typeInt, int stage, string targetMonster, int targetCount) : base(name, desc, typeInt, stage)
-        {
+            Name = name; Desc = desc;
             TargetMonster = targetMonster; TargetCount = targetCount;
+            Reward = reward;
+            IsSelected = false; IsSatisfied = false; IsCompleted = false;
+            // get quset list
+            // Quests = QuestList.GetAllQuests();
         }
-    }
 
-    class CollectQuest : Quest, ICollectQuest
-    {
-        public string TargetItem { get; }
-        public int TargetCount { get; }
-
-        public CollectQuest(string name, string desc, int typeInt, int stage, string targetItem, int targetCount) : base(name, desc, typeInt, stage)
+        // convert selected state if selected
+        public void SelectQuest()
         {
-            TargetItem = targetItem; TargetCount = targetCount;
-        }
-    }
-
-    static class QuestData
-    {
-        static Dictionary<string, Quest> quests;
-
-        static List<string> killQuestNames = new List<string>();
-        static List<string> collectQuestNames = new List<string>();
-
-        static QuestData()  // initializing
-        {
-            quests = new Dictionary<string, Quest>()
+            // if not selected, convert selected state
+            if (!IsSelected)
             {
-                { "미니언 처치", new KillQuest("미니언 처치", "전투에서 미니언을 5마리 처치하십시오.",1,1,"미니언", 5) },
-                { "공허충 처치", new KillQuest("공허충 처치", "전투에서 공허충을 5마리 처치하십시오.",1,2,"공허충", 5) },
-                { "대포 미니언 처치", new KillQuest("대포 미니언 처치", "전투에서 대포 미니언을 5마리 처치하십시오.",1,3,"대포 미니언", 5) },
-                { "외곽 포탑 파괴", new KillQuest("외곽 포탑 처치", "전투에서 외곽 포탑을 3회 파괴하십시오.",1,4,"외곽 포탑", 3) },
-                { "내부 포탑 파괴", new KillQuest("내부 포탑 처치", "전투에서 내부 포탑을 3회 파괴하십시오.",1,5,"내부 포탑", 3) },
-                { "억제기 포탑 파괴", new KillQuest("억제기 포탑 파괴", "전투에서 억제기 포탑을 3회 파괴하십시오.",1,6,"억제기 포탑", 3) },
-                { "슈퍼 미니언 처치", new KillQuest("슈퍼 미니언 처치", "전투에서 슈퍼 미니언을 5마리 처치하십시오.",1,7,"슈퍼 미니언", 5) },
-                { "넥서스 포탑 파괴", new KillQuest("넥서스 포탑 파괴", "전투에서 넥서스 포탑을 3회 파괴하십시오.",1,8,"넥서스 포탑", 3) },
-                { "도란의 방패 획득", new CollectQuest("도란의 방패 획득", "전투에서 도란의 방패를 획득하십시오.",2,1,"도란의 방패", 1) },
-                { "도란의 반지 획득", new CollectQuest("도란의 반지 획득", "전투에서 도란의 반지를 획득하십시오.",2,2,"도란의 반지", 1) },
-                { "태양불꽃 망토 획득", new CollectQuest("태양불꽃 망토 획득", "전투에서 태양불꽃 망토를 획득하십시오.",2,3,"태양불꽃 망토", 1) },
-                { "티아맷 획득", new CollectQuest("티아맷 획득", "전투에서 티아맷을 획득하십시오.",2,4,"티아맷", 1) },
-                { "라바돈의 죽음 모자", new CollectQuest("라바돈의 죽음 모자 획득", "전투에서 라바돈의 죽음 모자를 획득하십시오.",2,5,"라바돈의 죽음 모자", 1) },
-                { "스태틱의 단검 획득", new CollectQuest("스태틱의 단검 획득", "전투에서 스태틱의 단검을 획득하십시오.",2,1,"스태틱의 단검", 1) }
-            };
-
-            foreach (var q in quests)
-            {
-                if (quests[q.Key] is IKillQeust) { killQuestNames.Add(quests[q.Key].Name); }
-                else if (quests[q.Key] is ICollectQuest) { collectQuestNames.Add(quests[q.Key].Name); }
+                IsSelected = true; return;
             }
         }
 
-        // return individual quest
-        public static Quest GetQuest(string name)
+        // convert completed stated if chosen to be completed
+        public void CompleteQuest()
         {
-            if (quests.ContainsKey(name)) { return quests[name]; }
+            // check if satisfied, and convert complete state
+            if (IsSelected && IsSatisfied)
+            {
+                IsSelected = false;
+                IsCompleted = true;
+            }
+            // if not satisfied, show cannot complete caution msg
+        }
+        
+    }
+
+    class QuestList
+    {
+        private static List<Quest> questList;
+
+        static QuestList()
+        {
+            MonsterManager manager = new MonsterManager(0);
+            questList = new List<Quest>
+            {
+                new Quest("미니언 처치","미니언을 5마리 처치하십시오.",manager.monsterList[0],5,25),
+                new Quest("공허충 처치","공허충을 5마리 처치하십시오.",manager.monsterList[1],5,50),
+                new Quest("대포미니언 처치","대포미니언을 5마리 처치하십시오.",manager.monsterList[2],5,100),
+                new Quest("슈퍼 미니언 처치","슈퍼 미니언을 5마리 처치하십시오.",manager.monsterList[3],5,150)
+            };
+        }
+        public Quest GetQuest(int index)
+        {
+            Quest quest;
+            if (index >= 0 && index < questList.Count) { return quest = questList[index]; }
             return null;
         }
-        // return a set of quest
-        public static Quest[] GetQeustSet(int killStage, int collectStage)
+        public static List<Quest> GetAllQuests()
         {
-            Quest[] questSet = new Quest[2];
-            // use index to find quests from quests
-            Quest killQuest = GetQuest(killQuestNames[killStage - 1]);
-            Quest collectQuest = GetQuest(collectQuestNames[collectStage - 1]);
-            // add two quests in questSet
-            questSet[0] = killQuest; questSet[1] = collectQuest;
-
-            return questSet;
+            return questList;
         }
-        // display 
+    }
+
+    static class QuestManager
+    {
+        private static bool isQuest = false;
+        private static Quest quest;
+        public static List<Quest> questList = QuestList.GetAllQuests();
+        static QuestManager() { }
+
+        public static void DisplayQuest()
+        {
+            if (questList.Count == 0) { Console.WriteLine("  퀘스트 목록이 비어 있습니다."); return; }
+
+            // preparation for list-up
+            List<string> questNames = new List<string>();
+            List<string> questDescs = new List<string>();
+            foreach (Quest q in questList)
+            {
+                questNames.Add(q.Name); questDescs.Add(q.Desc);
+            }
+            // decide spacings
+            int nameMax = ConsoleUtil.CalcuatedMaxNumber(questNames);
+            int descMax = ConsoleUtil.CalcuatedMaxNumber(questDescs);
+
+            // show list of quests
+            string str;
+            int i = 0;
+            foreach (Quest q in questList)
+            {
+                str = "";  // initializing
+                str += String.Format("{0,2}. ", i + 1) + (q.IsSelected ? "(V)" : "   ");
+                str += ConsoleUtil.WriteSpace(q.Name, nameMax) + "| " + ConsoleUtil.WriteSpace(q.Desc, descMax) + "| ";
+                str += $"{q.CurrentCount} / {q.TargetCount} 마리";
+                str += q.IsSatisfied ? " | 완료 가능" : "";
+                
+                i++;
+
+                // check if selected, display in blue
+                // check if satisfied, display in green
+                // check if already completed, to disply in gray
+                if (q.IsSelected) { ConsoleUtil.ColorWrite(str, ConsoleColor.DarkCyan); }
+                else if (q.IsSatisfied) { ConsoleUtil.ColorWrite(str, ConsoleColor.Green); }
+                else if (q.IsCompleted) { ConsoleUtil.ColorWrite(str, ConsoleColor.Gray); }
+                else { Console.WriteLine(str); }
+            }
+        }
+        public static void SelectQuest(int input)
+        {
+            if (quest != null) { Console.WriteLine("  퀘스트는 한 번에 하나씩만 수주할 수 있습니다."); }
+            isQuest = !isQuest;
+            quest = questList[input - 1];
+            quest.SelectQuest();
+        }
+
+        public static void ActivateQuestManager(Quest targetQuest)
+        {
+            quest = targetQuest;
+        }
+        
+        public static void QuestCountUp(Monster monster)
+        {
+            if (monster.Name == quest.TargetMonster.Name) { quest.CurrentCount++; }
+        }
     }
 }

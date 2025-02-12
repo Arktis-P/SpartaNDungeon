@@ -8,22 +8,24 @@ namespace SpartaNDungeon
     {
         public void Show()
         {
-            Console.OutputEncoding = Encoding.UTF8; 
+            Console.OutputEncoding = Encoding.UTF8;
             string title = @"
 
- ::::::::  :::::::::  :::::::::  :::::::::::     :::     ::::    ::: :::::::::  :::    ::: ::::    :::  ::::::::  ::::::::::  ::::::::  ::::    ::: 
-:+:    :+: :+:    :+: :+:    :+:     :+:       :+: :+:   :+:+:   :+: :+:    :+: :+:    :+: :+:+:   :+: :+:    :+: :+:        :+:    :+: :+:+:   :+: 
-+:+        +:+    +:+ +:+    +:+     +:+      +:+   +:+  :+:+:+  +:+ +:+    +:+ +:+    +:+ :+:+:+  +:+ +:+        +:+        +:+    +:+ :+:+:+  +:+ 
-+#++:++#++ +#++:++#+  +#++:++#:      +#+     +#++:++#++: +#+ +:+ +#+ +#+    +:+ +#+    +:+ +#+ +:+ +#+ :#:        +#++:++#   +#+    +:+ +#+ +:+ +#+ 
-       +#+ +#+        +#+    +#+     +#+     +#+     +#+ +#+  +#+#+# +#+    +#+ +#+    +#+ +#+  +#+#+# +#+   +#+# +#+        +#+    +#+ +#+  +#+#+# 
-#+#    #+# #+#        #+#    #+#     #+#     #+#     #+# #+#   #+#+# #+#    #+# #+#    #+# #+#   #+#+# #+#    #+# #+#        #+#    #+# #+#   #+#+# 
- ########  ###        ###    ###     ###     ###     ### ###    #### #########   ########  ###    ####  ########  ##########  ########  ###    #### 
+ _____                      _             _   _   ______  _   __  _   
+/  ___|                    | |           | \ | |  | ___ \(_) / _|| |  
+\ `--.  _ __    __ _  _ __ | |_   __ _   |  \| |  | |_/ / _ | |_ | |_ 
+ `--. \| '_ \  / _` || '__|| __| / _` |  | . ` |  |    / | ||  _|| __|
+/\__/ /| |_) || (_| || |   | |_ | (_| |  | |\  |  | |\ \ | || |  | |_ 
+\____/ | .__/  \__,_||_|    \__| \__,_|  \_| \_/  \_| \_||_||_|   \__|
+       | |                                                            
+       |_|                                                            
+                                                       
 ";
 
             // 타이틀 색상은 고정
             Console.Clear();
-            Console.ForegroundColor = ConsoleColor.White; 
-            Console.WriteLine(title); 
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine(title);
 
             // "Press any key to start the game..." 문구를 한 번만 출력하고 색상만 변경
             Console.SetCursorPosition(0, Console.CursorTop + 1);
@@ -46,13 +48,13 @@ namespace SpartaNDungeon
 
                 if (Console.KeyAvailable) // 키가 눌렸다면
                 {
-                    Console.ReadKey(true); 
+                    Console.ReadKey(true);
                     break; // 루프 종료
                 }
             }
 
             Console.ResetColor(); // 기본 색상으로 리셋
-            Console.Clear(); 
+            Console.Clear();
         }
     }
 }

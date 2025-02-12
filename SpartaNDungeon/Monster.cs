@@ -164,7 +164,7 @@ namespace SpartaNDungeon
         }
         
 
-        public List<Monster> RandomMonster(List<Quest> quests) // 전투에서 랜덤하게 등장할 몬스터를 정한다
+        public List<Monster> RandomMonster() // 전투에서 랜덤하게 등장할 몬스터를 정한다
         {
             List<Monster> summonMonster = new List<Monster>();
             int min = 1 , max = 1; // 스테이지마다 등장 몬스터를 조절할 변수
@@ -172,14 +172,6 @@ namespace SpartaNDungeon
             int randomMon; // 랜덤한 일반 몬스터를 지정할 변수
             int randomElite; // 랜덤한 엘리트 몬스터를 지정할 변수
 
-            //몬스터가 생길 때 퀘스트를 업데이트
-            foreach (var quest in quests)
-            {
-                foreach(var monster in summonMonster)
-                {
-                    quest.UpdateQuest(monster); //퀘스트 진행상황 업데이트
-                }
-            }
 
 
             if(stage == 6) // 스테이지 6에 넥서스 포탑 등장
@@ -284,9 +276,9 @@ namespace SpartaNDungeon
             }
         }
 
-        internal List<Monster> RandomMonster()
-        {
-            throw new NotImplementedException();
-        }
+        //internal List<Monster> RandomMonster()
+        //{
+        //    throw new NotImplementedException();
+        //}
     }
 }

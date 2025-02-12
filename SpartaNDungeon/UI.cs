@@ -418,6 +418,7 @@ namespace SpartaNDungeon
                 // show option
                 Console.WriteLine();
                 // 1~99. (퀘스트 목록 확인)
+                questManager.DisplayQuests();
                 // 0. 나가기
                 Console.WriteLine("0. 나가기");
 

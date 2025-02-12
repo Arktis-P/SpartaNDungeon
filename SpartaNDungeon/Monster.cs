@@ -165,14 +165,12 @@ namespace SpartaNDungeon
         public List<Monster> RandomMonster() // 전투에서 랜덤하게 등장할 몬스터를 정한다
         {
             List<Monster> summonMonster = new List<Monster>();
-            int min = 1 , max = 1; // 스테이지마다 등장 몬스터를 조절할 변수
-            int randomCount = random.Next(min, max); // 한 전투에 나타나는 몬스터의 개체 수.
+            int randomCount = random.Next(1, 5); // 한 전투에 나타나는 몬스터의 개체 수.
             int randomMon; // 랜덤한 일반 몬스터를 지정할 변수
             int randomElite; // 랜덤한 엘리트 몬스터를 지정할 변수
 
             if(stage == 6) // 스테이지 6에 넥서스 포탑 등장
             {
-                min = 1; max = 4;
                 for (int i = 0; i < randomCount; i++)
                 {
                     summonMonster.Add(monsterList[3].Clone(stage, playerLevel)); // 슈퍼미니언만 등장
@@ -182,7 +180,6 @@ namespace SpartaNDungeon
             }
             else if(stage == 1) // 스테이지 1은 미니언, 대포미니언 및 공허충만 등장
             {
-                min = 1; max = 4;
                 for (int i = 0; i < randomCount; i++)
                 {
                     randomMon = random.Next(0, 3);
@@ -191,7 +188,6 @@ namespace SpartaNDungeon
             }
             else if (stage == 2) // 스테이지 2는 미니언 + 외곽 포탑 등장
             {
-                min = 1; max = 4;
                 for (int i = 0; i < randomCount; i++)
                 {
                     randomMon = random.Next(0, 3); // 미니언, 대포미니언 및 공허충만 등장
@@ -201,8 +197,6 @@ namespace SpartaNDungeon
             }
             else if (stage == 3) // 스테이지 3는 미니언 + 엘리트 몬스터 + 내부 포탑
             {
-                min = 1; max = 4;
-                randomMon = random.Next(0, 3);
                 randomElite = random.Next(0, 4);
                 for (int i = 0; i < randomCount; i++)
                 {
@@ -214,11 +208,11 @@ namespace SpartaNDungeon
             }
             else if (stage == 4) // 스테이지 4는 미니언 + 엘리트 몬스터 2마리 + 억제기 포탑 등장
             {
-                min = 1; max = 3;
-                randomMon = random.Next(0, 3);
+                
                 randomElite = random.Next(0, 4);
                 for (int i = 0; i < randomCount; i++)
                 {
+                    randomMon = random.Next(0, 3);
                     summonMonster.Add(monsterList[randomMon].Clone(stage, playerLevel)); 
                 }
                 summonMonster.Add(eliteList[randomElite].Clone(stage, playerLevel));
@@ -227,7 +221,6 @@ namespace SpartaNDungeon
             }
             else if (stage == 5) // 스테이지 5는 슈퍼미니언 + 대포미니언만 등장
             {
-                min = 3; max = 6;
                 for (int i = 0; i < randomCount; i++)
                 {
                     randomMon = random.Next(2, 4); // 슈퍼미니언, 대포미니언만 등장

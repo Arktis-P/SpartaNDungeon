@@ -178,7 +178,7 @@ namespace SpartaNDungeon
                     DungeonPage();  // to dungeon page
                     break;
                 case 5:
-                    if (player.CheckAllClear()) { NotQuestPage(); break; }
+                    if (!player.CheckAllClear()) { NotQuestPage(); break; }
                     QuestPage();  // to quest page
                     break;
                 case 6:
@@ -418,11 +418,11 @@ namespace SpartaNDungeon
             while (true)
             {
                 Console.Clear();
-                Console.WriteLine("");
+                Console.WriteLine();
                 Console.WriteLine("\t\t==== 퀘스트 ====");
                 Console.WriteLine("  진행할 수 있는 퀘스트를 확인하고, 퀘스트를 수주할 수 있습니다.");
                 // show option
-                Console.WriteLine("");
+                Console.WriteLine();
                 // 1~99. (퀘스트 목록 확인)
                 // 0. 나가기
                 Console.WriteLine("0. 나가기");
@@ -440,10 +440,10 @@ namespace SpartaNDungeon
             manager = new MonsterManager(1);
             Console.Clear();
             Console.WriteLine();
-            Console.WriteLine("\t몬스터 도감");
-            Console.WriteLine("이곳에선 몬스터들의 정보를 알 수 있습니다.");
+            Console.WriteLine("\t\t==== 몬스터 도감 ====");
+            Console.WriteLine("  몬스터들의 정보를 확인할 수 있습니다.");
             Console.WriteLine();
-            string str = "\t=====몬스터 목록=====";
+            string str = "\t[몬스터 목록]";
             ConsoleUtil.ColorWrite(str, ConsoleColor.Green);
             manager.MonsterWiki();
             Console.WriteLine();

@@ -30,8 +30,8 @@ namespace SpartaNDungeon
                 Thread.Sleep(200);
             }
             Thread.Sleep(300);
-            TitlePage();
         }
+
         private TitleScreen titleScreen = new TitleScreen();
         public void ShowTitleScreen()
         {
@@ -42,13 +42,13 @@ namespace SpartaNDungeon
         {
             Console.Clear();
             Console.WriteLine();
-            Console.WriteLine("\t\t이곳이!");
+            ConsoleUtil.ColorWrite("\t\t이곳이!", ConsoleColor.Red);
             Thread.Sleep(500);
             Console.WriteLine();
-            Console.WriteLine("\t\t바로!");
+            ConsoleUtil.ColorWrite("\t\t바로!", ConsoleColor.Red);
             Thread.Sleep(500);
             Console.WriteLine();
-            Console.WriteLine("\t\t스파르타다!");
+            ConsoleUtil.ColorWrite("\t\t스파르타다!", ConsoleColor.Red);
             if (ConsoleUtil.GetAnyKey() == true) { IntroductionPage(); }
         }
 
@@ -57,12 +57,12 @@ namespace SpartaNDungeon
             Console.Clear();
             Console.WriteLine();
             Console.WriteLine("\t스파르타의 협곡에 오신 것을 환영합니다.");
+            Thread.Sleep(1500);
             if (DataManager.CheckLoadData())
             {
                 LoadPage();
                 return;
             }
-            Thread.Sleep(500);
             Console.WriteLine();
             Console.WriteLine("\t이곳에 입장하기 위해서는 당신에 대한 정보가 필요합니다.");
             if (ConsoleUtil.GetAnyKey() == true) { GeneratePage(); }
@@ -92,7 +92,9 @@ namespace SpartaNDungeon
                     Console.WriteLine("\t저장된 데이터를 불러왔습니다.");
                     Thread.Sleep(500);
                     Console.WriteLine();
-                    Console.WriteLine($"\t스파르타의 협곡에 다시 오신 것을 환영합니다, {player.Name} 님!");
+                    Console.Write($"\t스파르타의 협곡에 다시 오신 것을 환영합니다, ");
+                    ConsoleUtil.ColorWritePart(player.Name, ConsoleColor.DarkCyan);
+                    Console.WriteLine(" 님!");
                     if (ConsoleUtil.GetAnyKey()) { StartPage(); return; }
                     return;
                 case 2:  // generate new player
@@ -132,7 +134,10 @@ namespace SpartaNDungeon
             // show welcome 
             Console.Clear();
             Console.WriteLine();
-            Console.WriteLine($"\t페르시아의 넥서스를 파괴해 스파르타의 협곡에 평화를 이끌어 주십시오, {player.Name} 님.");
+            ConsoleUtil.ColorWritePart("\t페르시아", ConsoleColor.Red);
+            Console.Write($"의 넥서스를 파괴해 스파르타의 협곡에 평화를 이끌어 주십시오, ");
+            ConsoleUtil.ColorWritePart(player.Name, ConsoleColor.DarkCyan);
+            Console.WriteLine(" 님.");
             Thread.Sleep(500);
             Console.WriteLine();
             Console.WriteLine("\t그곳까지 향하는 길이 순탄하지만은 않을 것입니다.");
@@ -173,7 +178,7 @@ namespace SpartaNDungeon
                     DungeonPage();  // to dungeon page
                     break;
                 case 5:
-                    if (player.CheckAllClear()) { NotQuestPage(); break; }
+                    if (!player.CheckAllClear()) { NotQuestPage(); break; }
                     QuestPage();  // to quest page
                     break;
                 case 6:
@@ -261,15 +266,7 @@ namespace SpartaNDungeon
                 else
                 {
                     Item item = player.inventory[input - 1];
-                    // check if item is equipable (type == weapon or armor)
-                    if (item.Type == ItemType.Weapon || item.Type == ItemType.Armor)
-                    {
-                        EquipItemPage(item);
-                    }
-                    else
-                    {
-                        Console.WriteLine($"{item.Name}은(는) 장비할 수 있는 아이템이 아닙니다.");
-                    }
+                    EquipItemPage(item);
                     InventoryManagePage(); return;
                 }
             }
@@ -334,7 +331,9 @@ namespace SpartaNDungeon
                 Console.WriteLine("  필요한 아이템을 구매할 수 있습니다.");
                 // display player Gold
                 Console.WriteLine();
-                Console.WriteLine($"  보유 골드: {Player.Gold} G");
+                Console.Write($"  보유 골드: ");
+                ConsoleUtil.ColorWritePart(Player.Gold.ToString(), ConsoleColor.DarkYellow);
+                Console.WriteLine(" G");
                 // show options
                 Console.WriteLine();
                 Console.WriteLine("\t[구매 가능한 아이템 목록]");
@@ -385,8 +384,8 @@ namespace SpartaNDungeon
         private void DungeonPage()
         {
             if (Dungeon.Stage == 0) { Dungeon.Stage = 1; }
-            dungeon = new Dungeon(Dungeon.Stage, player, manager);
-            dungeon.DungeonPage(this);
+            dungeon = new Dungeon(Dungeon.Stage, player, manager, this);
+            dungeon.DungeonPage();
         }
         // when quest is limited
         private void NotQuestPage()
@@ -411,11 +410,11 @@ namespace SpartaNDungeon
             while (true)
             {
                 Console.Clear();
-                Console.WriteLine("");
+                Console.WriteLine();
                 Console.WriteLine("\t\t==== 퀘스트 ====");
                 Console.WriteLine("  진행할 수 있는 퀘스트를 확인하고, 퀘스트를 수주할 수 있습니다.");
                 // show option
-                Console.WriteLine("");
+                Console.WriteLine();
                 // 1~99. (퀘스트 목록 확인)
                 // 0. 나가기
                 Console.WriteLine("0. 나가기");
@@ -433,21 +432,81 @@ namespace SpartaNDungeon
             manager = new MonsterManager(1);
             Console.Clear();
             Console.WriteLine();
-            Console.WriteLine("\t몬스터 도감");
-            Console.WriteLine("이곳에선 몬스터들의 정보를 알 수 있습니다.");
+            Console.WriteLine("\t\t==== 몬스터 위키 ====");
+            Console.WriteLine("  이곳에서 몬스터의 정보를 확인할 수 있습니다.");
             Console.WriteLine();
-            string str = "\t=====몬스터 목록=====";
+            string str = "\t[몬스터 목록]";
             ConsoleUtil.ColorWrite(str, ConsoleColor.Green);
             manager.MonsterWiki();
             Console.WriteLine();
 
+            Console.WriteLine("1. 다음 페이지");
             Console.WriteLine("0. 돌아가기");
-            int input = ConsoleUtil.GetInput(0, 0);
+            int input = ConsoleUtil.GetInput(0, 1);
 
             switch (input)
             {
                 case 0:
                     StartPage(); return;
+                case 1:
+                    MonsterWikiPageSecond();
+                    break;
+            }
+        }
+
+        private void MonsterWikiPageSecond()
+        {
+            Console.Clear();
+            manager = new MonsterManager(1);
+            Console.WriteLine("\n\t\t==== 몬스터 위키 ====");
+            Console.WriteLine("  이곳에서 몬스터의 정보를 확인할 수 있습니다.");
+            Console.WriteLine();
+            string str = "\t[몬스터 목록]";
+            ConsoleUtil.ColorWrite(str, ConsoleColor.Green);
+            manager.MonsterWikiSecond();
+            Console.WriteLine();
+
+            Console.WriteLine("1. 다음 페이지");
+            Console.WriteLine("2. 이전 페이지");
+            Console.WriteLine("0. 돌아가기");
+            int input = ConsoleUtil.GetInput(0, 2);
+
+            switch (input)
+            {
+                case 0:
+                    StartPage(); return;
+                case 1:
+                    MonsterWikiPageThird();
+                    break;
+                case 2:
+                    MonsterWikiPage();
+                    break;
+            }
+        }
+
+        private void MonsterWikiPageThird()
+        {
+            Console.Clear();
+            manager = new MonsterManager(1);
+            Console.WriteLine("\n\t\t==== 몬스터 위키 ====");
+            Console.WriteLine("  이곳에서 몬스터의 정보를 확인할 수 있습니다.");
+            Console.WriteLine();
+            string str = "\t[몬스터 목록]";
+            ConsoleUtil.ColorWrite(str, ConsoleColor.Green);
+            manager.MonsterWikiThird();
+            Console.WriteLine();
+
+            Console.WriteLine("1. 이전 페이지");
+            Console.WriteLine("0. 돌아가기");
+            int input = ConsoleUtil.GetInput(0, 1);
+
+            switch (input)
+            {
+                case 0:
+                    StartPage(); return;
+                case 1:
+                    MonsterWikiPage();
+                    break;
             }
         }
 
@@ -456,12 +515,15 @@ namespace SpartaNDungeon
         {
             Console.Clear();
             Console.WriteLine();
-            Console.WriteLine("\t\t==== 승리 ====");
+            ConsoleUtil.ColorWrite("\t\t==== 승리 ====", ConsoleColor.Green);
             Thread.Sleep(500);
             Console.WriteLine();
-            Console.WriteLine("  페르시아의 넥서스가 파괴되었습니다!");
+            ConsoleUtil.ColorWritePart("  페르시아", ConsoleColor.Red);
+            Console.WriteLine("의 넥서스가 파괴되었습니다!");
             Thread.Sleep(500);
-            Console.WriteLine($"  스파르타의 협곡에 평화가 찾아왔습니다. 감사합니다, {player.Name} 님!");
+            Console.Write($"  스파르타의 협곡에 평화가 찾아왔습니다. 감사합니다, ");
+            ConsoleUtil.ColorWritePart(player.Name, ConsoleColor.DarkCyan);
+            Console.WriteLine(" 님!");
             Thread.Sleep(500);
             Console.WriteLine();
             // check player's job and convert its value
@@ -494,6 +556,10 @@ namespace SpartaNDungeon
             Console.WriteLine("\t  몬스터 기능 : 박규태");
             Thread.Sleep(500);
             Console.WriteLine("\t    전투 기능 : 박소희");
+            Thread.Sleep(500);
+            Console.WriteLine("\t  퀘스트 기능 : 이정구");
+            Thread.Sleep(500);
+            Console.WriteLine("\t게임을 플레이해주셔서 감사합니다.");
             // check if all clear // if all clear, pop all clear msg up
             if (player.CheckAllClear()) { AllClearMessage(); return; }
             // get any key to continue

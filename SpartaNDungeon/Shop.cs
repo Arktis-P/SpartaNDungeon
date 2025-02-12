@@ -38,7 +38,8 @@ namespace SpartaNDungeon
             List<string> descrips = new List<string>();
             foreach (Item iitem in ItemSale)
             {
-                names.Add(iitem.Name); descrips.Add(iitem.Descrip);
+                names.Add(iitem.Name);
+                descrips.Add(iitem.Descrip);
             }
             int nameMax = ConsoleUtil.CalcuatedMaxNumber(names);
             int descripMax = ConsoleUtil.CalcuatedMaxNumber(descrips);
@@ -46,12 +47,24 @@ namespace SpartaNDungeon
             int index = 1;
             foreach (var saleItem in ItemSale)
             {
+                // 아이템이 구매된 상태일 때 회색으로 표시
+                if (saleItem.IsPurchase)
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkGray;
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.White; // 기본 흰색으로 표시
+                }
+
                 string indexStr = String.Format("{0,2}", index);
                 Console.WriteLine($"{indexStr}.  {ConsoleUtil.WriteSpace(saleItem.Name, nameMax)}| {ConsoleUtil.WriteSpace(saleItem.Descrip, descripMax)}| {saleItem.GetType()}\t| {saleItem.GetPriceString()}");
                 index++;
+                Console.ResetColor();
             }
         }
-        
+
+
         public void BuyItem(Player player,Item item)
         {
             if (player.HasItem(item))
@@ -95,6 +108,7 @@ namespace SpartaNDungeon
             int sellPrce = item.Cost / 2;
             Player.Gold += sellPrce;
             player.RemoveItem(item); //판매한 아이템 인벤토리에서 제거
+            item.IsPurchase = false;
             // to sell complete page
             Console.Clear();
             Console.WriteLine();

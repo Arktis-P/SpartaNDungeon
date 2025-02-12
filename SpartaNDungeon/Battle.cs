@@ -145,7 +145,7 @@ namespace SpartaNDungeon
             while (true)
             {
                 Console.Clear();
-                Console.WriteLine("Battle!\n");
+                ConsoleUtil.ColorWrite("Battle!!\n", ConsoleColor.Magenta);
                 MonsterStatus();
                 Console.WriteLine();
                 PlayerStatus();
@@ -238,7 +238,7 @@ namespace SpartaNDungeon
         }
         public void MonsterAttack()
         {
-            Console.WriteLine("Battle!");
+            ConsoleUtil.ColorWrite("Battle!!", ConsoleColor.Magenta);
             foreach (Monster mon in dungeon.monsters)
             {
                 int damage = 0;
@@ -264,14 +264,15 @@ namespace SpartaNDungeon
         public void PhaseResult(bool playerTurn, Monster select, int atk)
         {
             Console.Clear();
-            Console.WriteLine("Battle!!\n");
+            ConsoleUtil.ColorWrite("Battle!!", ConsoleColor.Magenta);
+            Console.WriteLine();
             if (playerTurn)
             {
                 Console.WriteLine($"{dungeon.player.Name}의 공격!");
                 Console.Write($"Lv.{select.Level} {select.Name} 을(를) 맞췄습니다. [데미지: {atk}]");
                 if (critical)
                 {
-                    Console.WriteLine(" - 치명타 공격!!");
+                    ConsoleUtil.ColorWrite(" - 치명타 공격!!", ConsoleColor.DarkBlue);
                     critical = false;
                 }
                 else Console.WriteLine();
@@ -287,7 +288,7 @@ namespace SpartaNDungeon
                 Console.WriteLine($"Lv.{select.Level} {select.Name}의 공격!");
                 if (avoidance)
                 {
-                    Console.WriteLine("회피 성공!");
+                    ConsoleUtil.ColorWrite("회피 성공", ConsoleColor.DarkBlue);
                     avoidance = false;
                 }
                 else Console.WriteLine($"{dungeon.player.Name} 을(를) 맞췄습니다. [데미지: {atk}]");
@@ -300,15 +301,15 @@ namespace SpartaNDungeon
         public void BattleResult()
         {
             Console.Clear();
-            Console.WriteLine("Battle!! - Result\n");
+            ConsoleUtil.ColorWrite("Battle!! - Result\n", ConsoleColor.Magenta);
             if (dungeon.monsters.Count == monsterCnt)
             {
-                Console.WriteLine("Victory");
+                ConsoleUtil.ColorWrite("Victory", ConsoleColor.Red);
                 Console.WriteLine($"던전에서 몬스터 {monsterCnt}마리를 잡았습니다.");
                 dungeon.player.Exp += random.Next(Dungeon.Stage * 50 , Dungeon.Stage * 100);
                 dungeon.NextStage();
             }
-            else if (dungeon.player.Health == 0) Console.WriteLine("You Lose");
+            else if (dungeon.player.Health == 0) ConsoleUtil.ColorWrite("You Lose", ConsoleColor.Blue);
 
             Console.WriteLine("[캐릭터 정보]");
             Console.WriteLine($"\nLv.{dungeon.player.Level} {dungeon.player.Name}");

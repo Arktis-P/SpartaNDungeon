@@ -153,7 +153,7 @@ namespace SpartaNDungeon
                 new Monster(10, "외곽 포탑", 40, 10, stage, "외곽 방어선에 배치되어 있는 포탑. 단단한 것 빼곤 그저 그럴 뿐이다.", playerLevel),
                 new Monster(15, "내부 포탑", 45, 15, stage, "내부 방어선에 배치되어 있는 포탑. 외곽 포탑보다 조금 더 강하다.", playerLevel),
                 new Monster(20, "억제기 포탑", 45, 18, stage, "억제기 바로 앞에 배치되어 있는 포탑. 포탄의 위력이 조금 더 올랐으니 주의하자.", playerLevel),
-                new Monster(30, "넥서스 포탑", 60, 15, stage, "황제에게 가기 직전에 배치되어 있는 수호자 포탑. \n쌍둥이 포탑이라고도 부르며 두개가 같이 배치되어 있어 계속해서 공격을 퍼붓는다.", playerLevel)
+                new Monster(30, "넥서스 포탑", 60, 15, stage, "황제에게 가기 직전에 배치되어 있는 수호자 포탑. \n 쌍둥이 포탑이라고도 부르며 두개가 같이 배치되어 있어 계속해서 공격을 퍼붓는다.", playerLevel)
             };
 
             boss = new List<Monster>
@@ -252,13 +252,19 @@ namespace SpartaNDungeon
                 Console.WriteLine($" 이름 : {monster.Name} |  체력 : {monster.Hp} |  공격력 : {monster.Atk} \n {monster.Info}");
                 Console.WriteLine();
             }
+        }
 
+        public void MonsterWikiSecond()
+        {
             foreach (var monster in eliteList)
             {
                 Console.WriteLine($" 이름 : {monster.Name} |  체력 : {monster.Hp} |  공격력 : {monster.Atk} \n {monster.Info}");
                 Console.WriteLine();
             }
+        }
 
+        public void MonsterWikiThird()
+        {
             foreach (var monster in towerList)
             {
                 Console.WriteLine($" 이름 : {monster.Name} |  체력 : {monster.Hp} |  공격력 : {monster.Atk} \n {monster.Info}");

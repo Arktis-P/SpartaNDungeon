@@ -433,21 +433,76 @@ namespace SpartaNDungeon
             manager = new MonsterManager(1);
             Console.Clear();
             Console.WriteLine();
-            Console.WriteLine("\t몬스터 도감");
-            Console.WriteLine("이곳에선 몬스터들의 정보를 알 수 있습니다.");
+            Console.WriteLine("\t이곳에선 몬스터들의 정보를 알 수 있습니다.");
             Console.WriteLine();
             string str = "\t=====몬스터 목록=====";
             ConsoleUtil.ColorWrite(str, ConsoleColor.Green);
             manager.MonsterWiki();
             Console.WriteLine();
 
+            Console.WriteLine("1. 다음 페이지");
             Console.WriteLine("0. 돌아가기");
-            int input = ConsoleUtil.GetInput(0, 0);
+            int input = ConsoleUtil.GetInput(0, 1);
 
             switch (input)
             {
                 case 0:
                     StartPage(); return;
+                case 1:
+                    MonsterWikiPageSecond();
+                    break;
+            }
+        }
+
+        private void MonsterWikiPageSecond()
+        {
+            Console.Clear();
+            manager = new MonsterManager(1);
+            Console.WriteLine();
+            string str = "\t=====몬스터 목록=====";
+            ConsoleUtil.ColorWrite(str, ConsoleColor.Green);
+            manager.MonsterWikiSecond();
+            Console.WriteLine();
+
+            Console.WriteLine("1. 다음 페이지");
+            Console.WriteLine("2. 이전 페이지");
+            Console.WriteLine("0. 돌아가기");
+            int input = ConsoleUtil.GetInput(0, 2);
+
+            switch (input)
+            {
+                case 0:
+                    StartPage(); return;
+                case 1:
+                    MonsterWikiPageThird();
+                    break;
+                case 2:
+                    MonsterWikiPage();
+                    break;
+            }
+        }
+
+        private void MonsterWikiPageThird()
+        {
+            Console.Clear();
+            manager = new MonsterManager(1);
+            Console.WriteLine();
+            string str = "\t=====몬스터 목록=====";
+            ConsoleUtil.ColorWrite(str, ConsoleColor.Green);
+            manager.MonsterWikiThird();
+            Console.WriteLine();
+
+            Console.WriteLine("1. 이전 페이지");
+            Console.WriteLine("0. 돌아가기");
+            int input = ConsoleUtil.GetInput(0, 1);
+
+            switch (input)
+            {
+                case 0:
+                    StartPage(); return;
+                case 1:
+                    MonsterWikiPage();
+                    break;
             }
         }
 

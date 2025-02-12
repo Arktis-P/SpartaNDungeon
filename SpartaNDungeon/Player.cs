@@ -43,8 +43,9 @@ namespace SpartaNDungeon
         public bool RogueClear { get; private set; }
         public bool ArcherClear { get; private set; }
 
-        public List<Quest> ActiveQuests { get; set; } = new List<Quest>();
+        public List<Quest1> ActiveQuests { get; set; } = new List<Quest1>();
 
+        public List<Monster> questMonsters { get; set; } = new List<Monster>();
         // player class initiate
         
         public Player(string name, int jobId)
@@ -72,10 +73,10 @@ namespace SpartaNDungeon
             AddDefaultItem();
         }
 
-        public void StartQuest(Quest quest)
+        public void StartQuest(Quest1 quest)
         {
             ActiveQuests.Add(quest);
-            Console.WriteLine($"퀘스트 시작: {quest.QuestName} - {quest.Description}");
+            Console.WriteLine($"퀘스트 시작: {quest.name} - {quest.decrip}");
 
         }
 

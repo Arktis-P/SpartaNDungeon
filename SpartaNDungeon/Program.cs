@@ -19,11 +19,12 @@ namespace SpartaNDungeon
     class Game
     {
         private Player player;
-        private UI ui;
+        private UI ui = new UI();
 
         public void Start()
         {
-            ui = new UI();
+          
+            ui.ShowTitleScreen();
             ui.LoadingPage();
         }
     }

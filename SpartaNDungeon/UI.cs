@@ -57,7 +57,7 @@ namespace SpartaNDungeon
             Console.Clear();
             Console.WriteLine();
             Console.WriteLine("\t스파르타의 협곡에 오신 것을 환영합니다.");
-            Thread.Sleep(500);
+            Thread.Sleep(1500);
             if (DataManager.CheckLoadData())
             {
                 LoadPage();

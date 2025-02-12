@@ -58,7 +58,7 @@ namespace SpartaNDungeon
             Console.Clear();
             Console.WriteLine();
             Console.WriteLine("\t스파르타의 협곡에 오신 것을 환영합니다.");
-            Thread.Sleep(500);
+            Thread.Sleep(1500);
             if (DataManager.CheckLoadData())
             {
                 LoadPage();
@@ -470,8 +470,8 @@ namespace SpartaNDungeon
         // Monster Wiki page
         private void MonsterWikiPage()
         {
-            manager = new MonsterManager(1);
             Console.Clear();
+            manager = new MonsterManager(1);
             Console.WriteLine();
             Console.WriteLine("\t\t==== 몬스터 위키 ====");
             Console.WriteLine("  이곳에서 몬스터의 정보를 확인할 수 있습니다.");
@@ -488,8 +488,12 @@ namespace SpartaNDungeon
             switch (input)
             {
                 case 0:
+                    Console.Clear();
+                    Console.WriteLine("\x1b[3J");
                     StartPage(); return;
                 case 1:
+                    Console.Clear();
+                    Console.WriteLine("\x1b[3J");
                     MonsterWikiPageSecond();
                     break;
             }
@@ -515,11 +519,17 @@ namespace SpartaNDungeon
             switch (input)
             {
                 case 0:
+                    Console.Clear();
+                    Console.WriteLine("\x1b[3J");
                     StartPage(); return;
                 case 1:
+                    Console.Clear();
+                    Console.WriteLine("\x1b[3J");
                     MonsterWikiPageThird();
                     break;
                 case 2:
+                    Console.Clear();
+                    Console.WriteLine("\x1b[3J");
                     MonsterWikiPage();
                     break;
             }
@@ -544,9 +554,13 @@ namespace SpartaNDungeon
             switch (input)
             {
                 case 0:
+                    Console.Clear();
+                    Console.WriteLine("\x1b[3J");
                     StartPage(); return;
                 case 1:
-                    MonsterWikiPage();
+                    Console.Clear();
+                    Console.WriteLine("\x1b[3J");
+                    MonsterWikiPageSecond();
                     break;
             }
         }

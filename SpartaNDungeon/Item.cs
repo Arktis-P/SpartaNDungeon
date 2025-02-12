@@ -100,7 +100,7 @@ namespace SpartaNDungeon
             {
                 if (item.Count > 0)
                 {
-                    player.Health = Math.Min(100, player.Health + item.Value);
+                    player.Health = Math.Min(player.MaxHealth, player.Health + item.Value);
                     item.Count--;
                     return player.Health;
                 }

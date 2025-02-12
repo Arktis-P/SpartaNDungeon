@@ -65,44 +65,43 @@ namespace SpartaNDungeon
         }
 
 
-        public void BuyItem(Player player,Item item)
+        public void BuyItem(Player player, Item item)
         {
-            if (player.HasItem(item))
+            Console.Clear();
+            Console.WriteLine("\t\t==== 상점 - 구매하기 ====");
+            Console.WriteLine();
+
+            // 이미 구매한 아이템인지 확인 (포션 제외)
+            if (item.Type != ItemType.Potion && player.HasItem(item))
             {
-                Console.Clear();
-                Console.WriteLine();    
-                Console.WriteLine("\t\t==== 상점 - 구매하기 ====");
-                Console.WriteLine();
-                Console.WriteLine($"  이미 {item.Name}을 구매하였습니다.");
+                Console.WriteLine($"  이미 {item.Name}을(를) 구매하였습니다.");
             }
-
-
-
-
-
-            else if (Player.Gold >= item.Cost)
+            else if (Player.Gold < item.Cost)
             {
-                Player.Gold -= item.Cost;
-                item.IsPurchase = true;
-                player.AddItem(item); //구매한 아이템 인벤토리로
-                // to buy complete page
-                Console.Clear();
-                Console.WriteLine();
-                Console.WriteLine("\t\t==== 상점 - 구매하기 ====");
-                Console.WriteLine();
-                Console.WriteLine($"  {item.Name}을(를) 구매해주셔서 감사합니다.");
-            }
-
-            else
-            {
-                Console.Clear();
-                Console.WriteLine();
-                Console.WriteLine("\t\t==== 상점 - 구매하기 ====");
-                Console.WriteLine();
                 Console.WriteLine("  골드가 충분하지 않습니다.");
             }
+            else
+            {
+                Player.Gold -= item.Cost; // 골드 차감
+
+                if (item.Type == ItemType.Potion)
+                {
+                    // 포션 개수 증가
+                    item.Count++;
+                    Console.WriteLine($"  {item.Name}을(를) 구매해주셔서 감사합니다. (보유량: {player.inventory.Find(i => i.Name == item.Name)!.Count}개)");
+                }
+                else
+                {
+                    item.IsPurchase = true;
+                    player.AddItem(item); // 인벤토리에 추가
+                    Console.WriteLine($"  {item.Name}을(를) 구매해주셔서 감사합니다.");
+                }
+            }
+
             ConsoleUtil.GetAnyKey();
         }
+
+
         public void SellItem(Player player,Item item)
         {
             int sellPrce = item.Cost / 2;

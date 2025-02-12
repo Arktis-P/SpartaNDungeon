@@ -429,8 +429,8 @@ namespace SpartaNDungeon
         // Monster Wiki page
         private void MonsterWikiPage()
         {
-            manager = new MonsterManager(1);
             Console.Clear();
+            manager = new MonsterManager(1);
             Console.WriteLine();
             Console.WriteLine("\t\t==== 몬스터 위키 ====");
             Console.WriteLine("  이곳에서 몬스터의 정보를 확인할 수 있습니다.");
@@ -505,7 +505,7 @@ namespace SpartaNDungeon
                 case 0:
                     StartPage(); return;
                 case 1:
-                    MonsterWikiPage();
+                    MonsterWikiPageSecond();
                     break;
             }
         }

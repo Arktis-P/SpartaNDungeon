@@ -19,7 +19,7 @@ namespace SpartaNDungeon
         int prevMp = 0;
         int prevExp = 0;
         bool critical = false;
-
+        bool avoidance = false;
         public Battle(Dungeon dungeon)
         {
             this.dungeon = dungeon;
@@ -245,7 +245,7 @@ namespace SpartaNDungeon
                 if (mon.IsDead) continue; // 몬스터 죽어있으면 넘어가기
                 if (random.NextDouble() < dungeon.player.Luck / 100.0) //회피 시
                 {
-                    Console.WriteLine("회피 성공!");
+                    avoidance = true;
                 }
                 else
                 { //방어력의 절반만큼 빼고 데미지 계산
@@ -285,7 +285,12 @@ namespace SpartaNDungeon
             else
             {
                 Console.WriteLine($"Lv.{select.Level} {select.Name}의 공격!");
-                Console.WriteLine($"{dungeon.player.Name} 을(를) 맞췄습니다. [데미지: {atk}]");
+                if (avoidance)
+                {
+                    Console.WriteLine("회피 성공!");
+                    avoidance = false;
+                }
+                else Console.WriteLine($"{dungeon.player.Name} 을(를) 맞췄습니다. [데미지: {atk}]");
                 Console.WriteLine($"\nLv.{dungeon.player.Level} {dungeon.player.Name}");
                 Console.WriteLine($"HP {prevHp} -> {dungeon.player.Health}");
                 Thread.Sleep(2000);

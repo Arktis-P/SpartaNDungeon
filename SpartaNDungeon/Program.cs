@@ -23,9 +23,9 @@ namespace SpartaNDungeon
 
         public void Start()
         {
-          
-            ui.ShowTitleScreen();
             ui.LoadingPage();
+            ui.ShowTitleScreen();
+            ui.IntroductionPage();
         }
     }
 }

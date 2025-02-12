@@ -28,16 +28,18 @@ namespace SpartaNDungeon
         public string Name { get; set; } // 몬스터 이름
         public int Hp { get; set; } //  몬스터 체력
         public int Atk { get; set; } // 몬스터 공격력
+        public string Info {  get; set; } // 몬스터 정보
         public bool IsDead { get; set; } // 사망했는지 판단하는 횟수
 
 
         
-        public Monster(int level, string name, int hp, int atk, int stage, int playerLevel) 
+        public Monster(int level, string name, int hp, int atk, int stage, string info, int playerLevel) 
         {
             Level = level; 
             Name = name;
             Hp = hp;  
-            Atk = atk; 
+            Atk = atk;
+            Info = info;
             IsDead = false;
 
             Type = GetMonsterType(stage); // 몬스터 타입 판단
@@ -48,7 +50,7 @@ namespace SpartaNDungeon
         // 같은 종류의 몬스터가 같은 값을 참조해 스탯(체력, 사망상태 등)을 공유하는 걸 막기 위해 생성할 때 클론으로 만든다.
         public Monster Clone(int stage, int playerLevel) 
         {
-            return new Monster(Level, Name, Hp, Atk, stage, playerLevel);
+            return new Monster(Level, Name, Hp, Atk, stage, Info, playerLevel);
         }
 
         public void LevelScale(int playerLevel) // 몬스터는 플레이어의 레벨에 따라 레벨 및 각종 스탯이 상승한다.
@@ -132,31 +134,31 @@ namespace SpartaNDungeon
 
             monsterList = new List<Monster>
             {
-                new Monster(2, "미니언", 12, 6, stage, playerLevel),
-                new Monster(3, "공허충", 10, 10, stage, playerLevel),
-                new Monster(5, "대포미니언", 15, 7, stage, playerLevel),
-                new Monster(10, "슈퍼 미니언", 30, 12, stage, playerLevel)
+                new Monster(2, "미니언", 12, 6, stage, "일반적인 미니언 병사이다. 하나씩은 그렇게 강하지 않지만 여러마리가 모인다면 무시할 수 없다.", playerLevel),
+                new Monster(3, "공허충", 10, 10, stage, "공허에서 튀어나온 벌레이다. 체력이 많지 않으나 공격성이 강하다.", playerLevel),
+                new Monster(5, "대포미니언", 15, 7, stage, "대포를 조종하는 미니언 병사이다. 일반적인 미니언보다 맷집이 단단한 편이다.", playerLevel),
+                new Monster(10, "슈퍼 미니언", 30, 12, stage, "최종 방어선을 지키는 정예병이다. 체력이 높고 공격력도 강해 방심할 수 없는 상대이다.", playerLevel)
             };
 
             eliteList = new List<Monster>
             {
-                new Monster(8, "칼날부리", 20, 15, stage, playerLevel),
-                new Monster(9, "큰 어스름 늑대", 25, 12, stage, playerLevel),
-                new Monster(11, "고대 돌거북", 35, 6, stage,playerLevel),
-                new Monster(10, "심술 두꺼비", 28, 10, stage, playerLevel)
+                new Monster(8, "칼날부리", 20, 15, stage, "칼날부리란 이름 처럼 날카로운 부리로 공격을 하는 위험한 새다. 공격력이 높으니 주의해야한다.", playerLevel),
+                new Monster(9, "큰 어스름 늑대", 25, 12, stage, "일반적인 늑대보다 커다란 늑대이다. 준수한 스펙을 지니고 있으니 조심하자.", playerLevel),
+                new Monster(11, "고대 돌거북", 35, 6, stage, "아주 오랫동안 살아온 거북이다. 체력이 매우 높으나 공격성이 약해 다른 놈을 먼저 노리자.", playerLevel),
+                new Monster(10, "심술 두꺼비", 28, 10, stage, "늪지에서 사는 독두꺼비다. 커다란 몸집에 맞게 체력이 높으니 주의.", playerLevel)
             };
 
             towerList = new List<Monster>
             {
-                new Monster(10, "외곽 포탑", 40, 10, stage, playerLevel),
-                new Monster(15, "내부 포탑", 45, 15, stage, playerLevel),
-                new Monster(20, "억제기 포탑", 45, 18, stage, playerLevel),
-                new Monster(30, "넥서스 포탑", 60, 15, stage, playerLevel)
+                new Monster(10, "외곽 포탑", 40, 10, stage, "외곽 방어선에 배치되어 있는 포탑. 단단한 것 빼곤 그저 그럴 뿐이다.", playerLevel),
+                new Monster(15, "내부 포탑", 45, 15, stage, "내부 방어선에 배치되어 있는 포탑. 외곽 포탑보다 조금 더 강하다.", playerLevel),
+                new Monster(20, "억제기 포탑", 45, 18, stage, "억제기 바로 앞에 배치되어 있는 포탑. 포탄의 위력이 조금 더 올랐으니 주의하자.", playerLevel),
+                new Monster(30, "넥서스 포탑", 60, 15, stage, "황제에게 가기 직전에 배치되어 있는 수호자 포탑. \n쌍둥이 포탑이라고도 부르며 두개가 같이 배치되어 있어 계속해서 공격을 퍼붓는다.", playerLevel)
             };
 
             boss = new List<Monster>
             {
-                new Monster(10, "크세르크세스 1세", 120, 25, stage, playerLevel)
+                new Monster(10, "크세르크세스 1세", 120, 25, stage, "관대하지 않은 자. 스파르타를 위해 죽여야한다", playerLevel)
             };
         }
 
@@ -247,13 +249,19 @@ namespace SpartaNDungeon
         {
             foreach (var monster in monsterList)
             {
-                Console.WriteLine($" 이름 : {monster.Name} |  체력 : {monster.Hp} |  공격력 : {monster.Atk} ");
+                Console.WriteLine($" 이름 : {monster.Name} |  체력 : {monster.Hp} |  공격력 : {monster.Atk} \n {monster.Info}");
                 Console.WriteLine();
             }
 
             foreach (var monster in eliteList)
             {
-                Console.WriteLine($" 이름 : {monster.Name} |  체력 : {monster.Hp} |  공격력 : {monster.Atk} ");
+                Console.WriteLine($" 이름 : {monster.Name} |  체력 : {monster.Hp} |  공격력 : {monster.Atk} \n {monster.Info}");
+                Console.WriteLine();
+            }
+
+            foreach (var monster in towerList)
+            {
+                Console.WriteLine($" 이름 : {monster.Name} |  체력 : {monster.Hp} |  공격력 : {monster.Atk} \n {monster.Info}");
                 Console.WriteLine();
             }
         }

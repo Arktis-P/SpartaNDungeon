@@ -32,6 +32,11 @@ namespace SpartaNDungeon
             Thread.Sleep(300);
             TitlePage();
         }
+        private TitleScreen titleScreen = new TitleScreen();
+        public void ShowTitleScreen()
+        {
+            titleScreen.Show(); // TitleScreen의 Show() 메서드 호출
+        }
 
         private void TitlePage()  // show game title page
         {

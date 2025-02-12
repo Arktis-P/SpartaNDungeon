@@ -448,9 +448,11 @@ namespace SpartaNDungeon
             {
                 case 0:
                     Console.Clear();
+                    Console.WriteLine("\x1b[3J");
                     StartPage(); return;
                 case 1:
                     Console.Clear();
+                    Console.WriteLine("\x1b[3J");
                     MonsterWikiPageSecond();
                     break;
             }
@@ -477,13 +479,16 @@ namespace SpartaNDungeon
             {
                 case 0:
                     Console.Clear();
+                    Console.WriteLine("\x1b[3J");
                     StartPage(); return;
                 case 1:
                     Console.Clear();
+                    Console.WriteLine("\x1b[3J");
                     MonsterWikiPageThird();
                     break;
                 case 2:
                     Console.Clear();
+                    Console.WriteLine("\x1b[3J");
                     MonsterWikiPage();
                     break;
             }
@@ -509,9 +514,11 @@ namespace SpartaNDungeon
             {
                 case 0:
                     Console.Clear();
+                    Console.WriteLine("\x1b[3J");
                     StartPage(); return;
                 case 1:
                     Console.Clear();
+                    Console.WriteLine("\x1b[3J");
                     MonsterWikiPageSecond();
                     break;
             }

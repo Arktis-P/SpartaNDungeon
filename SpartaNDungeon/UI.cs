@@ -30,8 +30,8 @@ namespace SpartaNDungeon
                 Thread.Sleep(200);
             }
             Thread.Sleep(300);
-            TitlePage();
         }
+
         private TitleScreen titleScreen = new TitleScreen();
         public void ShowTitleScreen()
         {
@@ -57,12 +57,12 @@ namespace SpartaNDungeon
             Console.Clear();
             Console.WriteLine();
             Console.WriteLine("\t스파르타의 협곡에 오신 것을 환영합니다.");
+            Thread.Sleep(500);
             if (DataManager.CheckLoadData())
             {
                 LoadPage();
                 return;
             }
-            Thread.Sleep(500);
             Console.WriteLine();
             Console.WriteLine("\t이곳에 입장하기 위해서는 당신에 대한 정보가 필요합니다.");
             if (ConsoleUtil.GetAnyKey() == true) { GeneratePage(); }

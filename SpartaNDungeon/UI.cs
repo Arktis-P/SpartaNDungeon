@@ -392,8 +392,8 @@ namespace SpartaNDungeon
         private void DungeonPage()
         {
             if (Dungeon.Stage == 0) { Dungeon.Stage = 1; }
-            dungeon = new Dungeon(Dungeon.Stage, player, manager);
-            dungeon.DungeonPage(this);
+            dungeon = new Dungeon(Dungeon.Stage, player, manager, this);
+            dungeon.DungeonPage();
         }
         // when quest is limited
         private void NotQuestPage()

@@ -122,7 +122,7 @@ namespace SpartaNDungeon
 
             // check if player has used skill in its skill set
             // check if player has enough mana
-            if (Mana >= usedSkill.ManaCost)
+            if (Mana >= usedSkill.ManaCost && Mana >0)
             {
                 // take mana off
                 Mana -= usedSkill.ManaCost;
@@ -132,6 +132,7 @@ namespace SpartaNDungeon
                 // show use log
                 Console.WriteLine();
                 Console.WriteLine($"{usedSkill.Name} 스킬을 사용!");
+                if (Mana < 0) Mana = 0;
             }
             else
             {

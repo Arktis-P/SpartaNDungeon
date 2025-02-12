@@ -49,7 +49,7 @@ namespace SpartaNDungeon
         {
             Name = name; Level = 1; Job = (JobType)jobId;
             Attack = 5; Defense = 5; Intelligence = 5; Luck = 5; Dexterity = 5;
-            Health = 100; Mana = 100;
+            Health = 100; Mana = 50;
             Gold = 100000; Exp = 0;
 
             MaxHealth = 100;  // may change dynamically with player's other stats (ex. level, attack, etc.)
@@ -89,7 +89,14 @@ namespace SpartaNDungeon
                     break;
                 default: break;  // default, no additional stats
             }
+            UpdateStatus();
         }
+        // update changed stats after add stat
+        private void UpdateStatus()
+        {
+            Mana += Intelligence * 10;
+        }
+
         // give player default items (3 potions)
         private void AddDefaultItem()
         {

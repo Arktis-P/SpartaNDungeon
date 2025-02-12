@@ -18,6 +18,7 @@ namespace SpartaNDungeon
         int prevHp = 0; // 입장 플레이어 체력
         int prevMp = 0;
         int prevExp = 0;
+        bool critical = false;
 
         public Battle(Dungeon dungeon)
         {
@@ -26,15 +27,15 @@ namespace SpartaNDungeon
             prevMp = dungeon.player.Mana;
             prevExp = dungeon.player.Exp;
         }
-        public void EnterDungeon(UI ui)
+        public void EnterDungeon()
         {
             Console.Clear();
             Shuffle(dungeon.monsters);
 
-            StartBattle(ui);
+            StartBattle();
 
         }
-        public void StartBattle(UI ui)
+        public void StartBattle()
         {
             while (true)
             {
@@ -56,7 +57,7 @@ namespace SpartaNDungeon
 
             }
             Console.WriteLine("\n0. 다음");
-            if(ConsoleUtil.GetInput(0,0) == 0) dungeon.DungeonPage(ui);
+            if(ConsoleUtil.GetInput(0,0) == 0) dungeon.DungeonPage();
 
         }
         public void Shuffle(List<Monster> list) // 배열 섞기
@@ -77,14 +78,30 @@ namespace SpartaNDungeon
             Console.WriteLine($"MP {dungeon.player.Mana}/{dungeon.player.MaxMana}");
         }
 
+        // 레벨 스케일과 변이 판단을 위한 HashSet. 스케일링 및 변이 판단 후 여기에 저장되어 중복을 확인하는 데 사용한다
+        private HashSet<Monster> scaledMon = new HashSet<Monster>(); // 레벨 스케일과 변이 중복 방지용 HashSet
+
         public void MonsterStatus() // 몬스터 상태 출력
         {
-            Console.WriteLine("Battle!");
-            Monster currentMon = null;
             for (int i = 0; i < dungeon.monsters.Count; i++)
             {
-                currentMon = dungeon.monsters[i];
-                if (currentMon.IsDead) // 몬스터 사망 시 이름 회색으로 출력
+                Monster currentMon = dungeon.monsters[i];
+
+                // 아직 레벨스케일링과 변이 판단이 되지않은 몬스터들만 LevelScale(), Mutation() 실행
+                if (!scaledMon.Contains(currentMon))
+                {
+                    currentMon.LevelScale(dungeon.player.Level);
+                    currentMon.Mutation(dungeon.player.Level);
+                    scaledMon.Add(currentMon); // HashSet에 저장 후 비교해서 중복을 방지한다.
+                }
+
+                if (Dungeon.Stage == 7) // 보스 스테이지일때 보스 패시브 발동
+                {
+                    if (currentMon.IsDead == false)
+                        currentMon.BossPassive();
+                }
+
+                if (currentMon.IsDead == true) // 몬스터가 사망할 경우 텍스트 색을 회색으로 변경
                 {
                     Console.ForegroundColor = ConsoleColor.DarkGray;
                     Console.WriteLine($"{(i + 1)}. {dungeon.monsters[i].MonsterDisplay()}");
@@ -92,7 +109,15 @@ namespace SpartaNDungeon
                 }
                 else
                 {
-                    Console.WriteLine($"{(i + 1)}. {dungeon.monsters[i].MonsterDisplay()}"); // 노말이면 일반적인 글자 색 출력
+                    if (currentMon.Type == MonsterType.Named) // 몬스터가 변이종일 경우 텍스트 색을 노란색으로 변경
+                    {
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine($"{(i + 1)}. {dungeon.monsters[i].MonsterDisplay()}");
+                        Console.ResetColor();
+                    }
+                    else
+                        Console.WriteLine($"{(i + 1)}. {dungeon.monsters[i].MonsterDisplay()}");
+
                 }
             }
         }
@@ -101,10 +126,7 @@ namespace SpartaNDungeon
         {
             int randomAtk = (int)Math.Ceiling(dungeon.player.Attack * 0.1);
             int playerAtk = dungeon.player.Attack + random.Next(-randomAtk, randomAtk + 1);
-            if(random.Next(0, 1) < 0.15) // 크리티컬 추후 Luk에 따라 변경
-            {
-                playerAtk = (int)(playerAtk * 1.6);
-            }
+
             return playerAtk;
         }
         public void Attack()
@@ -176,7 +198,11 @@ namespace SpartaNDungeon
 
                 int damage = (inputSkill == 1) ? CalAttack() : UseSkill(inputSkill);
                 if (damage == -1) continue;
-
+                if (random.NextDouble() < dungeon.player.Dexterity)
+                {
+                    damage *= 2;
+                    critical = true;
+                }
                 ExecuteAttack(monster, damage);
                 return true;
             }
@@ -194,7 +220,12 @@ namespace SpartaNDungeon
 
         public void ExecuteAttack(Monster monster, int damage)
         {
-            Console.WriteLine($"{monster.Name}에게 {damage}의 피해를 줬습니다.");
+            if(random.NextDouble() < 0.1) // 몬스터 회피 10%
+            {
+                Console.WriteLine($"Lv.{monster.Level} {monster.Name} 을(를) 공격했지만 아무일도 일어나지 않았습니다.");
+                damage = 0;
+            }
+            else Console.WriteLine($"{monster.Name}에게 {damage}의 피해를 줬습니다.");
             monster.Hp -= damage;
             if (monster.Hp <= 0)
             {
@@ -210,13 +241,22 @@ namespace SpartaNDungeon
             Console.WriteLine("Battle!");
             foreach (Monster mon in dungeon.monsters)
             {
+                int damage = 0;
                 if (mon.IsDead) continue; // 몬스터 죽어있으면 넘어가기
-
-                dungeon.player.Health -= mon.Atk;
+                if (random.NextDouble() < dungeon.player.Luck / 100.0) //회피 시
+                {
+                    Console.WriteLine("회피 성공!");
+                }
+                else
+                { //방어력의 절반만큼 빼고 데미지 계산
+                    damage = (int)Math.Ceiling(mon.Atk - dungeon.player.Defense * .5);
+                    if (damage < 0) damage = 1;
+                    dungeon.player.Health -= damage; //데미지가 음수일 때 0으로 처리
+                }
                 dungeon.player.CheckDead();
                 
-                PhaseResult(false, mon, mon.Atk);
-                prevHp -= mon.Atk;
+                PhaseResult(false, mon, damage);
+                prevHp -= damage;
                 playerTurn = true;
             }
 
@@ -228,7 +268,14 @@ namespace SpartaNDungeon
             if (playerTurn)
             {
                 Console.WriteLine($"{dungeon.player.Name}의 공격!");
-                Console.WriteLine($"Lv.{select.Level} {select.Name} 을(를) 맞췄습니다. [데미지: {atk}]");
+                Console.Write($"Lv.{select.Level} {select.Name} 을(를) 맞췄습니다. [데미지: {atk}]");
+                if (critical)
+                {
+                    Console.WriteLine(" - 치명타 공격!!");
+                    critical = false;
+                }
+                else Console.WriteLine();
+
                 Console.WriteLine();
                 Console.WriteLine($"Lv.{select.Level} {select.Name}");
                 Console.Write($"HP {select.Hp + atk} -> {select.GetIsDead()}");
@@ -251,10 +298,10 @@ namespace SpartaNDungeon
             Console.WriteLine("Battle!! - Result\n");
             if (dungeon.monsters.Count == monsterCnt)
             {
-                dungeon.NextStage();
                 Console.WriteLine("Victory");
                 Console.WriteLine($"던전에서 몬스터 {monsterCnt}마리를 잡았습니다.");
-                dungeon.player.Exp += random.Next(dungeon.Stage, dungeon.Stage * 10 + 1);
+                dungeon.player.Exp += random.Next(Dungeon.Stage * 50 , Dungeon.Stage * 100);
+                dungeon.NextStage();
             }
             else if (dungeon.player.Health == 0) Console.WriteLine("You Lose");
 
@@ -263,8 +310,9 @@ namespace SpartaNDungeon
             Console.WriteLine($"HP {dungeon.player.Health}");
             Console.WriteLine($"exp {prevExp} -> {dungeon.player.Exp}");
 
-            dungeon.Reward(dungeon.Stage);
-
+            dungeon.Reward(Dungeon.Stage);
+            dungeon.player.Mana += (10 + dungeon.player.Intelligence); // 스테이지 종료 시 마나 회복
+            dungeon.player.CheckLevelUp();  // check if level up possible
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Reflection.Metadata;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,7 +14,7 @@ namespace SpartaNDungeon
         // basic stats
         // name, job, level  // atk, def, luk, dex  // hp, mp  // gold
         public string Name { get; set; }
-        public JobType Job { get; }
+        public JobType Job { get; set; }
         public int Level { get; set; }
         public int Attack { get; set; }
         public int Defense { get; set; }
@@ -27,15 +28,15 @@ namespace SpartaNDungeon
 
         // intermediate stats
         // max health  // level exp 
-        public int MaxHealth { get; }
-        public int MaxMana { get; }
+        public int MaxHealth { get; set; }
+        public int MaxMana { get; set; }
         public int LevelExp { get; private set; }
         public int SkillDamage { get; set; }
 
         // complex stats  
-        public List<Item> inventory;
+        public List<Item> inventory { get; set; }
         // public List<Item> inventory;
-        public List<ISkill> skills;
+        public List<CSkill> skills { get; set; }
 
         // clear variables
         public bool WarriorClear { get; private set; }
@@ -43,17 +44,20 @@ namespace SpartaNDungeon
         public bool RogueClear { get; private set; }
         public bool ArcherClear { get; private set; }
 
+        //Item SetBonus
+        public int CurrentSetBonus { get; set; } = 0;
+
         // player class initiate
         public Player() { }
         public Player(string name, int jobId)
         {
             Name = name; Level = 1; Job = (JobType)jobId;
             Attack = 5; Defense = 5; Intelligence = 5; Luck = 5; Dexterity = 5;
-            Health = 100; Mana = 100;
+            Health = 100; Mana = 50;
             Gold = 100000; Exp = 0;
 
-            MaxHealth = 100;  // may change dynamically with player's other stats (ex. level, attack, etc.)
-            MaxMana = 100;  // may change dynamically with player's other stats (ex. level, intelligence, etc.)
+            MaxHealth = 90 + Level * 10;  // may change dynamically with player's other stats (ex. level, attack, etc.)
+            MaxMana = 50 + Intelligence * 10;  // may change dynamically with player's other stats (ex. level, intelligence, etc.)
             LevelExp = 100 * Level;  // requied exp increases as level increases
             SkillDamage = 0;
 
@@ -61,9 +65,9 @@ namespace SpartaNDungeon
             inventory = new List<Item>();
 
             // player's skill set
-            skills = new List<ISkill>();
+            skills = new List<CSkill>();
             // add skills to player's skill set according to player's job
-            AddSkillsByJob(Job.ToString());
+            AddSkillsByJob(Job);
             // give player additional stat according to player's job
             AddStatus();
             // give player default 3 potion
@@ -89,29 +93,39 @@ namespace SpartaNDungeon
                     break;
                 default: break;  // default, no additional stats
             }
+            UpdateStatus();
         }
+        // update changed stats after add stat
+        private void UpdateStatus()
+        {
+            MaxHealth = 90 + Level * 10;
+            MaxMana = 50 + Intelligence * 10;
+            Health = MaxHealth; Mana = MaxMana;
+        }
+
         // give player default items (3 potions)
         private void AddDefaultItem()
         {
             List<Item> itemList = Item.GetItemList();
-            Item item = itemList[itemList.Count()-1];
-            AddItem(item); AddItem(item); AddItem(item);
+            Item item = itemList[itemList.Count() - 1];
+            AddItem(item);
         }
 
         // skill related methods
         // add only skills for each job of player
-        private void AddSkillsByJob(string job)
+        public void AddSkillsByJob(JobType jobType)
         {
+            string job = jobType.ToString();
             skills.AddRange(SkillDatabase.GetSkillsByJob(job));
         }
         // if player use skill, returns damage (int) value 
         public void UseSkill(string name)
         {
-            ISkill usedSkill = SkillDatabase.GetSkill(name);
+            CSkill usedSkill = SkillDatabase.GetSkill(name);
 
             // check if player has used skill in its skill set
             // check if player has enough mana
-            if (Mana >= usedSkill.ManaCost)
+            if (Mana >= usedSkill.ManaCost && Mana >0)
             {
                 // take mana off
                 Mana -= usedSkill.ManaCost;
@@ -120,13 +134,13 @@ namespace SpartaNDungeon
 
                 // show use log
                 Console.WriteLine();
-                Console.WriteLine($"{usedSkill.Name} 스킬을 사용했습니다. {SkillDamage} 만큼의 피해를 주었습니다.");
+                Console.WriteLine($"{usedSkill.Name} 스킬을 사용!");
+                if (Mana < 0) Mana = 0;
             }
             else
             {
                 Console.WriteLine();
                 Console.WriteLine($"{usedSkill.Name} 스킬을 사용하기에 마나가 충분하지 않습니다. (현재 마나: {Mana})");
-                return;
             }
         }
 
@@ -145,10 +159,13 @@ namespace SpartaNDungeon
             }
             // show status
             Console.WriteLine($"LV. {Level}");  // Lv. 01
-            Console.WriteLine($"{Name} ( {jobName} )");  // Chad ( 전사 )
-            Console.WriteLine($"ATK : {Attack}\tDEF : {Defense}\tLUK : {Luck}\tDEX : {Dexterity}");  // ATK : 10    DEF : 10    LUK : 10    DEX : 10
-            Console.WriteLine($"HP : {Health} / {MaxHealth}\tMP : {Mana} / {MaxMana}"); // HP : 100 / 100    MP : 100 / 100
-            Console.WriteLine($"Gold : {Gold} G");  // Gold : 1000 G
+            ConsoleUtil.ColorWritePart(Name, ConsoleColor.DarkCyan);
+            Console.WriteLine($" ( {jobName} )");  // Chad ( 전사 )
+            Console.WriteLine("ATK : {0,3}  DEF : {1,3}  INT : {2,3}  LUK : {3,3}  DEX : {4,3}", Attack, Defense, Intelligence, Luck, Dexterity);  // ATK : 10    DEF : 10    LUK : 10    DEX : 10
+            Console.WriteLine($"HP : {Health} / {MaxHealth}\tMP : {Mana} / {MaxMana}"); // HP : 100 / 100    MP : 50 / 50
+            Console.Write($"Gold : ");  // Gold : 1000 G
+            ConsoleUtil.ColorWritePart(Gold.ToString(), ConsoleColor.DarkYellow);
+            Console.WriteLine(" G");
         }
 
         public enum JobType { Warrior = 1, Mage, Rogue, Archer }
@@ -170,12 +187,17 @@ namespace SpartaNDungeon
         public void DisplayInventory(bool isManaging = false, bool isSelling = false)
         {
             // if inventory is empty, out empty msg
-            if (inventory.Count == 0) { Console.WriteLine("인벤토리가 비어 있습니다."); return; }
+            if (inventory.Count == 0) { Console.WriteLine("  인벤토리가 비어 있습니다."); return; }
 
             List<string> itemNames = new List<string>();
             List<string> itemDescrips = new List<string>();
             foreach (Item iitem in inventory)
             {
+                if (iitem.Type == ItemType.Potion)
+                {
+                    string tempName = $"{iitem.Name} ({iitem.Count}개)";
+                    itemNames.Add(tempName); itemDescrips.Add(iitem.Descrip); break;
+                }
                 itemNames.Add(iitem.Name); itemDescrips.Add(iitem.Descrip);
             }
 
@@ -188,12 +210,21 @@ namespace SpartaNDungeon
                 item = "";  // initialize entire string for each item
                 item += isManaging ? String.Format("{0,2}. ", i+1) : "-  ";
                 item += inventory[i].IsEquip ? "(E)" : "   ";
-                item += ConsoleUtil.WriteSpace(inventory[i].Name, nameMax) + "\t| " + ConsoleUtil.WriteSpace(inventory[i].Descrip, descripMax);
+                item += inventory[i].Type == ItemType.Potion ? ConsoleUtil.WriteSpace($"{inventory[i].Name} ({inventory[i].Count}개)", nameMax) : ConsoleUtil.WriteSpace(inventory[i].Name, nameMax);
+                item += "\t| " + ConsoleUtil.WriteSpace(inventory[i].Descrip, descripMax);
                 item += "\t| " + inventory[i].GetType();
                 item += isSelling ? $"\t| {inventory[i].Cost} G" : "";
-                // show on console
-                Console.WriteLine(item);
+                // 장착한 아이템은 초록색으로 변경
+                if (inventory[i].IsEquip)
+                {
+                    ConsoleUtil.ColorWrite(item, ConsoleColor.Green);
+                }
+                else
+                {
+                    Console.WriteLine(item);
+                }
             }
+
 
             return;
         }
@@ -211,12 +242,12 @@ namespace SpartaNDungeon
         public void DisplaySkills()
         {
             // if skill set is empty, out empty msg
-            if (skills.Count == 0) { Console.WriteLine("스킬셋이 비어 있습니다."); return; }
+            if (skills.Count == 0) { Console.WriteLine("  스킬셋이 비어 있습니다."); return; }
 
             string item;
             for (int i = 0; i < skills.Count; i++)
             {
-                ISkill skill = skills[i];
+                CSkill skill = skills[i];
                 item = "";  // initializze entire string for each item
                 // 1. 기본 공격
                 item = $"{i + 2}. {skill.Name}\t| {skill.Desc}\t| 필요 마나: {skill.ManaCost}";
@@ -233,12 +264,26 @@ namespace SpartaNDungeon
         // increase player's level and initiate related values (exp, level exp)
         private void Levelup()
         {
-            // increase level
-            Level++;
-            // initiate exp to 0
-            Exp = 0;
-            // set new level exp
-            LevelExp = 100 * Level;
+            Level++;  // increase level
+            Exp = 0;  // initiate exp to 0
+            LevelExp = 100 * Level;  // set new level exp
+            Attack++; Defense++; Intelligence++; Luck++; Dexterity++;
+            switch (Job)  // additional stat increase for each job
+            {
+                case JobType.Warrior: Attack++; break;
+                case JobType.Mage: Intelligence++; break;
+                case JobType.Rogue: Luck++; break;
+                case JobType.Archer: Dexterity++; break;
+            }
+            UpdateStatus();  // update status change
+            // level up msg
+            Console.WriteLine();
+            ConsoleUtil.ColorWritePart(Name, ConsoleColor.DarkCyan);
+            Console.Write("의 레벨이 ");
+            ConsoleUtil.ColorWritePart(Level.ToString(), ConsoleColor.Green);
+            Console.WriteLine("(으)로 올랐습니다.");
+            Console.WriteLine("  당신은 더욱 강력해지는 것을 느낍니다.");
+            Console.WriteLine("  체력과 마나가 회복되었습니다.");
         }
 
         // check if player is dead
@@ -251,8 +296,11 @@ namespace SpartaNDungeon
         {
             // when player is dead
             // show death msg
+            Console.Clear();
             Console.WriteLine();
-            Console.WriteLine($"{Name}이(가) 던전을 탐험하다 죽었습니다.");
+            ConsoleUtil.ColorWrite("\t\t==== 패배 ====", ConsoleColor.Red);
+            ConsoleUtil.ColorWritePart(Name, ConsoleColor.DarkCyan);
+            Console.WriteLine("이(가) 협곡에서 죽었습니다.");
             // ask if retry
             // [later] insert on UI class
             Console.WriteLine();

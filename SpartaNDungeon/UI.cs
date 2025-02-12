@@ -447,8 +447,10 @@ namespace SpartaNDungeon
             switch (input)
             {
                 case 0:
+                    Console.Clear();
                     StartPage(); return;
                 case 1:
+                    Console.Clear();
                     MonsterWikiPageSecond();
                     break;
             }
@@ -474,11 +476,14 @@ namespace SpartaNDungeon
             switch (input)
             {
                 case 0:
+                    Console.Clear();
                     StartPage(); return;
                 case 1:
+                    Console.Clear();
                     MonsterWikiPageThird();
                     break;
                 case 2:
+                    Console.Clear();
                     MonsterWikiPage();
                     break;
             }
@@ -503,8 +508,10 @@ namespace SpartaNDungeon
             switch (input)
             {
                 case 0:
+                    Console.Clear();
                     StartPage(); return;
                 case 1:
+                    Console.Clear();
                     MonsterWikiPageSecond();
                     break;
             }

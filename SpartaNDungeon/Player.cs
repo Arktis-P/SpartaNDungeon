@@ -46,9 +46,11 @@ namespace SpartaNDungeon
 
         //Item SetBonus
         public int CurrentSetBonus { get; set; } = 0;
+        public List<Quest1> ActiveQuests { get; set; } = new List<Quest1>();
 
+        public List<Monster> questMonsters { get; set; } = new List<Monster>();
         // player class initiate
-        
+
         public Player(string name, int jobId)
         {
             Name = name; Level = 1; Job = (JobType)jobId;

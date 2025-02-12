@@ -63,9 +63,10 @@ namespace SpartaNDungeon
 
         public void DisplayQuests()
         {
-            foreach(Quest1 quest in quests)
+            for (int i = 0; i < quests.Count; i++)
             {
-                quest.DisplayQuest();
+                Console.Write($"{i+1}. ");
+                quests[i].DisplayQuest();
             }
         }
     }

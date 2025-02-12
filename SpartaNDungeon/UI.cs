@@ -16,6 +16,7 @@ namespace SpartaNDungeon
         Shop shop;
         Dungeon dungeon;
         MonsterManager manager;
+        Quest1Manager questManager;
         public void LoadingPage()  // loading page before game starts (no practical function)
         {
             Console.Clear();
@@ -407,6 +408,7 @@ namespace SpartaNDungeon
         // quest page
         private void QuestPage()
         {
+            questManager = new Quest1Manager(player, manager);
             while (true)
             {
                 Console.Clear();

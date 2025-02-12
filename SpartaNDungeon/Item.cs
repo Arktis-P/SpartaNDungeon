@@ -179,29 +179,53 @@ namespace SpartaNDungeon
             StringBuilder message = new StringBuilder();
             var equippedItems = player.inventory.Where(i => i.IsEquip).ToList();
 
-            int hasSetBonus = 0;
-            if (equippedItems.Any(i => i.Name == "몰락한 왕의 검") && equippedItems.Any(i => i.Name == "지배자의 피갑옷"))
-                hasSetBonus = 1;
-            if (equippedItems.Any(i => i.Name == "심연의 갑옷") && equippedItems.Any(i => i.Name == "어둠불꽃 횃불"))
-                hasSetBonus = 2;
+            // 기존에 적용된 세트 효과 확인
+            int previousBonus = player.CurrentSetBonus;
+            player.CurrentSetBonus = 0;
 
-            switch (hasSetBonus)
+            if (equippedItems.Any(i => i.Name == "지배자의 피갑옷") && equippedItems.Any(i => i.Name == "몰락한 왕의 검"))
+                player.CurrentSetBonus = 1;
+            if (equippedItems.Any(i => i.Name == "심연의 갑옷") && equippedItems.Any(i => i.Name == "어둠불꽃 횃불"))
+                player.CurrentSetBonus = 2;
+
+            // 기존 세트 보너스 해제
+            if (previousBonus == 1 && player.CurrentSetBonus != 1)
+            {
+                player.Attack -= 2;
+                player.Defense -= 1;
+                message.AppendLine("세트 효과가 사라졌습니다! 공격력 -2, 방어력 -1 감소.");
+            }
+            if (previousBonus == 2 && player.CurrentSetBonus != 2)
+            {
+                player.Attack -= 1;
+                player.Defense -= 1;
+                player.Dexterity -= 1;
+                player.Luck -= 1;
+                player.Intelligence -= 1;
+                message.AppendLine("세트 효과가 사라졌습니다! 모든 능력치 -1 감소.");
+            }
+
+            // 새로운 세트 보너스 적용
+            switch (player.CurrentSetBonus)
             {
                 case 1:
                     player.Attack += 2;
                     player.Defense += 1;
-                    message.AppendLine("세트 효과 발동! 공격력: 2 | 방어력: 1 추가 증가했습니다.");
+                    message.AppendLine("세트 효과 발동! 공격력 +2, 방어력 +1 증가.");
                     break;
                 case 2:
                     player.Attack += 1;
-                    player.Defense += 2;
-                    message.AppendLine("세트 효과 발동! 공격력: 1 | 방어력: 2 추가 증가했습니다.");
+                    player.Defense += 1;
+                    player.Dexterity += 1;
+                    player.Luck += 1;
+                    player.Intelligence += 1;
+                    message.AppendLine("세트 효과 발동! 모든 능력치 +1 증가.");
                     break;
-                
             }
 
             return message.ToString();
         }
+
 
     }
 }

@@ -44,6 +44,9 @@ namespace SpartaNDungeon
         public bool RogueClear { get; private set; }
         public bool ArcherClear { get; private set; }
 
+        //Item SetBonus
+        public int CurrentSetBonus { get; set; } = 0;
+
         // player class initiate
         public Player() { }
         public Player(string name, int jobId)

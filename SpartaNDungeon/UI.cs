@@ -164,7 +164,7 @@ namespace SpartaNDungeon
             Console.WriteLine("0. 게임종료");
             Console.WriteLine();
 
-            int input = ConsoleUtil.GetInput(0, 7); // input의 입력 범위를 1부터 6까지 제한
+            int input = ConsoleUtil.GetInput(0, 9); // input의 입력 범위를 1부터 6까지 제한
             switch(input)
             {
                 case 1:
@@ -188,6 +188,12 @@ namespace SpartaNDungeon
                     break;
                 case 7:
                     MonsterWikiPage();  // to save page
+                    break;
+                case 8:
+                    TestWarriorClearPage();  // to demonstrate warrior clear page
+                    break;
+                case 9:
+                    TestAllClearPage();  // to demo all clear page
                     break;
                 case 0:
                     EndGame();  // to end game page
@@ -619,7 +625,7 @@ namespace SpartaNDungeon
             // check if all clear // if all clear, pop all clear msg up
             if (player.CheckAllClear()) { AllClearMessage(); return; }
             // get any key to continue
-            if (ConsoleUtil.GetAnyKey()) { LoadingPage(); }
+            if (ConsoleUtil.GetAnyKey()) { LoadingPage(); ShowTitleScreen(); IntroductionPage(); }
         }
         // msg page for all clear page
         private void AllClearMessage()
@@ -632,6 +638,20 @@ namespace SpartaNDungeon
             Console.WriteLine("  무한 모드가 해금되었습니다.");
             ConsoleUtil.GetAnyKey();
             LoadingPage();
+            ShowTitleScreen();
+            IntroductionPage();
+        }
+
+        private void TestWarriorClearPage()
+        {
+            player.WarriorClear = !player.WarriorClear;
+            EndingPage();
+        }
+        private void TestAllClearPage()
+        {
+            player.WarriorClear = !player.WarriorClear; player.MageClear = !player.MageClear;
+            player.RogueClear = !player.RogueClear; player.ArcherClear = !player.ArcherClear;
+            EndingPage();
         }
 
         // save page

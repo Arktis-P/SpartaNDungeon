@@ -39,10 +39,10 @@ namespace SpartaNDungeon
         public List<CSkill> skills { get; set; }
 
         // clear variables
-        public bool WarriorClear { get; private set; }
-        public bool MageClear { get; private set; }
-        public bool RogueClear { get; private set; }
-        public bool ArcherClear { get; private set; }
+        public static bool WarriorClear { get; set; }
+        public static bool MageClear { get; set; }
+        public static bool RogueClear { get; set; }
+        public static bool ArcherClear { get; set; }
 
         //Item SetBonus
         public int CurrentSetBonus { get; set; } = 0;
@@ -363,7 +363,7 @@ namespace SpartaNDungeon
         // check if player has cleared every 
         public bool CheckAllClear()
         {
-            bool isAllClear = true;
+            bool isAllClear = false;
             if (WarriorClear && MageClear && RogueClear && ArcherClear) { isAllClear = true; }
             return isAllClear;
         }

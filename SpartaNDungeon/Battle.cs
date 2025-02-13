@@ -198,7 +198,7 @@ namespace SpartaNDungeon
 
                 int damage = (inputSkill == 1) ? CalAttack() : UseSkill(inputSkill);
                 if (damage == -1) continue;
-                if (random.NextDouble() < dungeon.player.Dexterity/100)
+                if (random.NextDouble() < dungeon.player.Dexterity/100) // 크리티컬
                 {
                     damage *= 2;
                     critical = true;

@@ -39,10 +39,10 @@ namespace SpartaNDungeon
         public List<CSkill> skills { get; set; }
 
         // clear variables
-        public static bool WarriorClear { get; set; }
-        public static bool MageClear { get; set; }
-        public static bool RogueClear { get; set; }
-        public static bool ArcherClear { get; set; }
+        public bool WarriorClear { get; set; }
+        public bool MageClear { get; set; }
+        public bool RogueClear { get; set; }
+        public bool ArcherClear { get; set; }
 
         //Item SetBonus
         public int CurrentSetBonus { get; set; } = 0;

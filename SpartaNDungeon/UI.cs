@@ -17,6 +17,12 @@ namespace SpartaNDungeon
         Shop shop;
         Dungeon dungeon;
         MonsterManager manager;
+
+        private bool WarriorClear = false;
+        private bool MageClear = false;
+        private bool RogueClear = false;
+        private bool ArcherClear = false;
+
         public void LoadingPage()  // loading page before game starts (no practical function)
         {
             Console.Clear();
@@ -59,10 +65,9 @@ namespace SpartaNDungeon
             Console.WriteLine();
             Console.WriteLine("\t스파르타의 협곡에 오신 것을 환영합니다.");
             Thread.Sleep(1500);
-            if (DataManager.CheckLoadData())
+            if (!WarriorClear && !MageClear && !RogueClear && !ArcherClear)
             {
-                LoadPage();
-                return;
+                if (DataManager.CheckLoadData()) { LoadPage(); return; }
             }
             Console.WriteLine();
             Console.WriteLine("\t이곳에 입장하기 위해서는 당신에 대한 정보가 필요합니다.");
@@ -132,6 +137,8 @@ namespace SpartaNDungeon
         {
             // instantiate player
             player = new Player(name, jobId);
+            if (WarriorClear || MageClear || RogueClear || ArcherClear)
+            { ClearStatusLoad(); }
 
             // show welcome 
             Console.Clear();
@@ -589,7 +596,7 @@ namespace SpartaNDungeon
             Thread.Sleep(500);
             Console.WriteLine();
             // check player's job and convert its value
-            // show claer status ex) ■ 전사    □ 마법사   □ 도적    □ 궁수
+            // show claer status ex) ■ 전사    □ 법사   □ 도적    □ 궁수
             player.DisplayClearStatus();
             if (ConsoleUtil.GetAnyKey()) { CreditPage(); }
         }
@@ -625,7 +632,7 @@ namespace SpartaNDungeon
             // check if all clear // if all clear, pop all clear msg up
             if (player.CheckAllClear()) { AllClearMessage(); return; }
             // get any key to continue
-            if (ConsoleUtil.GetAnyKey()) { LoadingPage(); ShowTitleScreen(); IntroductionPage(); }
+            if (ConsoleUtil.GetAnyKey()) { ClearStatusSave(); LoadingPage(); ShowTitleScreen(); IntroductionPage(); }
         }
         // msg page for all clear page
         private void AllClearMessage()
@@ -633,24 +640,35 @@ namespace SpartaNDungeon
             Console.Clear();
             Console.WriteLine();
             Console.WriteLine("  퀘스트 기능이 해금되었습니다.");
-            Thread.Sleep(500);
-            Console.WriteLine();
-            Console.WriteLine("  무한 모드가 해금되었습니다.");
             ConsoleUtil.GetAnyKey();
+            ClearStatusSave();
             LoadingPage();
             ShowTitleScreen();
             IntroductionPage();
         }
+        private void ClearStatusSave()
+        {
+            WarriorClear = player.WarriorClear;
+            MageClear = player.MageClear;
+            RogueClear = player.RogueClear;
+            ArcherClear = player.ArcherClear;
+        }
+        private void ClearStatusLoad()
+        {
+            player.WarriorClear = WarriorClear;
+            player.MageClear = MageClear;
+            player.RogueClear = RogueClear;
+            player.ArcherClear = ArcherClear;
+        }
 
         private void TestWarriorClearPage()
         {
-            player.WarriorClear = !player.WarriorClear;
+            player.WarriorClear = true;
             EndingPage();
         }
         private void TestAllClearPage()
         {
-            player.WarriorClear = !player.WarriorClear; player.MageClear = !player.MageClear;
-            player.RogueClear = !player.RogueClear; player.ArcherClear = !player.ArcherClear;
+            player.WarriorClear = true; player.MageClear = true; player.RogueClear = true; player.ArcherClear = true;
             EndingPage();
         }
 

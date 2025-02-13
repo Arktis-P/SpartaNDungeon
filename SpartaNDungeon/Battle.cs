@@ -19,7 +19,7 @@ namespace SpartaNDungeon
         int prevMp = 0;
         int prevExp = 0;
         bool critical = false;
-
+        bool avoidance = false;
         public Battle(Dungeon dungeon)
         {
             this.dungeon = dungeon;
@@ -150,7 +150,7 @@ namespace SpartaNDungeon
             while (true)
             {
                 Console.Clear();
-                Console.WriteLine("Battle!\n");
+                ConsoleUtil.ColorWrite("Battle!!\n", ConsoleColor.Magenta);
                 MonsterStatus();
                 Console.WriteLine();
                 PlayerStatus();
@@ -203,7 +203,7 @@ namespace SpartaNDungeon
 
                 int damage = (inputSkill == 1) ? CalAttack() : UseSkill(inputSkill);
                 if (damage == -1) continue;
-                if (random.NextDouble() < dungeon.player.Dexterity/100)
+                if (random.NextDouble() < dungeon.player.Dexterity/100) // 크리티컬
                 {
                     damage *= 2;
                     critical = true;
@@ -243,14 +243,14 @@ namespace SpartaNDungeon
         }
         public void MonsterAttack()
         {
-            Console.WriteLine("Battle!");
+            ConsoleUtil.ColorWrite("Battle!!", ConsoleColor.Magenta);
             foreach (Monster mon in dungeon.monsters)
             {
                 int damage = 0;
                 if (mon.IsDead) continue; // 몬스터 죽어있으면 넘어가기
                 if (random.NextDouble() < dungeon.player.Luck / 100.0) //회피 시
                 {
-                    Console.WriteLine("회피 성공!");
+                    avoidance = true;
                 }
                 else
                 { //방어력의 절반만큼 빼고 데미지 계산
@@ -269,14 +269,15 @@ namespace SpartaNDungeon
         public void PhaseResult(bool playerTurn, Monster select, int atk)
         {
             Console.Clear();
-            Console.WriteLine("Battle!!\n");
+            ConsoleUtil.ColorWrite("Battle!!", ConsoleColor.Magenta);
+            Console.WriteLine();
             if (playerTurn)
             {
                 Console.WriteLine($"{dungeon.player.Name}의 공격!");
                 Console.Write($"Lv.{select.Level} {select.Name} 을(를) 맞췄습니다. [데미지: {atk}]");
                 if (critical)
                 {
-                    Console.WriteLine(" - 치명타 공격!!");
+                    ConsoleUtil.ColorWrite(" - 치명타 공격!!", ConsoleColor.DarkBlue);
                     critical = false;
                 }
                 else Console.WriteLine();
@@ -290,7 +291,12 @@ namespace SpartaNDungeon
             else
             {
                 Console.WriteLine($"Lv.{select.Level} {select.Name}의 공격!");
-                Console.WriteLine($"{dungeon.player.Name} 을(를) 맞췄습니다. [데미지: {atk}]");
+                if (avoidance)
+                {
+                    ConsoleUtil.ColorWrite("회피 성공", ConsoleColor.DarkBlue);
+                    avoidance = false;
+                }
+                else Console.WriteLine($"{dungeon.player.Name} 을(를) 맞췄습니다. [데미지: {atk}]");
                 Console.WriteLine($"\nLv.{dungeon.player.Level} {dungeon.player.Name}");
                 Console.WriteLine($"HP {prevHp} -> {dungeon.player.Health}");
                 Thread.Sleep(2000);
@@ -300,15 +306,15 @@ namespace SpartaNDungeon
         public void BattleResult()
         {
             Console.Clear();
-            Console.WriteLine("Battle!! - Result\n");
+            ConsoleUtil.ColorWrite("Battle!! - Result\n", ConsoleColor.Magenta);
             if (dungeon.monsters.Count == monsterCnt)
             {
-                Console.WriteLine("Victory");
+                ConsoleUtil.ColorWrite("Victory", ConsoleColor.Red);
                 Console.WriteLine($"던전에서 몬스터 {monsterCnt}마리를 잡았습니다.");
                 dungeon.player.Exp += random.Next(Dungeon.Stage * 50 , Dungeon.Stage * 100);
                 dungeon.NextStage();
             }
-            else if (dungeon.player.Health == 0) Console.WriteLine("You Lose");
+            else if (dungeon.player.Health == 0) ConsoleUtil.ColorWrite("You Lose", ConsoleColor.Blue);
 
             Console.WriteLine("[캐릭터 정보]");
             Console.WriteLine($"\nLv.{dungeon.player.Level} {dungeon.player.Name}");
@@ -317,6 +323,8 @@ namespace SpartaNDungeon
 
             dungeon.Reward(Dungeon.Stage);
             dungeon.player.Mana += (10 + dungeon.player.Intelligence); // 스테이지 종료 시 마나 회복
+            if (dungeon.player.Mana >= dungeon.player.MaxMana) dungeon.player.Mana = dungeon.player.MaxMana;
+            
             dungeon.player.CheckLevelUp();  // check if level up possible
         }
     }

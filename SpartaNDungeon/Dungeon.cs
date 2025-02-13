@@ -26,6 +26,7 @@ namespace SpartaNDungeon
         public void DungeonPage()
         {
             Console.Clear();
+            Console.WriteLine("\x1b[3J");
             Console.WriteLine();
             Console.WriteLine("\t\t==== 협곡입장 ====");
             Console.Write("  미니언 생성까지 한 발자국 남았습니다.\n  협곡에는 ");
@@ -61,6 +62,7 @@ namespace SpartaNDungeon
         public void BattleStatusPage() // 상태 보기
         {
             Console.Clear();
+            Console.WriteLine("\x1b[3J");
             Console.WriteLine("\t\t==== 상태 보기 ====");
             Console.WriteLine("  던전에 입장할 캐릭터의 정보가 표시됩니다.\n");
 
@@ -74,6 +76,7 @@ namespace SpartaNDungeon
         public void UsePotionPage() // 포션 사용
         {
             Console.Clear();
+            Console.WriteLine("\x1b[3J");
             Item potion = player.inventory.FirstOrDefault(x => x.Type == ItemType.Potion);
             Console.WriteLine("회복");
             Console.Write($"포션을 사용하면 체력을 30 회복할 수 있습니다. ");
@@ -171,7 +174,8 @@ namespace SpartaNDungeon
 
         public void DisplayReward(List<Item> reward,int randomPotion, int rewardGold)
         {
-            Console.WriteLine("\n[획득 아이템]");
+            Console.WriteLine();
+            ConsoleUtil.ColorWrite("[획득 아이템]", ConsoleColor.Yellow);
             Console.WriteLine($"{rewardGold} G");
             foreach (Item item in reward)
             {

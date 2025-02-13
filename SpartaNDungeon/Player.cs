@@ -39,10 +39,10 @@ namespace SpartaNDungeon
         public List<CSkill> skills { get; set; }
 
         // clear variables
-        public bool WarriorClear { get; private set; }
-        public bool MageClear { get; private set; }
-        public bool RogueClear { get; private set; }
-        public bool ArcherClear { get; private set; }
+        public bool WarriorClear { get; set; }
+        public bool MageClear { get; set; }
+        public bool RogueClear { get; set; }
+        public bool ArcherClear { get; set; }
 
         //Item SetBonus
         public int CurrentSetBonus { get; set; } = 0;
@@ -211,9 +211,9 @@ namespace SpartaNDungeon
                 item += isManaging ? String.Format("{0,2}. ", i+1) : "-  ";
                 item += inventory[i].IsEquip ? "(E)" : "   ";
                 item += inventory[i].Type == ItemType.Potion ? ConsoleUtil.WriteSpace($"{inventory[i].Name} ({inventory[i].Count}개)", nameMax) : ConsoleUtil.WriteSpace(inventory[i].Name, nameMax);
-                item += "\t| " + ConsoleUtil.WriteSpace(inventory[i].Descrip, descripMax);
-                item += "\t| " + inventory[i].GetType();
-                item += isSelling ? $"\t| {inventory[i].Cost/2} G" : "";
+                item += "| " + ConsoleUtil.WriteSpace(inventory[i].Descrip, descripMax);
+                item += "| " + inventory[i].GetType();
+                item += isSelling ? $" | {inventory[i].Cost/2} G" : "";
                 // 장착한 아이템은 초록색으로 변경
                 if (inventory[i].IsEquip)
                 {

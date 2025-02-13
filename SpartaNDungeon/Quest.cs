@@ -6,23 +6,23 @@ using System.Threading.Tasks;
 
 namespace SpartaNDungeon
 {
-    class Quest
+    public class Quest
     {
         public string Name { get; set; }  // quest name
         public string Desc { get; set; }  // quest description
-        public Monster TargetMonster { get; set; }  // target monster for the qeust
+        public string TargetMonster { get; set; }  // target monster for the qeust
         public int TargetCount { get; set; }  // how many monsters needed to be defeated
         public int CurrentCount { get; set; }  // how many monsters defeated at the moment
         public int Reward { get; set; }  // reward (mostly gold) as quest reward 
 
-        public bool IsSelected; 
+        public bool IsSelected { get; set; } 
         public bool IsSatisfied => CurrentCount >= TargetCount;  // if satisfied the clear condition
-        public bool IsCompleted;  // if quest is already completed
+        public bool IsCompleted { get; set; }  // if quest is already completed
 
 
         // public List<Quest> Quests;  // list of quests
 
-        public Quest(string name, string desc, Monster targetMonster, int targetCount, int reward)
+        public Quest(string name, string desc, string targetMonster, int targetCount, int reward)
         {
             Name = name; Desc = desc;
             TargetMonster = targetMonster; TargetCount = targetCount;
@@ -59,17 +59,17 @@ namespace SpartaNDungeon
 
     class QuestList
     {
-        private static List<Quest> questList;
+        static List<Quest> questList;
 
         static QuestList()
         {
             MonsterManager manager = new MonsterManager(0);
             questList = new List<Quest>
             {
-                new Quest("미니언 처치","미니언을 5마리 처치하십시오.",manager.monsterList[0],1,25),
-                new Quest("공허충 처치","공허충을 5마리 처치하십시오.",manager.monsterList[1],5,50),
-                new Quest("대포미니언 처치","대포미니언을 5마리 처치하십시오.",manager.monsterList[2],5,100),
-                new Quest("슈퍼 미니언 처치","슈퍼 미니언을 5마리 처치하십시오.",manager.monsterList[3],5,150)
+                new Quest("미니언 처치","미니언을 5마리 처치하십시오.",manager.monsterList[0].Name,5,25),
+                new Quest("공허충 처치","공허충을 5마리 처치하십시오.",manager.monsterList[1].Name,5,50),
+                new Quest("대포미니언 처치","대포미니언을 5마리 처치하십시오.",manager.monsterList[2].Name,5,100),
+                new Quest("슈퍼 미니언 처치","슈퍼 미니언을 5마리 처치하십시오.",manager.monsterList[3].Name,5,150)
             };
         }
         public Quest GetQuest(int index)
@@ -121,7 +121,6 @@ namespace SpartaNDungeon
                     str += "| " + $"{q.CurrentCount} / {q.TargetCount}마리";
                     str += q.IsSatisfied ? " | 완료 가능" : "";
                 }
-                
                 i++;
 
                 // check if selected, display in blue
@@ -160,15 +159,10 @@ namespace SpartaNDungeon
             quest = null;
             isQuest = false;
         }
-
-        public static void ActivateQuestManager(Quest targetQuest)
-        {
-            quest = targetQuest;
-        }
         
         public static void QuestCountUp(Monster monster)
         {
-            if (monster.Name == quest.TargetMonster.Name) { quest.CurrentCount++; }
+            if (monster.Name == quest.TargetMonster) { quest.CurrentCount++; }
         }
     }
 }

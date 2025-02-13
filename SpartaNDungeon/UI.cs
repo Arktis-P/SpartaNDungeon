@@ -87,6 +87,7 @@ namespace SpartaNDungeon
                     Player.Gold = gameData.Gold;
                     Dungeon.Stage = gameData.Stage;
                     Item.LoadItemList(gameData.Items);  // override item list
+                    QuestManager.questList = gameData.Quests;  // override quest list
                     // show complete msg
                     Console.Clear();
                     Console.WriteLine();
@@ -653,7 +654,7 @@ namespace SpartaNDungeon
                 switch (input)
                 {
                     case 1:  // save data
-                        GameData gameData = new GameData(player, Player.Gold, Dungeon.Stage, Item.GetItemList());
+                        GameData gameData = new GameData(player, Player.Gold, Dungeon.Stage, Item.GetItemList(), QuestManager.questList);
                         DataManager.SaveData(gameData);
                         SaveCompletePage();
                         return;

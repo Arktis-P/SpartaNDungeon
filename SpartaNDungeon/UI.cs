@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics.Tracing;
@@ -16,6 +17,12 @@ namespace SpartaNDungeon
         Shop shop;
         Dungeon dungeon;
         MonsterManager manager;
+
+        private bool WarriorClear = false;
+        private bool MageClear = false;
+        private bool RogueClear = false;
+        private bool ArcherClear = false;
+
         public void LoadingPage()  // loading page before game starts (no practical function)
         {
             Console.Clear();
@@ -58,10 +65,9 @@ namespace SpartaNDungeon
             Console.WriteLine();
             Console.WriteLine("\t스파르타의 협곡에 오신 것을 환영합니다.");
             Thread.Sleep(1500);
-            if (DataManager.CheckLoadData())
+            if (!WarriorClear && !MageClear && !RogueClear && !ArcherClear)
             {
-                LoadPage();
-                return;
+                if (DataManager.CheckLoadData()) { LoadPage(); return; }
             }
             Console.WriteLine();
             Console.WriteLine("\t이곳에 입장하기 위해서는 당신에 대한 정보가 필요합니다.");
@@ -86,6 +92,7 @@ namespace SpartaNDungeon
                     Player.Gold = gameData.Gold;
                     Dungeon.Stage = gameData.Stage;
                     Item.LoadItemList(gameData.Items);  // override item list
+                    QuestManager.questList = gameData.Quests;  // override quest list
                     // show complete msg
                     Console.Clear();
                     Console.WriteLine();
@@ -130,6 +137,8 @@ namespace SpartaNDungeon
         {
             // instantiate player
             player = new Player(name, jobId);
+            if (WarriorClear || MageClear || RogueClear || ArcherClear)
+            { ClearStatusLoad(); }
 
             // show welcome 
             Console.Clear();
@@ -162,7 +171,7 @@ namespace SpartaNDungeon
             Console.WriteLine("0. 게임종료");
             Console.WriteLine();
 
-            int input = ConsoleUtil.GetInput(0, 7); // input의 입력 범위를 1부터 6까지 제한
+            int input = ConsoleUtil.GetInput(0, 9); // input의 입력 범위를 1부터 6까지 제한
             switch(input)
             {
                 case 1:
@@ -186,6 +195,12 @@ namespace SpartaNDungeon
                     break;
                 case 7:
                     MonsterWikiPage();  // to save page
+                    break;
+                case 8:
+                    TestWarriorClearPage();  // to demonstrate warrior clear page
+                    break;
+                case 9:
+                    TestAllClearPage();  // to demo all clear page
                     break;
                 case 0:
                     EndGame();  // to end game page
@@ -405,7 +420,7 @@ namespace SpartaNDungeon
         }
 
         // quest page
-        private void QuestPage()
+        public void QuestPage()
         {
             while (true)
             {
@@ -416,14 +431,54 @@ namespace SpartaNDungeon
                 // show option
                 Console.WriteLine();
                 // 1~99. (퀘스트 목록 확인)
+                QuestManager.DisplayQuest();
                 // 0. 나가기
-                Console.WriteLine("0. 나가기");
+                Console.WriteLine("\n0. 나가기");
 
                 // get player's input
-                int input = ConsoleUtil.GetInput(0, 0);
-                // back to startpage
-                StartPage(); return;
+                int input = ConsoleUtil.GetInput(0, QuestManager.questList.Count);
+                if (input == 0) { StartPage(); }
+                else if (input >= 1 && input <= QuestManager.questList.Count) { SelectQuestPage(input); }
             }
+        }
+
+        private void SelectQuestPage(int input)
+        {
+            if (QuestManager.isQuest)
+            {
+                if (QuestManager.CheckQuestSatisfie(input)) { QuestManager.CompleteQuest(input); CompleteQuestPage(); }  // if quest satisfied
+                else { QuestExistPage(); }
+            }
+            else  // if isQuest is empty
+            {
+                if (!QuestManager.CheckQuestCompleted(input)) { QuestManager.SelectQuest(input); }
+                else { QuestAlreadyCompletedPage(); }
+            }
+
+        }
+        private void QuestAlreadyCompletedPage()
+        {
+            Console.Clear(); Console.WriteLine("\x1b[3J");
+            Console.WriteLine("\n\t\t==== 퀘스트 ====");
+            Console.WriteLine("  이미 완료한 퀘스트입니다.");
+            ConsoleUtil.GetAnyKey(); QuestPage();
+        }
+        private void CompleteQuestPage()
+        {
+            Console.Clear(); Console.WriteLine("\x1b[3J");
+            Console.WriteLine("\n\t\t==== 퀘스트 ====");
+            Console.WriteLine("  축하합니다! 퀘스트를 완료했습니다.");
+            Console.Write("  완료 보상으로 ");
+            ConsoleUtil.ColorWritePart(QuestManager.reward.ToString(), ConsoleColor.DarkYellow);
+            Console.WriteLine(" G를 획득했습니다.");
+            ConsoleUtil.GetAnyKey(); QuestPage();
+        }
+        private void QuestExistPage()
+        {
+            Console.Clear(); Console.WriteLine("\x1b[3J");
+            Console.WriteLine("\n\t\t==== 퀘스트 ====");
+            Console.WriteLine("  한 번에 여러 개의 퀘스트를 수주할 수 없습니다.");
+            ConsoleUtil.GetAnyKey(); QuestPage();
         }
 
         // Monster Wiki page
@@ -541,7 +596,7 @@ namespace SpartaNDungeon
             Thread.Sleep(500);
             Console.WriteLine();
             // check player's job and convert its value
-            // show claer status ex) ■ 전사    □ 마법사   □ 도적    □ 궁수
+            // show claer status ex) ■ 전사    □ 법사   □ 도적    □ 궁수
             player.DisplayClearStatus();
             if (ConsoleUtil.GetAnyKey()) { CreditPage(); }
         }
@@ -577,7 +632,7 @@ namespace SpartaNDungeon
             // check if all clear // if all clear, pop all clear msg up
             if (player.CheckAllClear()) { AllClearMessage(); return; }
             // get any key to continue
-            if (ConsoleUtil.GetAnyKey()) { LoadingPage(); }
+            if (ConsoleUtil.GetAnyKey()) { ClearStatusSave(); LoadingPage(); ShowTitleScreen(); IntroductionPage(); }
         }
         // msg page for all clear page
         private void AllClearMessage()
@@ -585,11 +640,36 @@ namespace SpartaNDungeon
             Console.Clear();
             Console.WriteLine();
             Console.WriteLine("  퀘스트 기능이 해금되었습니다.");
-            Thread.Sleep(500);
-            Console.WriteLine();
-            Console.WriteLine("  무한 모드가 해금되었습니다.");
             ConsoleUtil.GetAnyKey();
+            ClearStatusSave();
             LoadingPage();
+            ShowTitleScreen();
+            IntroductionPage();
+        }
+        private void ClearStatusSave()
+        {
+            WarriorClear = player.WarriorClear;
+            MageClear = player.MageClear;
+            RogueClear = player.RogueClear;
+            ArcherClear = player.ArcherClear;
+        }
+        private void ClearStatusLoad()
+        {
+            player.WarriorClear = WarriorClear;
+            player.MageClear = MageClear;
+            player.RogueClear = RogueClear;
+            player.ArcherClear = ArcherClear;
+        }
+
+        private void TestWarriorClearPage()
+        {
+            player.WarriorClear = true;
+            EndingPage();
+        }
+        private void TestAllClearPage()
+        {
+            player.WarriorClear = true; player.MageClear = true; player.RogueClear = true; player.ArcherClear = true;
+            EndingPage();
         }
 
         // save page
@@ -612,7 +692,7 @@ namespace SpartaNDungeon
                 switch (input)
                 {
                     case 1:  // save data
-                        GameData gameData = new GameData(player, Player.Gold, Dungeon.Stage, Item.GetItemList());
+                        GameData gameData = new GameData(player, Player.Gold, Dungeon.Stage, Item.GetItemList(), QuestManager.questList);
                         DataManager.SaveData(gameData);
                         SaveCompletePage();
                         return;

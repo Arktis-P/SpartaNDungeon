@@ -20,6 +20,7 @@ namespace SpartaNDungeon
         int prevExp = 0;
         bool critical = false;
         bool avoidance = false;
+        bool monsterAvoidance = false;
         public Battle(Dungeon dungeon)
         {
             this.dungeon = dungeon;
@@ -234,7 +235,7 @@ namespace SpartaNDungeon
         {
             if(random.NextDouble() < 0.1) // 몬스터 회피 10%
             {
-                Console.WriteLine($"Lv.{monster.Level} {monster.Name} 을(를) 공격했지만 아무일도 일어나지 않았습니다.");
+                monsterAvoidance = true;
                 damage = 0;
             }
             else Console.WriteLine($"{monster.Name}에게 {damage}의 피해를 줬습니다.");
@@ -282,7 +283,13 @@ namespace SpartaNDungeon
             if (playerTurn)
             {
                 Console.WriteLine($"{dungeon.player.Name}의 공격!");
-                Console.Write($"Lv.{select.Level} {select.Name} 을(를) 맞췄습니다. [데미지: {atk}]");
+                if (monsterAvoidance) // 몬스터 회피
+                {
+                    Console.WriteLine($"Lv.{select.Level} {select.Name} 을(를) 공격했지만 아무일도 일어나지 않았습니다.");
+                    monsterAvoidance = true;
+                }
+                else Console.Write($"Lv.{select.Level} {select.Name} 을(를) 맞췄습니다. [데미지: {atk}]");
+                
                 if (critical)
                 {
                     ConsoleUtil.ColorWrite(" - 치명타 공격!!", ConsoleColor.DarkBlue);

@@ -34,7 +34,12 @@ namespace SpartaNDungeon
             return damage;
         }
 
-        public int UseSkill(Player player) { player.Mana -= this.ManaCost; return CalculateDamage(player); }
+        public int UseSkill(Player player)
+        {
+            if (player.Mana < this.ManaCost) { return 0; }    
+            player.Mana -= this.ManaCost;
+            return CalculateDamage(player);
+        }
     }
 
     // warrior class skills

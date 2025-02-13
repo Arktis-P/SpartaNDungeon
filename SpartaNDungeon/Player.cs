@@ -213,7 +213,7 @@ namespace SpartaNDungeon
                 item += inventory[i].Type == ItemType.Potion ? ConsoleUtil.WriteSpace($"{inventory[i].Name} ({inventory[i].Count}개)", nameMax) : ConsoleUtil.WriteSpace(inventory[i].Name, nameMax);
                 item += "\t| " + ConsoleUtil.WriteSpace(inventory[i].Descrip, descripMax);
                 item += "\t| " + inventory[i].GetType();
-                item += isSelling ? $"\t| {inventory[i].Cost} G" : "";
+                item += isSelling ? $"\t| {inventory[i].Cost/2} G" : "";
                 // 장착한 아이템은 초록색으로 변경
                 if (inventory[i].IsEquip)
                 {

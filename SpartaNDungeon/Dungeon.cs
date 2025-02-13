@@ -174,7 +174,8 @@ namespace SpartaNDungeon
 
         public void DisplayReward(List<Item> reward,int randomPotion, int rewardGold)
         {
-            Console.WriteLine("\n[획득 아이템]");
+            Console.WriteLine();
+            ConsoleUtil.ColorWrite("[획득 아이템]", ConsoleColor.Yellow);
             Console.WriteLine($"{rewardGold} G");
             foreach (Item item in reward)
             {

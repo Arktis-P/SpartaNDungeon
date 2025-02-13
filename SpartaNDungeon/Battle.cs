@@ -95,11 +95,6 @@ namespace SpartaNDungeon
                     scaledMon.Add(currentMon); // HashSet에 저장 후 비교해서 중복을 방지한다.
                 }
 
-                if (Dungeon.Stage == 7) // 보스 스테이지일때 보스 패시브 발동
-                {
-                    if (currentMon.IsDead == false)
-                        currentMon.BossPassive();
-                }
 
                 if (currentMon.IsDead == true) // 몬스터가 사망할 경우 텍스트 색을 회색으로 변경
                 {
@@ -118,6 +113,16 @@ namespace SpartaNDungeon
                     else
                         Console.WriteLine($"{(i + 1)}. {dungeon.monsters[i].MonsterDisplay()}");
 
+                }
+
+                if (Dungeon.Stage == 7) // 보스 스테이지일때 보스 패시브 발동
+                {
+                    if (currentMon.IsDead == false)
+                    {
+                        int updateHealth = dungeon.player.Health;
+                        currentMon.BossPassive(ref updateHealth);
+                        dungeon.player.Health = updateHealth;
+                    }
                 }
             }
         }

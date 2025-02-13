@@ -114,15 +114,19 @@ namespace SpartaNDungeon
             return MonsterType.Normal;
         }
 
-        public void BossPassive()
+        public void BossPassive(ref int playerHealth) // 보스의 패시브 스킬
         {
             Hp += 10;
             Atk += 2;
-            string str = $" 나는 관대하다. (매턴 발동) : {Name}의 체력이 10, 공격력이 2 증가했습니다!";
+            if (MonClass == MonsterClass.Boss) // 보스몬스터만 발동
+            {
+                playerHealth -= 5;
+                string str2 = $" 황제의 위광 (매턴 발동) : 어떠한 압박감이 플레이어를 덮칩니다... (매턴 플레이어 체력 5 감소)";
+                ConsoleUtil.ColorWrite(str2, ConsoleColor.DarkYellow);
+            }
+            string str = $" 나는 관대하다 (매턴 발동) : {Name}의 체력이 10, 공격력이 2 증가했습니다!";
             ConsoleUtil.ColorWrite(str, ConsoleColor.Red);
         }
-
-        
     }
 
 

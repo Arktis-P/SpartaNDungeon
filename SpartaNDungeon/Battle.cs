@@ -203,6 +203,7 @@ namespace SpartaNDungeon
 
                 int damage = (inputSkill == 1) ? CalAttack() : UseSkill(inputSkill);
                 if (damage == -1) continue;
+
                 if (random.NextDouble() < dungeon.player.Dexterity/100) // 크리티컬
                 {
                     damage *= 2;
@@ -218,9 +219,15 @@ namespace SpartaNDungeon
             if (dungeon.player.skills.Count == 0) return -1;
 
             int skillIndex = input - 2;
-
-            Console.WriteLine($"{dungeon.player.skills[skillIndex].Name} 사용!");
-            return dungeon.player.skills[skillIndex].UseSkill(dungeon.player);
+            int damage = dungeon.player.skills[skillIndex].UseSkill(dungeon.player);
+            if(damage != 0) Console.WriteLine($"{dungeon.player.skills[skillIndex].Name} 사용!");
+            else if (damage == 0)
+            {
+                Console.WriteLine("\n마나가 부족해 스킬을 사용할 수 없습니다!");
+                Thread.Sleep(1000);
+                return -1;
+            }
+            return damage;
         }
 
         public void ExecuteAttack(Monster monster, int damage)
@@ -269,6 +276,7 @@ namespace SpartaNDungeon
         public void PhaseResult(bool playerTurn, Monster select, int atk)
         {
             Console.Clear();
+            Console.WriteLine("\x1b[3J");
             ConsoleUtil.ColorWrite("Battle!!", ConsoleColor.Magenta);
             Console.WriteLine();
             if (playerTurn)
@@ -306,6 +314,7 @@ namespace SpartaNDungeon
         public void BattleResult()
         {
             Console.Clear();
+            Console.WriteLine("\x1b[3J");
             ConsoleUtil.ColorWrite("Battle!! - Result\n", ConsoleColor.Magenta);
             if (dungeon.monsters.Count == monsterCnt)
             {

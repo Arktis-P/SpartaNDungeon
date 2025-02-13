@@ -162,6 +162,7 @@ namespace SpartaNDungeon
         
         public static void QuestCountUp(Monster monster)
         {
+            if (!isQuest) { return; }
             if (monster.Name == quest.TargetMonster) { quest.CurrentCount++; }
         }
     }

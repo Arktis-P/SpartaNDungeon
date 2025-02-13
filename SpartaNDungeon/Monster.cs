@@ -96,14 +96,14 @@ namespace SpartaNDungeon
             return str;
         }
 
-        // 기본적으로 10%의 확률로 네임드 몬스터 탄생. 스테이지가 3층 이상일 경우 네임드 확률이 30%로 변경
+        // 기본적으로 20%의 확률로 네임드 몬스터 탄생. 스테이지가 3층 이상일 경우 네임드 확률이 30%로 변경
         private MonsterType GetMonsterType(int stage, MonsterClass monClass) 
         {
             if((monClass != MonsterClass.Tower) && (monClass != MonsterClass.Boss)) // 타워나 보스는 변이 발생 x
             {
                 if (stage < 3)
                 {
-                    return (random.Next(0, 10) < 1) ? MonsterType.Named : MonsterType.Normal;
+                    return (random.Next(0, 10) < 2) ? MonsterType.Named : MonsterType.Normal;
                 }
                 else
                 {

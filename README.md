@@ -54,9 +54,9 @@ SpartaNDungeon 프로젝트를 통해 제작한 게임 **스파르타의 협곡(
 
 ## 📖 와이어프레임
 #### **1차 와이어프레임**
-[1차 와이어프레임](ReadMeFiles/SpartaTextDungeon.png)  
+![1차 와이어프레임](ReadMeFiles/SpartaTextDungeon.png)  
 #### **2차 와이어프레임**
-[2차 와이어프레임](ReadMeFiles/SpartaTextDungeon2.png)
+![2차 와이어프레임](ReadMeFiles/SpartaTextDungeon2.png)
 
 ---
 
